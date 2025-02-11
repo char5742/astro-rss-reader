@@ -33,7 +33,7 @@ import Layout from "~/layouts/Layout.astro";
     </header>
 
     <div class="item-content">
-      <figure class="mb-xl">
+      <figure>
         <img src="https://placehold.co/800x400" alt="AI技術のイメージ" />
       </figure>
 
@@ -78,7 +78,7 @@ import Layout from "~/layouts/Layout.astro";
       </footer>
     </div>
 
-    <aside class="item-container mt-xl" hidden>
+    <aside class="item-container" hidden>
       <h3>AI要約</h3>
       <p class="text-secondary">
         この記事は2024年のAI技術トレンドと実装課題について解説しています。主要なポイントは：
@@ -99,6 +99,23 @@ import Layout from "~/layouts/Layout.astro";
     padding: var(--spacing-md);
   }
 
+  figure {
+    margin-bottom: var(--spacing-md);
+  }
+
+  aside {
+    margin-top: var(--spacing-lg);
+
+    h3 {
+      margin-bottom: var(--spacing-sm);
+    }
+
+    p,
+    ul {
+      color: var(--text-secondaryt);
+    }
+  }
+
   header {
     margin-bottom: var(--spacing-lg);
   }
@@ -114,10 +131,6 @@ import Layout from "~/layouts/Layout.astro";
   .article-content ul {
     margin-bottom: var(--spacing-md);
     padding-left: var(--spacing-lg);
-  }
-
-  aside h3 {
-    margin-bottom: var(--spacing-sm);
   }
 
   @media (max-width: 768px) {
