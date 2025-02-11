@@ -18,6 +18,10 @@
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "@happy-dom/global-registrator": "^17.0.3",
-    "bun-types": "^1.2.2"
+    "bun-types": "^1.2.2",
+    "stylelint": "^16.14.1",
+    "stylelint-config-html": "^1.1.0",
+    "stylelint-config-recommended": "^15.0.0",
+    "stylelint-value-no-unknown-custom-properties": "^6.0.1"
   }
 }
