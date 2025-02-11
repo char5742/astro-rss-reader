@@ -22,25 +22,25 @@ const { title, description } = Astro.props;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: var(--space-lg);
+    gap: var(--spacing-lg);
   }
 
   .setting-info h3 {
-    font-size: 1rem;
-    margin-bottom: var(--space-xs);
-    color: var(--color-text);
+    font-size: var(--font-size-md);
+    margin-bottom: var(--spacing-sm);
+    color: var(--text-primary);
   }
 
   .setting-info p {
-    font-size: 0.875rem;
-    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
   }
 
   @media (max-width: 768px) {
     .setting-item {
       flex-direction: column;
       align-items: stretch;
-      gap: var(--space-sm);
+      gap: var(--spacing-sm);
     }
   }
 </style>

@@ -1,7 +1,57 @@
 .card {
-  padding: 2rem 1rem;
-  box-sizing: border-box;
-  border-radius: var(--border-radius-md);
-  box-shadow: var(--shadow-md);
+  background: var(--background);
+  border: 1px solid var(--neutral);
+  border-radius: 8px;
+  padding: var(--spacing-md);
   container-type: inline-size;
+}
+
+/* カードヘッダー */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+}
+
+/* カードコンテンツ */
+.card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm);
+}
+
+/* カードグリッド */
+.card-grid {
+  display: grid;
+  gap: var(--spacing-md);
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+@media (max-width: 768px) {
+  .card-grid {
+    gap: var(--spacing-sm);
+  }
+}
+
+/* カードアクション */
+.card-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+/* カードメタ情報 */
+.card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* カードフッター */
+.card-footer {
+  margin-bottom: var(--spacing-md);
 }

@@ -4,39 +4,39 @@ import Layout from "~/layouts/Layout.astro";
 ---
 
 <Layout title="記事詳細">
-  <article class="article-detail">
-    <header class="article-header">
-      <div class="meta">
-        <a href="/feeds/technews" class="source">Tech News</a>
+  <article class="container-sm">
+    <header class="page-header">
+      <div class="meta-info">
+        <a href="/feeds/technews" class="text-primary">Tech News</a>
         <time datetime="2024-02-20">2024年2月20日</time>
       </div>
       <h1>AI技術の最新動向：2024年の展望と課題</h1>
-      <div class="article-actions">
-        <button class="action-btn">
+      <nav class="action-group">
+        <button class="btn">
           <span class="icon">🔖</span>
           ブックマーク
         </button>
-        <button class="action-btn">
+        <button class="btn">
           <span class="icon">🤖</span>
           AI要約
         </button>
-        <button class="action-btn">
+        <button class="btn">
           <span class="icon">🔊</span>
           読み上げ
         </button>
-        <button class="action-btn">
+        <button class="btn">
           <span class="icon">📤</span>
           シェア
         </button>
-      </div>
+      </nav>
     </header>
 
-    <div class="article-content">
-      <div class="thumbnail">
+    <div class="content-body">
+      <figure class="mb-xl">
         <img src="https://placehold.co/800x400" alt="AI技術のイメージ" />
-      </div>
+      </figure>
 
-      <div class="content-body">
+      <div class="article-content">
         <p>
           人工知能技術は2024年も急速な進化を続けています。本記事では、主要な技術トレンドと、企業が直面している実装上の課題について詳しく解説します。
         </p>
@@ -60,15 +60,15 @@ import Layout from "~/layouts/Layout.astro";
         </ul>
       </div>
 
-      <footer class="article-footer">
-        <div class="tags">
+      <footer class="card mt-xl">
+        <div class="tag-list">
           <span class="tag">AI</span>
           <span class="tag">Technology</span>
           <span class="tag">Machine Learning</span>
         </div>
         <a
           href="https://example.com/original"
-          class="original-link"
+          class="text-primary"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -77,12 +77,12 @@ import Layout from "~/layouts/Layout.astro";
       </footer>
     </div>
 
-    <aside class="ai-summary" hidden>
+    <aside class="card mt-xl" hidden>
       <h3>AI要約</h3>
-      <p>
+      <p class="text-secondary">
         この記事は2024年のAI技術トレンドと実装課題について解説しています。主要なポイントは：
       </p>
-      <ul>
+      <ul class="text-secondary">
         <li>大規模言語モデルの進化による自然な対話の実現</li>
         <li>マルチモーダルAIの発展と応用範囲の拡大</li>
         <li>実装時の課題としてリソース最適化とプライバシー保護が重要</li>
@@ -92,166 +92,56 @@ import Layout from "~/layouts/Layout.astro";
 </Layout>
 
 <style>
-  .article-detail {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: var(--space-md);
-  }
-
-  .article-header {
-    margin-bottom: var(--space-xl);
-  }
-
-  .meta {
-    display: flex;
-    gap: var(--space-md);
-    margin-bottom: var(--space-md);
-    color: var(--color-text-secondary);
-    font-size: 0.875rem;
-  }
-
-  .source {
-    color: var(--color-primary);
-    text-decoration: none;
-  }
-
-  .article-header h1 {
-    font-size: 2rem;
+  h1 {
+    font-size: var(--font-size-4xl);
     line-height: 1.3;
-    margin-bottom: var(--space-lg);
+    margin-bottom: var(--spacing-lg);
   }
 
-  .article-actions {
-    display: flex;
-    gap: var(--space-md);
-    flex-wrap: wrap;
+  h2 {
+    font-size: var(--font-size-2xl);
+    margin: var(--spacing-lg) 0 var(--spacing-md);
   }
 
-  .action-btn {
-    display: flex;
-    align-items: center;
-    gap: var(--space-xs);
-    padding: var(--space-sm) var(--space-md);
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 6px;
-    color: var(--color-text);
-    font-size: 0.875rem;
-    transition: background-color 0.2s;
+  h3 {
+    margin-bottom: var(--spacing-md);
   }
 
-  .action-btn:hover {
-    background: var(--color-border);
+  p {
+    margin-bottom: var(--spacing-md);
+    line-height: 1.8;
   }
 
-  .thumbnail {
-    margin-bottom: var(--space-xl);
-    border-radius: 8px;
+  ul {
+    margin-bottom: var(--spacing-md);
+    padding-left: var(--spacing-lg);
+  }
+
+  li {
+    margin-bottom: var(--spacing-sm);
+  }
+
+  figure {
+    border-radius: var(--border-radius-sm);
     overflow: hidden;
   }
 
-  .thumbnail img {
+  figure img {
     width: 100%;
     height: auto;
     display: block;
   }
 
-  .content-body {
-    font-size: 1.1rem;
-    line-height: 1.8;
-    color: var(--color-text);
-  }
-
-  .content-body h2 {
-    font-size: 1.5rem;
-    margin: var(--space-xl) 0 var(--space-md);
-  }
-
-  .content-body p {
-    margin-bottom: var(--space-md);
-  }
-
-  .content-body ul {
-    margin-bottom: var(--space-md);
-    padding-left: var(--space-xl);
-  }
-
-  .content-body li {
-    margin-bottom: var(--space-xs);
-  }
-
-  .article-footer {
-    margin-top: var(--space-xl);
-    padding-top: var(--space-lg);
-    border-top: 1px solid var(--color-border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: var(--space-md);
-  }
-
-  .tags {
-    display: flex;
-    gap: var(--space-xs);
-    flex-wrap: wrap;
-  }
-
-  .tag {
-    padding: 2px 8px;
-    background: var(--color-border);
-    border-radius: 4px;
-    font-size: 0.75rem;
-    color: var(--color-text);
-  }
-
-  .original-link {
-    color: var(--color-primary);
-    text-decoration: none;
-    font-size: 0.875rem;
-  }
-
-  .original-link:hover {
-    text-decoration: underline;
-  }
-
-  .ai-summary {
-    margin-top: var(--space-xl);
-    padding: var(--space-lg);
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-  }
-
-  .ai-summary h3 {
-    margin-bottom: var(--space-md);
-    color: var(--color-text);
-  }
-
-  .ai-summary p {
-    margin-bottom: var(--space-sm);
-    color: var(--color-text-secondary);
-  }
-
-  .ai-summary ul {
-    padding-left: var(--space-xl);
-  }
-
-  .ai-summary li {
-    color: var(--color-text-secondary);
-    margin-bottom: var(--space-xs);
-  }
-
   @media (max-width: 768px) {
-    .article-header h1 {
-      font-size: 1.5rem;
+    h1 {
+      font-size: var(--font-size-2xl);
     }
 
-    .article-actions {
-      gap: var(--space-sm);
+    nav.action-group {
+      gap: var(--spacing-sm);
     }
 
-    .action-btn {
+    .action-group .btn {
       flex: 1;
       justify-content: center;
     }

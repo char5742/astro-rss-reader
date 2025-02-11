@@ -7,18 +7,18 @@ import Layout from "~/layouts/Layout.astro";
 ---
 
 <Layout title="設定">
-  <div class="settings-page">
+  <div class="container-sm">
     <header class="page-header">
       <h1>設定</h1>
     </header>
 
-    <div class="settings-grid">
+    <div class="item-list">
       <SettingSection title="アピアランス">
         <SettingItem
           title="カラーテーマ"
           description="アプリのカラーテーマを選択"
         >
-          <select class="setting-control">
+          <select class="form-control">
             <option value="system">システム設定に従う</option>
             <option value="light">ライトモード</option>
             <option value="dark">ダークモード</option>
@@ -29,7 +29,7 @@ import Layout from "~/layouts/Layout.astro";
           title="フォントサイズ"
           description="記事の表示サイズを調整"
         >
-          <select class="setting-control">
+          <select class="form-control">
             <option value="small">小</option>
             <option value="medium">中</option>
             <option value="large">大</option>
@@ -69,7 +69,7 @@ import Layout from "~/layouts/Layout.astro";
           <button class="btn secondary">エクスポート</button>
         </SettingItem>
 
-        <div class="danger-zone">
+        <div class="card danger">
           <SettingItem
             title="アカウント削除"
             description="すべてのデータが削除されます"
@@ -83,59 +83,9 @@ import Layout from "~/layouts/Layout.astro";
 </Layout>
 
 <style>
-  .settings-page {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: var(--space-md);
-  }
-
-  .page-header {
-    margin-bottom: var(--space-xl);
-  }
-
-  .settings-grid {
-    display: grid;
-    gap: var(--space-xl);
-  }
-
-  .danger-zone {
-    padding-top: var(--space-md);
-    border-top: 1px solid var(--color-border);
-  }
-
-  .setting-control {
-    min-width: 150px;
-    padding: var(--space-sm) var(--space-md);
-    border: 1px solid var(--color-border);
-    border-radius: 6px;
-    background: var(--color-background);
-    color: var(--color-text);
-    font-size: 0.875rem;
-  }
-
-  /* Buttons */
-  .btn {
-    padding: var(--space-sm) var(--space-md);
-    border-radius: 6px;
-    font-size: 0.875rem;
-    font-weight: 500;
-  }
-
-  .btn.secondary {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    color: var(--color-text);
-  }
-
-  .btn.danger {
-    background: #ef4444;
-    border: none;
-    color: white;
-  }
-
-  @media (max-width: 768px) {
-    .setting-control {
-      width: 100%;
-    }
+  .card.danger {
+    border-top: 1px solid var(--neutral);
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-md);
   }
 </style>

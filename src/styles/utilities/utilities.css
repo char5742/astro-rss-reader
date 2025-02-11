@@ -2,3 +2,119 @@
   4) ユーティリティレイヤ (@layer utilities):
      便利クラス、mixin的なもの、アニメ定義、scroll-driven animなど
 ───────────────────────────────────────────────────────────*/
+
+/* コンテナ幅制御 */
+.container {
+  max-width: var(--grid-max-width);
+  margin: 0 auto;
+  padding: var(--spacing-md);
+}
+
+.container-sm {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: var(--spacing-md);
+}
+
+/* フレックスユーティリティ */
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.gap-sm {
+  gap: var(--spacing-sm);
+}
+
+.gap-md {
+  gap: var(--spacing-md);
+}
+
+/* マージン */
+.mb-sm {
+  margin-bottom: var(--spacing-sm);
+}
+
+.mb-md {
+  margin-bottom: var(--spacing-md);
+}
+
+.mb-lg {
+  margin-bottom: var(--spacing-lg);
+}
+
+.mb-xl {
+  margin-bottom: var(--spacing-lg);
+}
+
+/* マージントップ */
+.mt-sm {
+  margin-top: var(--spacing-sm);
+}
+
+.mt-md {
+  margin-top: var(--spacing-md);
+}
+
+.mt-lg {
+  margin-top: var(--spacing-lg);
+}
+
+.mt-xl {
+  margin-top: var(--spacing-lg);
+}
+
+/* マージンレフト */
+.ml-sm {
+  margin-left: var(--spacing-sm);
+}
+
+.ml-md {
+  margin-left: var(--spacing-md);
+}
+
+.ml-lg {
+  margin-left: var(--spacing-lg);
+}
+
+.ml-xl {
+  margin-left: var(--spacing-lg);
+}
+
+/* テキスト */
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.text-sm {
+  font-size: 0.875rem;
+}
+
+/* 状態 */
+.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+/* レスポンシブ */
+@media (max-width: 768px) {
+  .md\:flex-col {
+    flex-direction: column;
+  }
+  
+  .md\:w-full {
+    width: 100%;
+  }
+}

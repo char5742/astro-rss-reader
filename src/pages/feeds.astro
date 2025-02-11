@@ -3,23 +3,27 @@ import Layout from "~/layouts/Layout.astro";
 ---
 
 <Layout title="フィード管理">
-  <div class="feed-management">
-    <header class="page-header">
+  <!-- Wrap all content in a standard container -->
+  <div class="container">
+    <header class="page-header flex justify-between items-center mb-lg">
       <h1>フィード管理</h1>
-      <div class="header-actions">
+      <div class="header-actions flex gap-sm">
         <button class="btn primary">新規フィード追加</button>
         <button class="btn secondary">OPMLインポート</button>
         <button class="btn secondary">OPMLエクスポート</button>
       </div>
     </header>
 
-    <section class="category-section">
+    <section class="category-section mb-lg">
       <h2>カテゴリー管理</h2>
-      <div class="category-list">
-        <article class="category-card">
-          <h3>テクノロジー</h3>
+      <div
+        class="category-list grid"
+        style="grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: var(--spacing-md);"
+      >
+        <article class="category-card card" style="padding: var(--spacing-md);">
+          <h3 style="margin-bottom: var(--spacing-sm);">テクノロジー</h3>
           <span class="feed-count">5フィード</span>
-          <div class="category-actions">
+          <div class="category-actions flex justify-end gap-sm mt-sm">
             <button class="btn text">編集</button>
             <button class="btn text">削除</button>
           </div>
@@ -28,20 +32,31 @@ import Layout from "~/layouts/Layout.astro";
       </div>
     </section>
 
-    <section class="feeds-section">
+    <section class="feeds-section mb-lg">
       <h2>フィード一覧</h2>
-      <div class="feed-list">
-        <article class="feed-item">
+      <div class="feed-list grid" style="gap: var(--spacing-md);">
+        <article
+          class="feed-item grid"
+          style="grid-template-columns: 1fr auto auto; align-items: center; gap: var(--spacing-md);"
+        >
           <div class="feed-info">
             <h3>TechCrunch</h3>
-            <p class="feed-url">https://techcrunch.com/feed</p>
-            <span class="category-tag">テクノロジー</span>
+            <p class="feed-url" style="margin: var(--spacing-sm) 0;">
+              https://techcrunch.com/feed
+            </p>
+            <span
+              class="category-tag"
+              style="padding: 2px 8px; border-radius: 4px;">テクノロジー</span
+            >
           </div>
-          <div class="feed-stats">
+          <div
+            class="feed-stats flex flex-col items-end gap-sm"
+            style="font-size: 0.875rem; color: var(--text-secondary);"
+          >
             <span>200記事</span>
             <span>最終更新: 10分前</span>
           </div>
-          <div class="feed-actions">
+          <div class="feed-actions flex gap-sm">
             <button class="btn secondary">編集</button>
             <button class="btn danger">削除</button>
           </div>
@@ -71,21 +86,22 @@ import Layout from "~/layouts/Layout.astro";
   }
 
   .btn {
-    padding: var(--space-sm) var(--space-md);
+    padding: var(--spacing-sm) var(--spacing-md);
     border-radius: 6px;
     font-weight: 500;
-    transition: background-color 0.2s;
+    transition: background-color var(--duration-fast);
   }
 
   .btn.primary {
-    background-color: var(--color-primary);
-    color: white;
+    background-color: var(--primary);
+    color: var(--on-primary);
+    border-color: var(--primary);
   }
 
   .btn.secondary {
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-border);
-    color: var(--color-text);
+    background: var(--background);
+    border: 1px solid var(--neutral);
+    color: var(--text-primary);
   }
 
   .btn.danger {
@@ -94,7 +110,9 @@ import Layout from "~/layouts/Layout.astro";
   }
 
   .btn.text {
-    color: var(--color-text);
+    background: transparent;
+    color: var(--text-primary);
+    border: none;
   }
 
   .category-section,
@@ -105,18 +123,18 @@ import Layout from "~/layouts/Layout.astro";
   .category-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: var(--space-md);
+    gap: var(--spacing-md);
   }
 
   .category-card {
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: 8px;
-    padding: var(--space-md);
+    padding: var(--spacing-md);
   }
 
   .category-card h3 {
-    margin-bottom: var(--space-xs);
+    margin-bottom: var(--spacing-sm);
   }
 
   .feed-count {
@@ -133,14 +151,14 @@ import Layout from "~/layouts/Layout.astro";
 
   .feed-list {
     display: grid;
-    gap: var(--space-md);
+    gap: var(--spacing-md);
   }
 
   .feed-item {
     display: grid;
     grid-template-columns: 1fr auto auto;
     align-items: center;
-    gap: var(--space-md);
+    gap: var(--spacing-md);
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: 8px;
@@ -150,7 +168,7 @@ import Layout from "~/layouts/Layout.astro";
   .feed-url {
     color: var(--color-text-secondary);
     font-size: 0.875rem;
-    margin: var(--space-xs) 0;
+    margin: var(--spacing-sm) 0;
   }
 
   .category-tag {
@@ -165,21 +183,21 @@ import Layout from "~/layouts/Layout.astro";
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: var(--space-xs);
+    gap: var(--spacing-sm);
     color: var(--color-text-secondary);
     font-size: 0.875rem;
   }
 
   .feed-actions {
     display: flex;
-    gap: var(--space-sm);
+    gap: var(--spacing-sm);
   }
 
   @media (max-width: 768px) {
     .page-header {
       flex-direction: column;
       align-items: stretch;
-      gap: var(--space-md);
+      gap: var(--spacing-md);
     }
 
     .header-actions {

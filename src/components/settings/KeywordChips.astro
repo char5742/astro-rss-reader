@@ -24,36 +24,36 @@ const { keywords = [] } = Astro.props;
   .keyword-chips {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-xs);
-    padding-top: var(--space-sm);
+    gap: var(--spacing-sm);
+    padding-top: var(--spacing-sm);
   }
 
   .keyword-chip {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-xs);
-    padding: var(--space-xs) var(--space-sm);
-    background: var(--color-border);
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--neutral);
     border-radius: 16px;
-    font-size: 0.875rem;
+    font-size: var(--font-size-sm);
   }
 
   .remove-keyword {
     border: none;
     background: none;
-    color: var(--color-text-secondary);
-    font-size: 1rem;
+    color: var(--text-secondary);
+    font-size: var(--font-size-md);
     padding: 0;
     cursor: pointer;
   }
 
   .add-keyword {
-    padding: var(--space-xs) var(--space-sm);
-    border: 1px dashed var(--color-border);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 1px dashed var(--neutral);
     border-radius: 16px;
     background: none;
-    color: var(--color-primary);
-    font-size: 0.875rem;
+    color: var(--primary);
+    font-size: var(--font-size-sm);
     cursor: pointer;
   }
 </style>
