@@ -94,25 +94,33 @@ const { title } = Astro.props;
     .app-layout {
       grid-template-columns: 1fr;
     }
-
     .sidebar {
       position: fixed;
       bottom: 0;
       left: 0;
-      right: 0;
+      width: 100vw;
       z-index: 10;
-      border-right: none;
-      border-top: 1px solid var(--neutral);
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    .main-nav ul {
-      display: flex;
-      justify-content: space-around;
-    }
+    .main-nav {
+      ul {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        width: 100%;
+        margin: 0;
+        padding: var(--spacing-sm) 0;
+        overflow-x: auto;
+      }
 
-    .main-nav a {
-      padding: var(--spacing-sm);
-      text-align: center;
+      a {
+        padding: var(--spacing-sm);
+        font-size: 0.9rem;
+        white-space: nowrap;
+        width: 100%;
+      }
     }
   }
 </style>
