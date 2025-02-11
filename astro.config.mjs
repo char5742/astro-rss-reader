@@ -6,6 +6,9 @@ import db from "@astrojs/db";
 // https://astro.build/config
 export default defineConfig({
   integrations: [db()],
+  experimental: {
+    serializeConfig: true
+  },
   vite: {
     css: {
       transformer: "lightningcss",
