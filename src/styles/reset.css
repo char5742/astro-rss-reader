@@ -121,8 +121,7 @@ button:focus,
 input:focus,
 textarea:focus,
 select:focus {
-  outline: 2px solid currentColor;
-  outline-offset: 2px;
+  all: unset;
 }
 
 /* Disable resizing for textareas if not specified */
