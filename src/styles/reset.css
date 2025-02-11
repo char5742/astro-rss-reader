@@ -1,3 +1,5 @@
+/* stylelint-disable no-descending-specificity */
+/* stylelint-disable no-duplicate-selectors */
 /* Box sizing rules */
 *,
 *::before,
@@ -80,4 +82,57 @@ textarea:not([rows]) {
 /* Anything that has been anchored to should have extra scroll margin */
 :target {
   scroll-margin-block: 5ex;
+}
+
+/* Remove default button styles */
+button {
+  all: unset;
+  display: inline-block;
+  cursor: pointer;
+}
+
+/* Remove default input, textarea, select styles */
+input,
+textarea,
+select {
+  all: unset;
+  width: 100%;
+  display: block;
+}
+
+/* Ensure text areas have a reasonable min-height */
+textarea:not([rows]) {
+  min-height: 10em;
+}
+
+/* Set consistent appearance for buttons and inputs */
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+}
+
+/* Ensure focus visibility */
+button:focus,
+input:focus,
+textarea:focus,
+select:focus {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* Disable resizing for textareas if not specified */
+textarea {
+  resize: vertical;
+}
+
+/* Ensure select elements are styled consistently */
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }

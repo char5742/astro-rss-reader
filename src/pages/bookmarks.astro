@@ -3,40 +3,41 @@ import Layout from "~/layouts/Layout.astro";
 ---
 
 <Layout title="ブックマーク">
-  <div class="bookmarks">
-    <header>
+  <div class="container">
+    <header class="container-header">
       <h1>ブックマーク</h1>
-      <div class="filters">
-        <select>
+      <div class="container-actions">
+        <select class="form-control">
           <option value="all">すべてのタグ</option>
           <option value="ai">AI</option>
           <option value="tech">テクノロジー</option>
           <option value="dev">開発</option>
         </select>
         <nav class="view-mode">
-          <button class="active" aria-label="リスト表示">
+          <button class="icon-btn active" aria-label="リスト表示">
             <span>📝</span>
           </button>
-          <button aria-label="グリッド表示">
+          <button class="icon-btn" aria-label="グリッド表示">
             <span>📰</span>
           </button>
         </nav>
       </div>
     </header>
 
-    <nav class="tags">
-      <ul>
-        <li><button class="active">すべて <span>24</span></button></li>
-        <li><button>AI <span>8</span></button></li>
-        <li><button>テクノロジー <span>12</span></button></li>
-        <li><button>開発 <span>4</span></button></li>
-      </ul>
+    <nav class="tag-list">
+      <button class="tag active"
+        >すべて <span class="tag-count">24</span></button
+      >
+      <button class="tag">AI <span class="tag-count">8</span></button>
+      <button class="tag">テクノロジー <span class="tag-count">12</span></button
+      >
+      <button class="tag">開発 <span class="tag-count">4</span></button>
     </nav>
 
-    <main class="articles">
-      <article>
-        <header>
-          <div class="source">
+    <div class="container-list">
+      <article class="item-container">
+        <header class="item-header">
+          <div class="article-source">
             <img
               src="https://placehold.co/20x20"
               alt="Tech News"
@@ -47,170 +48,42 @@ import Layout from "~/layouts/Layout.astro";
           </div>
           <time datetime="2024-02-20">2024.02.20</time>
         </header>
-        <div class="content">
+        <div class="item-content">
           <h2>
-            <a href="/articles/1">AI技術の最新動向：2024年の展望と課題</a>
+            <a href="/articles/1" class="item-title"
+              >AI技術の最新動向：2024年の展望と課題</a
+            >
           </h2>
-          <p>
+          <p class="item-description">
             人工知能技術は2024年も急速な進化を続けています。本記事では、主要な技術トレンドと企業が直面している実装上の課題について詳しく解説します...
           </p>
         </div>
-        <footer>
-          <div class="article-tags">
-            <span>AI</span>
-            <span>Technology</span>
+        <footer class="item-footer">
+          <div class="tag-list">
+            <span class="tag">AI</span>
+            <span class="tag">Technology</span>
           </div>
-          <div class="actions">
-            <button aria-label="ブックマークを解除">
+          <div class="container-actions">
+            <button class="icon-btn" aria-label="ブックマークを解除">
               <span>🔖</span>
             </button>
-            <button aria-label="シェア">
+            <button class="icon-btn" aria-label="シェア">
               <span>📤</span>
             </button>
           </div>
         </footer>
       </article>
-    </main>
+    </div>
   </div>
 </Layout>
 
 <style>
-  .bookmarks {
-    max-width: var(--grid-max-width);
-    margin: 0 auto;
-    padding: var(--spacing-md);
-  }
-
-  .bookmarks > header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--spacing-lg);
-  }
-
-  .filters {
-    display: flex;
-    gap: var(--spacing-md);
-  }
-
   .view-mode {
     display: flex;
     gap: var(--spacing-sm);
   }
 
-  .view-mode button.active {
-    background: var(--primary);
-    color: var(--on-primary);
-  }
-
-  .tags {
-    margin-bottom: var(--spacing-xl);
-  }
-
-  .tags ul {
-    display: flex;
-    gap: var(--spacing-sm);
-    list-style: none;
-    padding: 0;
-  }
-
-  .tags button.active {
-    background: var(--primary);
-    color: var(--on-primary);
-  }
-
-  .tags button span {
-    font-size: var(--font-size-sm);
-    margin-left: 0.5em;
-  }
-
-  .articles {
-    display: grid;
-    gap: var(--spacing-md);
-  }
-
-  article {
-    background: var(--background);
-    border: 1px solid var(--neutral);
-    border-radius: 8px;
-    padding: var(--spacing-md);
-  }
-
-  article > header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--spacing-md);
-  }
-
-  .source {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    color: var(--text-secondary);
-  }
-
-  .source img {
-    border-radius: 4px;
-  }
-
-  time {
-    font-size: var(--font-size-sm);
-    color: var(--text-secondary);
-  }
-
-  .content h2 {
-    margin-bottom: var(--spacing-sm);
-    font-size: var(--font-size-lg);
-  }
-
-  .content h2 a {
-    color: var(--text-primary);
-    text-decoration: none;
-  }
-
-  .content h2 a:hover {
-    color: var(--primary);
-  }
-
-  .content p {
-    color: var(--text-secondary);
-    line-height: 1.6;
-    margin-bottom: var(--spacing-md);
-  }
-
-  footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .article-tags {
-    display: flex;
-    gap: var(--spacing-sm);
-  }
-
-  .article-tags span {
-    font-size: var(--font-size-sm);
-    background: var(--neutral);
-    padding: 2px 8px;
-    border-radius: 4px;
-  }
-
-  .actions {
-    display: flex;
-    gap: var(--spacing-sm);
-  }
-
-  @media (max-width: 768px) {
-    .bookmarks > header {
-      flex-direction: column;
-      align-items: stretch;
-    }
-
-    .filters {
-      flex-direction: column;
-      gap: var(--spacing-md);
-    }
+  .tag-list {
+    margin-bottom: var(--spacing-lg);
   }
 </style>

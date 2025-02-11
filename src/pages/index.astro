@@ -3,28 +3,32 @@ import Layout from "~/layouts/Layout.astro";
 ---
 
 <Layout title="ホーム">
-  <div class="dashboard">
-    <header>
+  <div class="container">
+    <header class="container-header">
       <h1>ダッシュボード</h1>
     </header>
 
     <section class="feed-overview">
       <h2>フィード一覧</h2>
-      <div class="feed-grid">
-        <article>
-          <h3>Tech News</h3>
-          <p class="unread">12 件の未読</p>
-          <div class="stats">
-            <span>総記事数: 156</span>
-            <span>更新: 10分前</span>
+      <div class="container-grid">
+        <article class="item-container">
+          <div class="item-content">
+            <h3 class="item-title">Tech News</h3>
+            <p class="unread">12 件の未読</p>
+            <div class="container-meta">
+              <span>総記事数: 156</span>
+              <span>更新: 10分前</span>
+            </div>
           </div>
         </article>
-        <article>
-          <h3>Design Weekly</h3>
-          <p class="unread">5 件の未読</p>
-          <div class="stats">
-            <span>総記事数: 89</span>
-            <span>更新: 2時間前</span>
+        <article class="item-container">
+          <div class="item-content">
+            <h3 class="item-title">Design Weekly</h3>
+            <p class="unread">5 件の未読</p>
+            <div class="container-meta">
+              <span>総記事数: 89</span>
+              <span>更新: 2時間前</span>
+            </div>
           </div>
         </article>
       </div>
@@ -32,16 +36,22 @@ import Layout from "~/layouts/Layout.astro";
 
     <section class="latest-articles">
       <h2>最新記事</h2>
-      <div class="article-list">
-        <article>
-          <header>
-            <h3>記事タイトル</h3>
+      <div class="container-list">
+        <article class="item-container">
+          <header class="item-header">
+            <h3 class="item-title">記事タイトル</h3>
             <time datetime="2024-02-20">2024.02.20</time>
           </header>
-          <p>記事の要約テキストがここに表示されます...</p>
-          <footer>
-            <span class="source">Tech News</span>
-            <button class="bookmark">ブックマーク</button>
+          <div class="item-content">
+            <p class="item-description">
+              記事の要約テキストがここに表示されます...
+            </p>
+          </div>
+          <footer class="item-footer">
+            <span class="article-source">Tech News</span>
+            <button class="icon-btn" aria-label="ブックマーク">
+              <span>🔖</span>
+            </button>
           </footer>
         </article>
       </div>

@@ -3,191 +3,88 @@ import Layout from "~/layouts/Layout.astro";
 ---
 
 <Layout title="記事一覧">
-  <div class="articles">
-    <header>
+  <div class="container">
+    <header class="container-header">
       <div class="header-content">
         <h1>記事一覧</h1>
-        <span class="source">Tech News</span>
+        <span class="article-source">Tech News</span>
       </div>
 
-      <div class="controls">
+      <div class="container-actions">
         <nav class="filter">
-          <button class="active">すべて</button>
-          <button>未読</button>
-          <button>既読</button>
+          <button class="btn secondary active">すべて</button>
+          <button class="btn secondary">未読</button>
+          <button class="btn secondary">既読</button>
         </nav>
-        <select>
+        <select class="form-control">
           <option value="newest">新着順</option>
           <option value="oldest">古い順</option>
           <option value="popular">人気順</option>
         </select>
-        <nav class="view">
-          <button class="active" aria-label="リスト表示">
+        <nav class="view-mode">
+          <button class="icon-btn active" aria-label="リスト表示">
             <span>📝</span>
           </button>
-          <button aria-label="グリッド表示">
+          <button class="icon-btn" aria-label="グリッド表示">
             <span>📰</span>
           </button>
         </nav>
       </div>
     </header>
 
-    <main class="article-list">
-      <article>
-        <div class="meta">
+    <div class="container-list">
+      <article class="item-container">
+        <div class="item-header">
           <time datetime="2024-02-20">2024.02.20</time>
-          <span class="status">未読</span>
+          <span class="article-status unread">未読</span>
         </div>
-        <h2>
-          <a href="/articles/1">AI技術の最新動向：2024年の展望と課題</a>
-        </h2>
-        <p>
-          人工知能技術は2024年も急速な進化を続けています。本記事では、主要な技術トレンドと、
-          企業が直面している実装上の課題について詳しく解説します...
-        </p>
-        <footer>
-          <div class="tags">
-            <span>AI</span>
-            <span>Technology</span>
+        <div class="item-content">
+          <h2>
+            <a href="/articles/1" class="item-title"
+              >AI技術の最新動向：2024年の展望と課題</a
+            >
+          </h2>
+          <p class="item-description">
+            人工知能技術は2024年も急速な進化を続けています。本記事では、主要な技術トレンドと、
+            企業が直面している実装上の課題について詳しく解説します...
+          </p>
+        </div>
+        <footer class="item-footer">
+          <div class="tag-list">
+            <span class="tag">AI</span>
+            <span class="tag">Technology</span>
           </div>
-          <div class="actions">
-            <button aria-label="ブックマーク">
+          <div class="container-actions">
+            <button class="icon-btn" aria-label="ブックマーク">
               <span>🔖</span>
             </button>
-            <button aria-label="シェア">
+            <button class="icon-btn" aria-label="シェア">
               <span>📤</span>
             </button>
           </div>
         </footer>
       </article>
-    </main>
+    </div>
 
-    <footer>
-      <button>さらに読み込む</button>
+    <footer class="container-footer">
+      <button class="btn secondary">さらに読み込む</button>
     </footer>
   </div>
 </Layout>
 
 <style>
-  .articles {
-    max-width: var(--grid-max-width);
-    margin: 0 auto;
-    padding: var(--spacing-md);
-  }
-
-  .header-content {
-    margin-bottom: var(--spacing-lg);
-
-    h1 {
-      margin-bottom: var(--spacing-sm);
-    }
-
-    .source {
-      color: var(--text-secondary);
-    }
-  }
-
-  .controls {
+  .filter {
     display: flex;
-    gap: var(--spacing-md);
-    align-items: center;
-    margin-bottom: var(--spacing-lg);
-
-    .filter {
-      display: flex;
-      gap: var(--spacing-sm);
-    }
-
-    .view {
-      display: flex;
-      gap: var(--spacing-sm);
-    }
-
-    select {
-      padding: var(--spacing-sm) var(--spacing-md);
-      border: 1px solid var(--neutral);
-      border-radius: 6px;
-      background: var(--background);
-    }
+    gap: var(--spacing-sm);
   }
 
-  .article-list {
-    display: grid;
-    gap: var(--spacing-md);
-
-    article {
-      background: var(--background);
-      border: 1px solid var(--neutral);
-      border-radius: 8px;
-      padding: var(--spacing-md);
-
-      .meta {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: var(--spacing-sm);
-
-        time {
-          color: var (--text-secondary);
-        }
-
-        .status {
-          color: var(--primary);
-        }
-      }
-
-      h2 {
-        margin-bottom: var(--spacing-md);
-        font-size: var(--font-size-lg);
-
-        a {
-          color: var(--text-primary);
-          text-decoration: none;
-
-          &:hover {
-            color: var(--primary);
-          }
-        }
-      }
-
-      p {
-        color: var(--text-secondary);
-        margin-bottom: var(--spacing-md);
-        line-height: 1.6;
-      }
-
-      footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-
-        .tags {
-          display: flex;
-          gap: var(--spacing-sm);
-
-          span {
-            padding: 2px 8px;
-            background: var(--neutral);
-            border-radius: 4px;
-            font-size: var(--font-size-sm);
-          }
-        }
-
-        .actions {
-          display: flex;
-          gap: var(--spacing-sm);
-        }
-      }
-    }
-  }
-
-  footer {
+  .view-mode {
     display: flex;
-    justify-content: center;
-    margin-top: var(--spacing-xl);
+    gap: var(--spacing-sm);
   }
 
   @media (max-width: 768px) {
-    .controls {
+    .container-actions {
       flex-direction: column;
       align-items: stretch;
     }
