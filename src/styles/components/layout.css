@@ -2,6 +2,18 @@
 /* ページヘッダー */
 .page-header {
   margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-md);
+  position: relative;
+}
+
+.page-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 3rem;
+  height: 2px;
+  background: var(--primary);
 }
 
 /* メタ情報 */
@@ -16,6 +28,7 @@
 .item-grid {
   display: grid;
   gap: var(--spacing-md);
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
 }
 
 /* アイテムリスト */
@@ -26,9 +39,36 @@
 }
 
 /* カード基本スタイル */
-.content-card {
+.content-wrapper {
   background: var(--background);
-  border: 1px solid var(--neutral);
-  border-radius: 8px;
+  border-radius: var(--border-radius-sm);
+  box-shadow: var(--shadow-sm);
   padding: var(--spacing-md);
+  transition: box-shadow var(--duration-fast);
+}
+
+.content-wrapper:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* グリッドビュー */
+.grid-view {
+  display: grid;
+  gap: var(--spacing-md);
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+/* リストビュー */
+.list-view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+/* メディアクエリ（モバイル対応） */
+@media (max-width: 768px) {
+  .grid-view {
+    display: flex;
+    flex-direction: column;
+  }
 }

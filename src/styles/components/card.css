@@ -1,9 +1,14 @@
 .card {
   background: var(--background);
-  border: 1px solid var(--neutral);
-  border-radius: 8px;
+  border-radius: var(--border-radius-sm);
   padding: var(--spacing-md);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--duration-fast);
   container-type: inline-size;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
 }
 
 /* カードヘッダー */
@@ -53,5 +58,7 @@
 
 /* カードフッター */
 .card-footer {
-  margin-bottom: var(--spacing-md);
+  margin-top: var(--spacing-md);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--neutral);
 }

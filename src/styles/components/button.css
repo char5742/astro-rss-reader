@@ -1,34 +1,67 @@
 /* 基本的なボタンスタイル */
 .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
   padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: 6px;
+  border-radius: var(--border-radius-sm);
   background: var(--background);
-  border: 1px solid var(--neutral);
   color: var(--text-primary);
   font-size: var(--font-size-sm);
-  transition: background-color var(--duration-fast);
+  transition: all var(--duration-fast);
+  border: none;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: var(--neutral);
 }
 
 .btn.primary {
   background-color: var(--primary);
   color: var(--on-primary);
-  border-color: var(--primary);
+}
+
+.btn.primary:hover {
+  filter: brightness(1.1);
 }
 
 .btn.secondary {
   background-color: var(--background);
-  border: 1px solid var(--neutral);
   color: var(--text-primary);
 }
 
 .btn.danger {
   background-color: #ef4444;
   color: white;
-  border: none;
+}
+
+.btn.danger:hover {
+  filter: brightness(1.1);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* アクションボタングループ */
-.action-group {
+.btn-group {
   display: flex;
   gap: var(--spacing-sm);
+}
+
+.icon-btn {
+  padding: var(--spacing-sm);
+  border-radius: var(--border-radius-sm);
+  background: transparent;
+  color: var(--text-secondary);
+  border: none;
+  cursor: pointer;
+  transition: all var(--duration-fast);
+}
+
+.icon-btn:hover {
+  background: var(--background);
+  color: var(--text-primary);
 }

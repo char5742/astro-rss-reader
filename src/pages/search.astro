@@ -86,183 +86,29 @@ import Layout from "~/layouts/Layout.astro";
     max-width: var(--grid-max-width);
     margin: 0 auto;
     padding: var(--spacing-md);
-
-    > header {
-      margin-bottom: var(--spacing-lg);
-    }
   }
 
   .search-form {
     margin-bottom: var(--spacing-lg);
-    padding: var(--spacing-md);
-    background: var(--background);
-    border: 1px solid var(--neutral);
-    border-radius: var(--border-radius-sm);
-
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: var(--spacing-md);
-    }
-
-    .search-inputs {
-      display: flex;
-      gap: var(--spacing-sm);
-
-      input[type="search"],
-      select {
-        padding: var(--spacing-sm);
-        border: 1px solid var(--neutral);
-        border-radius: var(--border-radius-sm);
-        font-size: var(--font-size-sm);
-      }
-
-      input[type="search"] {
-        flex: 1;
-      }
-
-      button {
-        padding: var(--spacing-sm) var(--spacing-md);
-        background-color: var(--primary);
-        color: var(--on-primary);
-        border: none;
-        border-radius: var(--border-radius-sm);
-        cursor: pointer;
-      }
-    }
-
-    .search-filters {
-      display: flex;
-      gap: var(--spacing-lg);
-
-      label {
-        display: flex;
-        align-items: center;
-        gap: var(--spacing-sm);
-        font-size: var(--font-size-sm);
-      }
-    }
   }
 
-  .recent-searches {
-    margin-bottom: var(--spacing-lg);
-
-    h2 {
-      margin-bottom: var(--spacing-md);
-    }
-
-    .search-history {
-      display: flex;
-      flex-direction: column;
-      gap: var(--spacing-md);
-
-      article {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: var(--spacing-md);
-        background: var(--background);
-        border: 1px solid var(--neutral);
-        border-radius: var(--border-radius-sm);
-
-        time {
-          font-size: var(--font-size-sm);
-          color: var(--text-secondary);
-        }
-
-        button {
-          color: var(--primary);
-          background: none;
-          border: none;
-          cursor: pointer;
-        }
-      }
-    }
-  }
-
-  .search-results {
-    > header {
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-md);
-      margin-bottom: var(--spacing-lg);
-
-      span {
-        color: var(--text-secondary);
-      }
-    }
-
-    .results-list {
-      display: flex;
-      flex-direction: column;
-      gap: var(--spacing-md);
-
-      article {
-        padding: var(--spacing-md);
-        background: var(--background);
-        border: 1px solid var(--neutral);
-        border-radius: var(--border-radius-sm);
-
-        h3 {
-          margin-bottom: var(--spacing-sm);
-        }
-
-        p {
-          line-height: 1.6;
-          color: var(--text-secondary);
-          margin-bottom: var(--spacing-sm);
-        }
-
-        footer {
-          display: flex;
-          justify-content: space-between;
-          font-size: var(--font-size-sm);
-          color: var (--text-secondary);
-        }
-      }
-    }
-  }
-
-  .pagination {
+  .search-history article {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    gap: var(--spacing-md);
-    margin-top: var(--spacing-lg);
+  }
 
-    button {
-      color: var(--primary);
-      background: none;
-      border: none;
-      cursor: pointer;
-
-      &:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-      }
-    }
-
-    span {
-      color: var(--text-secondary);
-    }
+  .search-results mark {
+    background: var(--primary);
+    color: var(--on-primary);
+    border-radius: 2px;
+    padding: 0 2px;
   }
 
   @media (max-width: 768px) {
-    .search-form {
-      .search-inputs {
-        flex-direction: column;
-      }
-
-      .search-filters {
-        flex-direction: column;
-        gap: var(--spacing-sm);
-      }
-    }
-
-    .search-history article {
+    .search-form .search-inputs,
+    .search-form .search-filters {
       flex-direction: column;
-      align-items: flex-start;
-      gap: var(--spacing-sm);
     }
   }
 </style>

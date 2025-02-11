@@ -70,47 +70,44 @@ import Layout from "~/layouts/Layout.astro";
 
 <style>
   .articles {
-    max-width: 1200px;
+    max-width: var(--grid-max-width);
     margin: 0 auto;
     padding: var(--spacing-md);
+  }
 
-    > header {
-      margin-bottom: var(--spacing-lg);
+  .header-content {
+    margin-bottom: var(--spacing-lg);
 
-      .header-content {
-        margin-bottom: var(--spacing-lg);
+    h1 {
+      margin-bottom: var(--spacing-sm);
+    }
 
-        h1 {
-          margin-bottom: var(--spacing-sm);
-        }
+    .source {
+      color: var(--text-secondary);
+    }
+  }
 
-        .source {
-          color: var(--text-secondary);
-        }
-      }
+  .controls {
+    display: flex;
+    gap: var(--spacing-md);
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
 
-      .controls {
-        display: flex;
-        gap: var(--spacing-md);
-        align-items: center;
+    .filter {
+      display: flex;
+      gap: var(--spacing-sm);
+    }
 
-        .filter {
-          display: flex;
-          gap: var(--spacing-sm);
-        }
+    .view {
+      display: flex;
+      gap: var(--spacing-sm);
+    }
 
-        .view {
-          display: flex;
-          gap: var(--spacing-sm);
-        }
-
-        select {
-          padding: var(--spacing-sm) var(--spacing-md);
-          border: 1px solid var(--neutral);
-          border-radius: 6px;
-          background: var(--background);
-        }
-      }
+    select {
+      padding: var(--spacing-sm) var(--spacing-md);
+      border: 1px solid var(--neutral);
+      border-radius: 6px;
+      background: var(--background);
     }
   }
 
@@ -190,11 +187,9 @@ import Layout from "~/layouts/Layout.astro";
   }
 
   @media (max-width: 768px) {
-    .articles {
-      header .controls {
-        flex-direction: column;
-        align-items: stretch;
-      }
+    .controls {
+      flex-direction: column;
+      align-items: stretch;
     }
   }
 </style>

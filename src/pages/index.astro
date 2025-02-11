@@ -51,7 +51,7 @@ import Layout from "~/layouts/Layout.astro";
 
 <style>
   .dashboard {
-    max-width: 1200px;
+    max-width: var(--grid-max-width);
     margin: 0 auto;
     padding: var(--spacing-md);
 
@@ -161,6 +161,16 @@ import Layout from "~/layouts/Layout.astro";
         }
       }
     }
+  }
+
+  .stats {
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+  }
+
+  .unread {
+    color: var(--primary);
+    font-weight: 500;
   }
 
   @media (max-width: 768px) {

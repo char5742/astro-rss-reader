@@ -79,176 +79,25 @@ import Layout from "~/layouts/Layout.astro";
     max-width: 800px;
     margin: 0 auto;
     padding: var(--spacing-md);
-
-    header {
-      margin-bottom: var(--spacing-lg);
-
-      h1 {
-        margin-bottom: var(--spacing-md);
-      }
-
-      .actions {
-        display: flex;
-        gap: var(--spacing-sm);
-      }
-    }
-
-    section {
-      margin-bottom: var(--spacing-lg);
-
-      h2 {
-        font-size: var(--font-size-md);
-        color: var(--text-secondary);
-        margin-bottom: var(--spacing-md);
-      }
-    }
   }
 
-  .notification {
-    display: grid;
-    gap: var(--spacing-sm);
-
-    article {
-      display: flex;
-      gap: var(--spacing-md);
-      padding: var(--spacing-md);
-      background: var(--background);
-      border: 1px solid var(--neutral);
-      border-radius: var(--border-radius-sm);
-
-      &.unread {
-        background: var(--background);
-        border-left: 3px solid var(--primary);
-      }
-
-      img {
-        width: 2rem;
-        height: 2rem;
-        border-radius: var(--border-radius-sm);
-        background: var(--neutral);
-        padding: 0.5rem;
-      }
-
-      div {
-        flex: 1;
-
-        h3 {
-          font-size: var(--font-size-md);
-          margin-bottom: var(--spacing-sm);
-        }
-
-        time {
-          font-size: var(--font-size-sm);
-          color: var(--text-secondary);
-        }
-
-        p {
-          color: var(--text-secondary);
-          font-size: var(--font-size-sm);
-          margin: var(--spacing-sm) 0;
-        }
-
-        a {
-          color: var(--primary);
-          font-size: var(--font-size-sm);
-          text-decoration: none;
-
-          &:hover {
-            text-decoration: underline;
-          }
-        }
-      }
-    }
+  .notification article img {
+    width: 2rem;
+    height: 2rem;
+    padding: 0.5rem;
   }
 
-  .keywords {
-    background: var(--background);
-    border: 1px solid var(--neutral);
-    border-radius: var(--border-radius-sm);
-    padding: var(--spacing-md);
+  .notification article.unread {
+    border-left: 3px solid var(--primary);
+  }
 
-    .tags {
-      display: grid;
-      gap: var(--spacing-sm);
-      margin-bottom: var(--spacing-md);
-
-      span {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: var(--spacing-sm) var(--spacing-md);
-        background: var(--neutral);
-        border-radius: 16px;
-        font-size: var(--font-size-sm);
-      }
-
-      label {
-        position: relative;
-        display: inline-block;
-        width: 50px;
-        height: 24px;
-
-        input {
-          opacity: 0;
-          width: 0;
-          height: 0;
-        }
-
-        span {
-          position: absolute;
-          cursor: pointer;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: var(--neutral);
-          border-radius: 24px;
-          transition: var(--duration-normal);
-
-          &:before {
-            position: absolute;
-            content: "";
-            height: 20px;
-            width: 20px;
-            left: 2px;
-            bottom: 2px;
-            background: white;
-            transition: var(--duration-normal);
-            border-radius: 50%;
-          }
-        }
-
-        input:checked + span {
-          background: var(--primary);
-
-          &:before {
-            transform: translateX(26px);
-          }
-        }
-      }
-    }
-
-    a {
-      display: block;
-      text-align: center;
-      color: var(--primary);
-      font-size: var(--font-size-sm);
-      text-decoration: none;
-
-      &:hover {
-        text-decoration: underline;
-      }
-    }
+  .keywords label span {
+    background: var(--neutral);
   }
 
   @media (max-width: 768px) {
     .notification article {
       flex-direction: column;
-
-      img {
-        width: 1.5rem;
-        height: 1.5rem;
-      }
     }
   }
 </style>
