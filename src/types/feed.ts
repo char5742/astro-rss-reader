@@ -27,7 +27,7 @@ export type FeedWithCategories = Feed &
 	}>;
 
 export type Subscription = Readonly<{
-    feedId: FeedId;
-    subscribedAt: Date;
-    notificationsEnabled: boolean;
+	feedId: FeedId;
+	subscribedAt: Date;
+	notificationsEnabled: boolean;
 }>;
