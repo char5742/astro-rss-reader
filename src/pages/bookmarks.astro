@@ -1,0 +1,291 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="ブックマーク">
+	<div class="bookmarks-page">
+		<header class="page-header">
+			<h1>ブックマーク</h1>
+			<div class="view-options">
+				<div class="tag-filter">
+					<select class="filter-select">
+						<option value="all">すべてのタグ</option>
+						<option value="ai">AI</option>
+						<option value="tech">テクノロジー</option>
+						<option value="dev">開発</option>
+					</select>
+				</div>
+				<div class="view-toggle">
+					<button class="toggle-btn active" aria-label="リスト表示">
+						<span class="icon">📝</span>
+					</button>
+					<button class="toggle-btn" aria-label="グリッド表示">
+						<span class="icon">📰</span>
+					</button>
+				</div>
+			</div>
+		</header>
+
+		<nav class="tag-nav">
+			<ul class="tag-list">
+				<li>
+					<button class="tag-btn active">すべて <span class="count">24</span></button>
+				</li>
+				<li>
+					<button class="tag-btn">AI <span class="count">8</span></button>
+				</li>
+				<li>
+					<button class="tag-btn">テクノロジー <span class="count">12</span></button>
+				</li>
+				<li>
+					<button class="tag-btn">開発 <span class="count">4</span></button>
+				</li>
+			</ul>
+		</nav>
+
+		<main class="bookmarks-grid">
+			<article class="bookmark-card">
+				<div class="card-header">
+					<div class="source-info">
+						<img src="https://placehold.co/20x20" alt="Tech News" class="source-icon" />
+						<span class="source-name">Tech News</span>
+					</div>
+					<time datetime="2024-02-20">2024.02.20</time>
+				</div>
+				<div class="card-content">
+					<h2>
+						<a href="/articles/1">AI技術の最新動向：2024年の展望と課題</a>
+					</h2>
+					<p>人工知能技術は2024年も急速な進化を続けています。本記事では、主要な技術トレンドと企業が直面している実装上の課題について詳しく解説します...</p>
+				</div>
+				<footer class="card-footer">
+					<div class="tags">
+						<span class="tag">AI</span>
+						<span class="tag">Technology</span>
+					</div>
+					<div class="actions">
+						<button class="action-btn" aria-label="ブックマークを解除">
+							<span class="icon">🔖</span>
+						</button>
+						<button class="action-btn" aria-label="シェア">
+							<span class="icon">📤</span>
+						</button>
+					</div>
+				</footer>
+			</article>
+			<!-- サンプルカード -->
+		</main>
+	</div>
+</Layout>
+
+<style>
+	.bookmarks-page {
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: var(--space-md);
+	}
+
+	.page-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: var(--space-xl);
+	}
+
+	.view-options {
+		display: flex;
+		gap: var(--space-md);
+		align-items: center;
+	}
+
+	.filter-select {
+		padding: var(--space-sm) var(--space-md);
+		border: 1px solid var(--color-border);
+		border-radius: 6px;
+		background: var(--color-surface);
+		color: var(--color-text);
+		font-size: 0.875rem;
+	}
+
+	.view-toggle {
+		display: flex;
+		gap: var(--space-xs);
+	}
+
+	.toggle-btn {
+		padding: var(--space-sm);
+		border: 1px solid var(--color-border);
+		border-radius: 6px;
+		background: var(--color-surface);
+		color: var(--color-text);
+	}
+
+	.toggle-btn.active {
+		background: var(--color-primary);
+		color: white;
+		border-color: var(--color-primary);
+	}
+
+	.tag-nav {
+		margin-bottom: var(--space-xl);
+		border-bottom: 1px solid var(--color-border);
+	}
+
+	.tag-list {
+		display: flex;
+		gap: var(--space-sm);
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		overflow-x: auto;
+		padding-bottom: var(--space-sm);
+	}
+
+	.tag-btn {
+		padding: var(--space-sm) var(--space-md);
+		border: 1px solid var(--color-border);
+		border-radius: 6px;
+		background: var(--color-surface);
+		color: var(--color-text);
+		font-size: 0.875rem;
+		display: flex;
+		align-items: center;
+		gap: var(--space-sm);
+		white-space: nowrap;
+	}
+
+	.tag-btn.active {
+		background: var(--color-primary);
+		color: white;
+		border-color: var(--color-primary);
+	}
+
+	.count {
+		background: rgba(0, 0, 0, 0.1);
+		padding: 2px 6px;
+		border-radius: 4px;
+		font-size: 0.75rem;
+	}
+
+	.bookmarks-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+		gap: var(--space-md);
+	}
+
+	.bookmark-card {
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: 8px;
+		padding: var(--space-md);
+		display: flex;
+		flex-direction: column;
+	}
+
+	.card-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: var(--space-md);
+	}
+
+	.source-info {
+		display: flex;
+		align-items: center;
+		gap: var(--space-xs);
+	}
+
+	.source-icon {
+		width: 20px;
+		height: 20px;
+		border-radius: 4px;
+	}
+
+	.source-name {
+		font-size: 0.875rem;
+		color: var(--color-text-secondary);
+	}
+
+	time {
+		font-size: 0.875rem;
+		color: var(--color-text-secondary);
+	}
+
+	.card-content {
+		flex: 1;
+		margin-bottom: var(--space-md);
+	}
+
+	.card-content h2 {
+		font-size: 1.125rem;
+		margin-bottom: var(--space-sm);
+	}
+
+	.card-content h2 a {
+		color: var(--color-text);
+		text-decoration: none;
+	}
+
+	.card-content h2 a:hover {
+		color: var(--color-primary);
+	}
+
+	.card-content p {
+		color: var(--color-text-secondary);
+		font-size: 0.875rem;
+		line-height: 1.6;
+		display: -webkit-box;
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	.card-footer {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	.tags {
+		display: flex;
+		gap: var(--space-xs);
+		flex-wrap: wrap;
+	}
+
+	.tag {
+		padding: 2px 8px;
+		background: var(--color-border);
+		border-radius: 4px;
+		font-size: 0.75rem;
+		color: var(--color-text);
+	}
+
+	.actions {
+		display: flex;
+		gap: var(--space-xs);
+	}
+
+	.action-btn {
+		padding: var(--space-xs);
+		border: 1px solid var(--color-border);
+		border-radius: 4px;
+		background: var(--color-surface);
+		color: var(--color-text);
+	}
+
+	@media (max-width: 768px) {
+		.page-header {
+			flex-direction: column;
+			align-items: stretch;
+			gap: var(--space-md);
+		}
+
+		.view-options {
+			justify-content: space-between;
+		}
+
+		.bookmarks-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

@@ -1,0 +1,297 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="検索">
+	<div class="search-page">
+		<header class="page-header">
+			<h1>記事検索</h1>
+		</header>
+
+		<div class="search-container">
+			<form class="search-form">
+				<div class="search-input-group">
+					<input
+						type="search"
+						name="q"
+						placeholder="キーワードで検索..."
+						class="search-input"
+					/>
+					<select name="filter" class="search-filter">
+						<option value="all">すべて</option>
+						<option value="title">タイトル</option>
+						<option value="content">本文</option>
+						<option value="tags">タグ</option>
+					</select>
+					<button type="submit" class="search-button">検索</button>
+				</div>
+
+				<div class="search-options">
+					<label class="checkbox-label">
+						<input type="checkbox" name="read" />
+						未読のみ
+					</label>
+					<label class="checkbox-label">
+						<input type="checkbox" name="bookmarked" />
+						ブックマーク済み
+					</label>
+				</div>
+			</form>
+		</div>
+
+		<section class="search-history">
+			<h2>最近の検索</h2>
+			<div class="history-list">
+				<div class="history-item">
+					<span class="history-query">AI technology trends</span>
+					<time class="history-time">2時間前</time>
+					<button class="history-action">再検索</button>
+				</div>
+				<div class="history-item">
+					<span class="history-query">Web development best practices</span>
+					<time class="history-time">昨日</time>
+					<button class="history-action">再検索</button>
+				</div>
+				<!-- サンプルデータ -->
+			</div>
+		</section>
+
+		<section class="search-results">
+			<header class="results-header">
+				<h2>検索結果</h2>
+				<span class="results-count">15件</span>
+			</header>
+
+			<div class="results-list">
+				<article class="result-item">
+					<h3>
+						<a href="/articles/1">最新のAI開発動向：2024年の展望と課題</a>
+					</h3>
+					<p class="result-excerpt">
+						...最新の<mark>AI</mark>技術トレンドについて解説します。
+						特に注目すべき点として、大規模言語モデルの発展と...
+					</p>
+					<footer class="result-meta">
+						<span class="result-source">Tech News</span>
+						<time datetime="2024-02-20">2024.02.20</time>
+					</footer>
+				</article>
+				<!-- サンプルデータ -->
+			</div>
+
+			<div class="pagination">
+				<button class="pagination-btn" disabled>&lt; 前へ</button>
+				<span class="page-info">1 / 3</span>
+				<button class="pagination-btn">次へ &gt;</button>
+			</div>
+		</section>
+	</div>
+</Layout>
+
+<style>
+	.search-page {
+		max-width: 1000px;
+		margin: 0 auto;
+		padding: var(--space-md);
+	}
+
+	.page-header {
+		margin-bottom: var(--space-xl);
+	}
+
+	.search-container {
+		margin-bottom: var(--space-xl);
+	}
+
+	.search-form {
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: 8px;
+		padding: var(--space-lg);
+	}
+
+	.search-input-group {
+		display: flex;
+		gap: var(--space-sm);
+		margin-bottom: var(--space-md);
+	}
+
+	.search-input {
+		flex: 1;
+		padding: var(--space-sm) var(--space-md);
+		border: 1px solid var(--color-border);
+		border-radius: 6px;
+		font-size: 1rem;
+		color: var(--color-text);
+		background: var(--color-background);
+	}
+
+	.search-filter {
+		padding: var(--space-sm) var(--space-md);
+		border: 1px solid var(--color-border);
+		border-radius: 6px;
+		background: var(--color-background);
+		color: var(--color-text);
+	}
+
+	.search-button {
+		padding: var(--space-sm) var(--space-xl);
+		background: var(--color-primary);
+		color: white;
+		border: none;
+		border-radius: 6px;
+		font-weight: 500;
+	}
+
+	.search-options {
+		display: flex;
+		gap: var(--space-lg);
+	}
+
+	.checkbox-label {
+		display: flex;
+		align-items: center;
+		gap: var(--space-xs);
+		color: var(--color-text);
+		cursor: pointer;
+	}
+
+	.search-history {
+		margin-bottom: var(--space-xl);
+	}
+
+	.history-list {
+		display: grid;
+		gap: var(--space-sm);
+	}
+
+	.history-item {
+		display: flex;
+		align-items: center;
+		gap: var(--space-md);
+		padding: var(--space-sm) var(--space-md);
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: 6px;
+	}
+
+	.history-query {
+		flex: 1;
+		color: var(--color-text);
+	}
+
+	.history-time {
+		color: var(--color-text-secondary);
+		font-size: 0.875rem;
+	}
+
+	.history-action {
+		padding: var(--space-xs) var(--space-sm);
+		background: none;
+		border: 1px solid var(--color-border);
+		border-radius: 4px;
+		color: var(--color-text);
+		font-size: 0.875rem;
+	}
+
+	.results-header {
+		display: flex;
+		align-items: center;
+		gap: var(--space-md);
+		margin-bottom: var(--space-lg);
+	}
+
+	.results-count {
+		color: var(--color-text-secondary);
+		font-size: 0.875rem;
+	}
+
+	.results-list {
+		display: grid;
+		gap: var(--space-md);
+		margin-bottom: var(--space-xl);
+	}
+
+	.result-item {
+		padding: var(--space-lg);
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: 8px;
+	}
+
+	.result-item h3 {
+		margin-bottom: var(--space-sm);
+	}
+
+	.result-item h3 a {
+		color: var(--color-text);
+		text-decoration: none;
+	}
+
+	.result-item h3 a:hover {
+		color: var(--color-primary);
+	}
+
+	.result-excerpt {
+		margin-bottom: var(--space-sm);
+		color: var(--color-text-secondary);
+		line-height: 1.6;
+	}
+
+	mark {
+		background: #fef08a;
+		color: var(--color-text);
+		padding: 0 2px;
+		border-radius: 2px;
+	}
+
+	.result-meta {
+		display: flex;
+		gap: var(--space-md);
+		color: var(--color-text-secondary);
+		font-size: 0.875rem;
+	}
+
+	.pagination {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: var(--space-md);
+	}
+
+	.pagination-btn {
+		padding: var(--space-sm) var(--space-md);
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: 6px;
+		color: var(--color-text);
+	}
+
+	.pagination-btn:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+
+	.page-info {
+		color: var(--color-text-secondary);
+	}
+
+	@media (max-width: 768px) {
+		.search-input-group {
+			flex-direction: column;
+		}
+
+		.search-options {
+			flex-direction: column;
+			gap: var(--space-sm);
+		}
+
+		.history-item {
+			flex-wrap: wrap;
+		}
+
+		.history-query {
+			width: 100%;
+		}
+	}
+</style>
