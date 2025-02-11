@@ -110,5 +110,6 @@
   .container-actions {
     width: 100%;
     justify-content: flex-start;
+    white-space: normal;
   }
 }
