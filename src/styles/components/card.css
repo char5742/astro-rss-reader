@@ -1,0 +1,7 @@
+.card {
+  padding: 2rem 1rem;
+  box-sizing: border-box;
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-md);
+  container-type: inline-size;
+}

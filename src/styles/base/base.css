@@ -1,0 +1,78 @@
+/*───────────────────────────────────────────────────────────
+2) ベースレイヤ (@layer base):
+ルート要素やHTMLタグのベーススタイル、スコープCSS、nest構文など
+───────────────────────────────────────────────────────────*/
+/* スコープCSSの一例: カード内だけの .button をスコープ化する場合 */
+@import "./article.css";
+
+@layer base;
+@layer base {
+  @scope (.card) {
+    .button {
+      background-color: var(--color-brand);
+      color: var(--color-contrast);
+    }
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-base);
+    background-color: var(--background);
+  }
+
+  /* 初期状態で使う例: :has でdialogのopen状態を検知し、ボディスクロールを止める */
+  html:has(dialog[open]) {
+    overflow: hidden;
+  }
+
+  main {
+    width: 720px;
+    max-width: calc(100% - 2em);
+    margin: auto;
+    padding: 3em 1em;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 0 0 0.5rem 0;
+    color: var(--text-primary);
+    line-height: 1.2;
+  }
+  h1 {
+    font-size: var(--font-size-4xl);
+  }
+  h2 {
+    font-size: var(--font-size-3xl);
+  }
+  h3 {
+    font-size: var(--font-size-2xl);
+  }
+  h4 {
+    font-size: var(--font-size-xl);
+  }
+  h5 {
+    font-size: var(--font-size-lg);
+  }
+  p {
+    font-size: var(--font-size-md);
+    color: var(--text-primary);
+  }
+
+  a {
+    color: var(--link);
+
+    &:hover {
+      color: var(--link-hover);
+    }
+
+    &:visited {
+      color: var(--link-visited);
+    }
+  }
+}
