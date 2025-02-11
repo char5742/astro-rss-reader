@@ -1,0 +1,34 @@
+/* 基本的なボタンスタイル */
+.btn {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: 6px;
+  background: var(--background);
+  border: 1px solid var(--neutral);
+  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+  transition: background-color var(--duration-fast);
+}
+
+.btn.primary {
+  background-color: var(--primary);
+  color: var(--on-primary);
+  border-color: var(--primary);
+}
+
+.btn.secondary {
+  background-color: var(--background);
+  border: 1px solid var(--neutral);
+  color: var(--text-primary);
+}
+
+.btn.danger {
+  background-color: #ef4444;
+  color: white;
+  border: none;
+}
+
+/* アクションボタングループ */
+.action-group {
+  display: flex;
+  gap: var(--spacing-sm);
+}

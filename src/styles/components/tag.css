@@ -1,0 +1,14 @@
+/* タグ関連のスタイル */
+.tag {
+  padding: 2px 8px;
+  background: var(--neutral);
+  border-radius: 4px;
+  font-size: var(--font-size-xs);
+  color: var(--text-primary);
+}
+
+.tag-list {
+  display: flex;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+}

@@ -1,0 +1,10 @@
+/* フォームコントロール */
+.form-control {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--neutral);
+  border-radius: 6px;
+  background: var(--background);
+  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+  width: 100%;
+}
