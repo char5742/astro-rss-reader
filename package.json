@@ -9,10 +9,13 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/db": "^0.14.6",
     "astro": "^5.2.5"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.9.4",
     "@happy-dom/global-registrator": "^17.0.3",
+    "biome": "^0.3.3",
     "bun-types": "^1.2.2"
   }
 }
