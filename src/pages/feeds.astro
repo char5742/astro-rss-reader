@@ -3,214 +3,203 @@ import Layout from "~/layouts/Layout.astro";
 ---
 
 <Layout title="フィード管理">
-  <!-- Wrap all content in a standard container -->
-  <div class="container">
-    <header class="page-header flex justify-between items-center mb-lg">
+  <div class="feeds">
+    <header>
       <h1>フィード管理</h1>
-      <div class="header-actions flex gap-sm">
-        <button class="btn primary">新規フィード追加</button>
-        <button class="btn secondary">OPMLインポート</button>
-        <button class="btn secondary">OPMLエクスポート</button>
+      <div class="actions">
+        <button class="primary">新規フィード追加</button>
+        <button class="secondary">OPMLインポート</button>
+        <button class="secondary">OPMLエクスポート</button>
       </div>
     </header>
 
-    <section class="category-section mb-lg">
+    <section class="categories">
       <h2>カテゴリー管理</h2>
-      <div
-        class="category-list grid"
-        style="grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: var(--spacing-md);"
-      >
-        <article class="category-card card" style="padding: var(--spacing-md);">
-          <h3 style="margin-bottom: var(--spacing-sm);">テクノロジー</h3>
-          <span class="feed-count">5フィード</span>
-          <div class="category-actions flex justify-end gap-sm mt-sm">
-            <button class="btn text">編集</button>
-            <button class="btn text">削除</button>
+      <div class="category-grid">
+        <article>
+          <h3>テクノロジー</h3>
+          <span class="count">5フィード</span>
+          <div class="actions">
+            <button>編集</button>
+            <button>削除</button>
           </div>
         </article>
-        <!-- サンプルデータ -->
       </div>
     </section>
 
-    <section class="feeds-section mb-lg">
+    <section class="feed-list">
       <h2>フィード一覧</h2>
-      <div class="feed-list grid" style="gap: var(--spacing-md);">
-        <article
-          class="feed-item grid"
-          style="grid-template-columns: 1fr auto auto; align-items: center; gap: var(--spacing-md);"
-        >
-          <div class="feed-info">
+      <div class="feeds-grid">
+        <article>
+          <div class="content">
             <h3>TechCrunch</h3>
-            <p class="feed-url" style="margin: var(--spacing-sm) 0;">
-              https://techcrunch.com/feed
-            </p>
-            <span
-              class="category-tag"
-              style="padding: 2px 8px; border-radius: 4px;">テクノロジー</span
-            >
+            <p class="url">https://techcrunch.com/feed</p>
+            <span class="tag">テクノロジー</span>
           </div>
-          <div
-            class="feed-stats flex flex-col items-end gap-sm"
-            style="font-size: 0.875rem; color: var(--text-secondary);"
-          >
+          <div class="stats">
             <span>200記事</span>
             <span>最終更新: 10分前</span>
           </div>
-          <div class="feed-actions flex gap-sm">
-            <button class="btn secondary">編集</button>
-            <button class="btn danger">削除</button>
+          <div class="actions">
+            <button class="secondary">編集</button>
+            <button class="danger">削除</button>
           </div>
         </article>
-        <!-- サンプルデータ -->
       </div>
     </section>
   </div>
 </Layout>
 
 <style>
-  .feed-management {
+  .feeds {
     max-width: 1200px;
     margin: 0 auto;
-  }
-
-  .page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--space-xl);
-  }
-
-  .header-actions {
-    display: flex;
-    gap: var(--space-sm);
-  }
-
-  .btn {
-    padding: var(--spacing-sm) var(--spacing-md);
-    border-radius: 6px;
-    font-weight: 500;
-    transition: background-color var(--duration-fast);
-  }
-
-  .btn.primary {
-    background-color: var(--primary);
-    color: var(--on-primary);
-    border-color: var(--primary);
-  }
-
-  .btn.secondary {
-    background: var(--background);
-    border: 1px solid var(--neutral);
-    color: var(--text-primary);
-  }
-
-  .btn.danger {
-    background-color: #ef4444;
-    color: white;
-  }
-
-  .btn.text {
-    background: transparent;
-    color: var(--text-primary);
-    border: none;
-  }
-
-  .category-section,
-  .feeds-section {
-    margin-bottom: var(--space-xl);
-  }
-
-  .category-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: var(--spacing-md);
-  }
-
-  .category-card {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
     padding: var(--spacing-md);
+
+    > header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-lg);
+
+      .actions {
+        display: flex;
+        gap: var(--spacing-sm);
+      }
+    }
   }
 
-  .category-card h3 {
-    margin-bottom: var(--spacing-sm);
-  }
+  .categories {
+    margin-bottom: var(--spacing-lg);
 
-  .feed-count {
-    color: var(--color-text-secondary);
-    font-size: 0.875rem;
-  }
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: var(--spacing-md);
 
-  .category-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: var(--space-sm);
-    margin-top: var(--space-sm);
+      article {
+        background: var(--background);
+        border: 1px solid var(--neutral);
+        border-radius: 8px;
+        padding: var(--spacing-md);
+
+        h3 {
+          margin-bottom: var(--spacing-sm);
+        }
+
+        .count {
+          color: var(--text-secondary);
+          font-size: var(--font-size-sm);
+        }
+
+        .actions {
+          display: flex;
+          justify-content: flex-end;
+          gap: var(--spacing-sm);
+          margin-top: var (--spacing-sm);
+        }
+      }
+    }
   }
 
   .feed-list {
-    display: grid;
-    gap: var(--spacing-md);
+    .feeds-grid {
+      display: grid;
+      gap: var(--spacing-md);
+
+      article {
+        display: grid;
+        grid-template-columns: 1fr auto auto;
+        align-items: center;
+        gap: var(--spacing-md);
+        background: var(--background);
+        border: 1px solid var(--neutral);
+        border-radius: 8px;
+        padding: var(--spacing-md);
+
+        .content {
+          h3 {
+            margin-bottom: var(--spacing-sm);
+          }
+
+          .url {
+            color: var(--text-secondary);
+            font-size: var(--font-size-sm);
+            margin-bottom: var(--spacing-sm);
+          }
+
+          .tag {
+            display: inline-block;
+            padding: 2px 8px;
+            background: var(--neutral);
+            border-radius: 4px;
+            font-size: var(--font-size-sm);
+          }
+        }
+
+        .stats {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: var(--spacing-sm);
+          color: var(--text-secondary);
+          font-size: var(--font-size-sm);
+        }
+
+        .actions {
+          display: flex;
+          gap: var(--spacing-sm);
+        }
+      }
+    }
   }
 
-  .feed-item {
-    display: grid;
-    grid-template-columns: 1fr auto auto;
-    align-items: center;
-    gap: var(--spacing-md);
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    padding: var(--space-md);
-  }
+  button {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: 6px;
+    font-size: var(--font-size-sm);
+    transition: background-color var(--duration-fast);
 
-  .feed-url {
-    color: var(--color-text-secondary);
-    font-size: 0.875rem;
-    margin: var(--spacing-sm) 0;
-  }
+    &.primary {
+      background-color: var(--primary);
+      color: var(--on-primary);
+      border: none;
+    }
 
-  .category-tag {
-    display: inline-block;
-    padding: 2px 8px;
-    background: var(--color-border);
-    border-radius: 4px;
-    font-size: 0.75rem;
-  }
+    &.secondary {
+      background: var(--background);
+      border: 1px solid var(--neutral);
+      color: var(--text-primary);
+    }
 
-  .feed-stats {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: var(--spacing-sm);
-    color: var(--color-text-secondary);
-    font-size: 0.875rem;
-  }
-
-  .feed-actions {
-    display: flex;
-    gap: var(--spacing-sm);
+    &.danger {
+      background-color: #ef4444;
+      color: white;
+      border: none;
+    }
   }
 
   @media (max-width: 768px) {
-    .page-header {
-      flex-direction: column;
-      align-items: stretch;
-      gap: var(--spacing-md);
+    .feeds {
+      > header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--spacing-md);
+
+        .actions {
+          flex-wrap: wrap;
+        }
+      }
     }
 
-    .header-actions {
-      flex-wrap: wrap;
-    }
-
-    .feed-item {
+    .feed-list .feeds-grid article {
       grid-template-columns: 1fr;
-    }
+      gap: var(--spacing-md);
 
-    .feed-stats,
-    .feed-actions {
-      justify-content: flex-start;
+      .stats,
+      .actions {
+        justify-content: flex-start;
+      }
     }
   }
 </style>

@@ -3,40 +3,40 @@ import Layout from "~/layouts/Layout.astro";
 ---
 
 <Layout title="記事一覧">
-  <div class="container">
-    <header class="page-header">
-      <div class="mb-lg">
+  <div class="articles">
+    <header>
+      <div class="header-content">
         <h1>記事一覧</h1>
-        <span class="text-secondary">Tech News</span>
+        <span class="source">Tech News</span>
       </div>
 
-      <div class="flex gap-md md:flex-col">
-        <nav class="flex gap-sm">
-          <button class="btn active">すべて</button>
-          <button class="btn">未読</button>
-          <button class="btn">既読</button>
+      <div class="controls">
+        <nav class="filter">
+          <button class="active">すべて</button>
+          <button>未読</button>
+          <button>既読</button>
         </nav>
-        <select class="form-control">
+        <select>
           <option value="newest">新着順</option>
           <option value="oldest">古い順</option>
           <option value="popular">人気順</option>
         </select>
-        <nav class="flex gap-sm">
-          <button class="btn active" aria-label="リスト表示">
+        <nav class="view">
+          <button class="active" aria-label="リスト表示">
             <span>📝</span>
           </button>
-          <button class="btn" aria-label="グリッド表示">
+          <button aria-label="グリッド表示">
             <span>📰</span>
           </button>
         </nav>
       </div>
     </header>
 
-    <main class="item-list">
-      <article class="card">
-        <div class="card-meta">
+    <main class="article-list">
+      <article>
+        <div class="meta">
           <time datetime="2024-02-20">2024.02.20</time>
-          <span class="text-primary">未読</span>
+          <span class="status">未読</span>
         </div>
         <h2>
           <a href="/articles/1">AI技術の最新動向：2024年の展望と課題</a>
@@ -45,16 +45,16 @@ import Layout from "~/layouts/Layout.astro";
           人工知能技術は2024年も急速な進化を続けています。本記事では、主要な技術トレンドと、
           企業が直面している実装上の課題について詳しく解説します...
         </p>
-        <footer class="card-footer">
-          <div class="tag-list">
-            <span class="tag">AI</span>
-            <span class="tag">Technology</span>
+        <footer>
+          <div class="tags">
+            <span>AI</span>
+            <span>Technology</span>
           </div>
-          <div class="flex gap-sm">
-            <button class="btn" aria-label="ブックマーク">
+          <div class="actions">
+            <button aria-label="ブックマーク">
               <span>🔖</span>
             </button>
-            <button class="btn" aria-label="シェア">
+            <button aria-label="シェア">
               <span>📤</span>
             </button>
           </div>
@@ -62,30 +62,139 @@ import Layout from "~/layouts/Layout.astro";
       </article>
     </main>
 
-    <footer class="flex justify-center mt-xl">
-      <button class="btn">さらに読み込む</button>
+    <footer>
+      <button>さらに読み込む</button>
     </footer>
   </div>
 </Layout>
 
 <style>
-  h2 {
-    margin-bottom: var(--spacing-md);
-    font-size: var(--font-size-lg);
+  .articles {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-md);
+
+    > header {
+      margin-bottom: var(--spacing-lg);
+
+      .header-content {
+        margin-bottom: var(--spacing-lg);
+
+        h1 {
+          margin-bottom: var(--spacing-sm);
+        }
+
+        .source {
+          color: var(--text-secondary);
+        }
+      }
+
+      .controls {
+        display: flex;
+        gap: var(--spacing-md);
+        align-items: center;
+
+        .filter {
+          display: flex;
+          gap: var(--spacing-sm);
+        }
+
+        .view {
+          display: flex;
+          gap: var(--spacing-sm);
+        }
+
+        select {
+          padding: var(--spacing-sm) var(--spacing-md);
+          border: 1px solid var(--neutral);
+          border-radius: 6px;
+          background: var(--background);
+        }
+      }
+    }
   }
 
-  h2 a {
-    color: var(--text-primary);
-    text-decoration: none;
+  .article-list {
+    display: grid;
+    gap: var(--spacing-md);
+
+    article {
+      background: var(--background);
+      border: 1px solid var(--neutral);
+      border-radius: 8px;
+      padding: var(--spacing-md);
+
+      .meta {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: var(--spacing-sm);
+
+        time {
+          color: var (--text-secondary);
+        }
+
+        .status {
+          color: var(--primary);
+        }
+      }
+
+      h2 {
+        margin-bottom: var(--spacing-md);
+        font-size: var(--font-size-lg);
+
+        a {
+          color: var(--text-primary);
+          text-decoration: none;
+
+          &:hover {
+            color: var(--primary);
+          }
+        }
+      }
+
+      p {
+        color: var(--text-secondary);
+        margin-bottom: var(--spacing-md);
+        line-height: 1.6;
+      }
+
+      footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .tags {
+          display: flex;
+          gap: var(--spacing-sm);
+
+          span {
+            padding: 2px 8px;
+            background: var(--neutral);
+            border-radius: 4px;
+            font-size: var(--font-size-sm);
+          }
+        }
+
+        .actions {
+          display: flex;
+          gap: var(--spacing-sm);
+        }
+      }
+    }
   }
 
-  h2 a:hover {
-    color: var(--primary);
+  footer {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--spacing-xl);
   }
 
-  p {
-    color: var(--text-secondary);
-    margin-bottom: var(--spacing-md);
-    line-height: 1.6;
+  @media (max-width: 768px) {
+    .articles {
+      header .controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
   }
 </style>

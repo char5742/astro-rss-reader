@@ -3,82 +3,68 @@ import Layout from "~/layouts/Layout.astro";
 ---
 
 <Layout title="ブックマーク">
-  <div class="container">
-    <header class="page-header flex justify-between items-center">
+  <div class="bookmarks">
+    <header>
       <h1>ブックマーク</h1>
-      <div class="flex gap-md">
-        <select class="form-control">
+      <div class="filters">
+        <select>
           <option value="all">すべてのタグ</option>
           <option value="ai">AI</option>
           <option value="tech">テクノロジー</option>
           <option value="dev">開発</option>
         </select>
-        <nav class="flex gap-sm">
-          <button class="btn active" aria-label="リスト表示">
+        <nav class="view-mode">
+          <button class="active" aria-label="リスト表示">
             <span>📝</span>
           </button>
-          <button class="btn" aria-label="グリッド表示">
+          <button aria-label="グリッド表示">
             <span>📰</span>
           </button>
         </nav>
       </div>
     </header>
 
-    <nav class="mb-xl">
-      <ul class="tag-list">
-        <li>
-          <button class="btn active"
-            >すべて <span class="text-sm">24</span></button
-          >
-        </li>
-        <li>
-          <button class="btn">AI <span class="text-sm">8</span></button>
-        </li>
-        <li>
-          <button class="btn"
-            >テクノロジー <span class="text-sm">12</span></button
-          >
-        </li>
-        <li>
-          <button class="btn">開発 <span class="text-sm">4</span></button>
-        </li>
+    <nav class="tags">
+      <ul>
+        <li><button class="active">すべて <span>24</span></button></li>
+        <li><button>AI <span>8</span></button></li>
+        <li><button>テクノロジー <span>12</span></button></li>
+        <li><button>開発 <span>4</span></button></li>
       </ul>
     </nav>
 
-    <main class="card-grid">
-      <article class="card">
-        <header class="card-header">
-          <div class="flex gap-sm items-center">
+    <main class="articles">
+      <article>
+        <header>
+          <div class="source">
             <img
               src="https://placehold.co/20x20"
               alt="Tech News"
               width="20"
               height="20"
             />
-            <span class="text-secondary">Tech News</span>
+            <span>Tech News</span>
           </div>
-          <time datetime="2024-02-20" class="text-secondary text-sm"
-            >2024.02.20</time
-          >
+          <time datetime="2024-02-20">2024.02.20</time>
         </header>
-        <div class="card-content">
+        <div class="content">
           <h2>
             <a href="/articles/1">AI技術の最新動向：2024年の展望と課題</a>
           </h2>
-          <p class="text-secondary">
+          <p>
             人工知能技術は2024年も急速な進化を続けています。本記事では、主要な技術トレンドと企業が直面している実装上の課題について詳しく解説します...
           </p>
         </div>
-        <footer class="card-footer">
-          <div class="tag-list">
-            <span class="tag">AI</span>
-            <span class="tag">Technology</span>
+        <footer>
+          <div class="article-tags">
+            <span>AI</span>
+            <span>Technology</span>
           </div>
-          <div class="flex gap-sm">
-            <button class="btn" aria-label="ブックマークを解除">
+          <div class="actions">
+            <button aria-label="ブックマークを解除">
               <span>🔖</span>
             </button>
-            <button class="btn" aria-label="シェア">
+            <button aria-label="シェア">
               <span>📤</span>
             </button>
           </div>
@@ -89,26 +75,142 @@ import Layout from "~/layouts/Layout.astro";
 </Layout>
 
 <style>
-  h2 {
-    font-size: var(--font-size-sm);
-    margin-bottom: var(--spacing-sm);
+  .bookmarks {
+    max-width: var(--grid-max-width);
+    margin: 0 auto;
+    padding: var(--spacing-md);
   }
 
-  h2 a {
+  .bookmarks > header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .filters {
+    display: flex;
+    gap: var(--spacing-md);
+  }
+
+  .view-mode {
+    display: flex;
+    gap: var(--spacing-sm);
+  }
+
+  .view-mode button.active {
+    background: var(--primary);
+    color: var(--on-primary);
+  }
+
+  .tags {
+    margin-bottom: var(--spacing-xl);
+  }
+
+  .tags ul {
+    display: flex;
+    gap: var(--spacing-sm);
+    list-style: none;
+    padding: 0;
+  }
+
+  .tags button.active {
+    background: var(--primary);
+    color: var(--on-primary);
+  }
+
+  .tags button span {
+    font-size: var(--font-size-sm);
+    margin-left: 0.5em;
+  }
+
+  .articles {
+    display: grid;
+    gap: var(--spacing-md);
+  }
+
+  article {
+    background: var(--background);
+    border: 1px solid var(--neutral);
+    border-radius: 8px;
+    padding: var(--spacing-md);
+  }
+
+  article > header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .source {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    color: var(--text-secondary);
+  }
+
+  .source img {
+    border-radius: 4px;
+  }
+
+  time {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+  }
+
+  .content h2 {
+    margin-bottom: var(--spacing-sm);
+    font-size: var(--font-size-lg);
+  }
+
+  .content h2 a {
     color: var(--text-primary);
     text-decoration: none;
   }
 
-  h2 a:hover {
+  .content h2 a:hover {
     color: var(--primary);
   }
 
-  p {
+  .content p {
+    color: var(--text-secondary);
     line-height: 1.6;
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
   }
 
-  img {
+  footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .article-tags {
+    display: flex;
+    gap: var(--spacing-sm);
+  }
+
+  .article-tags span {
+    font-size: var(--font-size-sm);
+    background: var(--neutral);
+    padding: 2px 8px;
     border-radius: 4px;
+  }
+
+  .actions {
+    display: flex;
+    gap: var(--spacing-sm);
+  }
+
+  @media (max-width: 768px) {
+    .bookmarks > header {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .filters {
+      flex-direction: column;
+      gap: var(--spacing-md);
+    }
   }
 </style>
