@@ -27,4 +27,7 @@
   "[json]": {
     "editor.defaultFormatter": "biomejs.biome"
   },
+  "chat.promptFiles": {
+    "docs": true
+  },
 }
