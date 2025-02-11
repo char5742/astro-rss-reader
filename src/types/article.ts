@@ -1,4 +1,4 @@
-import type { CategoryId, FeedId } from "./feed";
+import type { FeedId } from './feed';
 
 export enum ArticleStatus {
 	UNREAD = 'unread',
@@ -21,7 +21,7 @@ export type Article = Readonly<{
 	status: ArticleStatus;
 	isFavorite: boolean;
 	imageUrl?: string;
-	categories: string[];
+	categories: ArticleCategory[];
 }>;
 
 export function NewArticle({
@@ -57,11 +57,10 @@ export function NewArticle({
 export type ArticleFilter = Readonly<{
 	status?: ArticleStatus;
 	isFavorite?: boolean;
-	categoryIds?: CategoryId[];
+	categoryIds?: ArticleCategoryId[];
 	feedIds?: FeedId[];
 	searchQuery?: string;
 }>;
-
 
 export type ArticleHistory = Readonly<{
 	articleId: ArticleId;
@@ -77,3 +76,12 @@ export type Tag = Readonly<{
 }>;
 
 export type ArticleWithTags = Article & Readonly<{ tags: Tag[] }>;
+
+const ArticleCategoryIdBrand = Symbol();
+export type ArticleCategoryId = string & {
+	[ArticleCategoryIdBrand]: undefined;
+};
+export type ArticleCategory = Readonly<{
+	id: ArticleCategoryId;
+	name: string;
+}>;

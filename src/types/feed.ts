@@ -6,25 +6,24 @@ export type Feed = Readonly<{
 	id: FeedId;
 	title: string;
 	url: string;
-	categoryIds: CategoryId[];
+	categoryIds: FeedCategoryId[];
 	description?: string;
 	lastUpdated?: Date;
 	imageUrl?: string;
 }>;
 
-const CategoryIdBrand = Symbol();
+const FeedCategoryIdBrand = Symbol();
 
-export type CategoryId = string & { [CategoryIdBrand]: undefined };
+export type FeedCategoryId = string & { [FeedCategoryIdBrand]: undefined };
 
-export type Category = Readonly<{
-	id: CategoryId;
+export type FeedCategory = Readonly<{
+	id: FeedCategoryId;
 	name: string;
-	color?: string;
 }>;
 
 export type FeedWithCategories = Feed &
 	Readonly<{
-		categories: Category[];
+		categories: FeedCategory[];
 	}>;
 
 export type Subscription = Readonly<{
