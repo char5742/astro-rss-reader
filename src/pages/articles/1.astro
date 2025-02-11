@@ -17,7 +17,7 @@ import Layout from "~/layouts/Layout.astro";
           <span class="icon">🔖</span>
           ブックマーク
         </button>
-        <button class="btn">
+        <button class="btn" id="ai-summary-btn">
           <span class="icon">🤖</span>
           AI要約
         </button>
@@ -78,7 +78,7 @@ import Layout from "~/layouts/Layout.astro";
       </footer>
     </div>
 
-    <aside class="item-container" hidden>
+    <aside id="ai-summary" class="item-container" hidden>
       <h3>AI要約</h3>
       <p class="text-secondary">
         この記事は2024年のAI技術トレンドと実装課題について解説しています。主要なポイントは：
@@ -140,3 +140,10 @@ import Layout from "~/layouts/Layout.astro";
     }
   }
 </style>
+
+<script>
+  // AI要約の表示/非表示を切り替える
+  document?.querySelector("#ai-summary-btn")?.addEventListener("click", () => {
+    document.querySelector("#ai-summary")?.toggleAttribute("hidden");
+  });
+</script>
