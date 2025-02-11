@@ -1,0 +1,97 @@
+form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  background-color: var(--background);
+  border: var(--border-width-sm) solid var(--neutral);
+  border-radius: var(--border-radius-sm);
+  transition: border-color var(--duration-fast);
+
+  &:hover {
+    border-color: var(--primary);
+  }
+
+  label {
+    font-size: var(--font-size-sm);
+    color: var(--text-primary);
+    font-weight: var(--font-weight-bold);
+  }
+
+  /* テキスト・セレクト・テキストエリア用 */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  select,
+  textarea {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: none;
+    border-radius: var(--border-radius-sm);
+    background-color: var(--background);
+    color: var(--text-primary);
+    font-size: var(--font-size-md);
+    box-shadow: var(--elevation-1);
+    transition: box-shadow var(--duration-fast);
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px var(--primary);
+    }
+  }
+
+  /* カスタムチェックボックス */
+  input[type="checkbox"] {
+    appearance: none;
+    width: 1.2rem;
+    height: 1.2rem;
+    border: var(--border-width-sm) solid var(--neutral);
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    transition: background-color var(--duration-fast);
+    position: relative; /* 擬似要素を絶対配置したいので相対配置 */
+
+    &:checked {
+      background-color: var(--primary);
+
+      &::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0.4rem;
+        height: 0.7rem;
+        border-right: var(--border-width-sm) solid var(--on-primary);
+        border-bottom: var(--border-width-sm) solid var(--on-primary);
+
+        /* 見やすいようにチェックマークを中心に配置 */
+        transform: translate(-50%, -50%) rotate(45deg);
+      }
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px var(--primary);
+    }
+  }
+
+  button {
+    align-self: flex-end;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: none;
+    border-radius: var(--border-radius-sm);
+    background-color: var(--primary);
+    color: var(--on-primary);
+    font-size: var(--font-size-md);
+    cursor: pointer;
+    transition: filter var(--duration-fast);
+
+    &:hover {
+      filter: brightness(1.05);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}

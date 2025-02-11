@@ -5,6 +5,8 @@
 /* スコープCSSの一例: カード内だけの .button をスコープ化する場合 */
 
 @layer base;
+@import './form.css';
+
 @layer base {
   @scope (.card) {
     .button {
