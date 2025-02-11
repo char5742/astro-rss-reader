@@ -85,94 +85,6 @@ import Layout from "~/layouts/Layout.astro";
       color: var(--text-primary);
     }
   }
-
-  .feed-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: var(--spacing-md);
-    margin-bottom: var(--spacing-lg);
-
-    article {
-      background: var(--background);
-      border: 1px solid var(--neutral);
-      border-radius: 8px;
-      padding: var(--spacing-md);
-
-      h3 {
-        margin-bottom: var(--spacing-sm);
-        color: var(--text-primary);
-      }
-
-      .unread {
-        font-weight: 500;
-        color: var(--primary);
-        margin-bottom: var(--spacing-sm);
-      }
-
-      .stats {
-        display: flex;
-        justify-content: space-between;
-        color: var (--text-secondary);
-        font-size: var(--font-size-sm);
-      }
-    }
-  }
-
-  .article-list {
-    display: grid;
-    gap: var(--spacing-md);
-
-    article {
-      background: var(--background);
-      border: 1px solid var(--neutral);
-      border-radius: 8px;
-      padding: var(--spacing-md);
-
-      header {
-        display: flex;
-        justify-content: space-between;
-        align-items: start;
-        margin-bottom: var(--spacing-sm);
-
-        h3 {
-          font-size: 1.25rem;
-          color: var(--text-primary);
-        }
-
-        time {
-          font-size: var(--font-size-sm);
-          color: var(--text-secondary);
-        }
-      }
-
-      p {
-        font-size: var(--font-size-sm);
-        color: var(--text-secondary);
-        margin-bottom: var(--spacing-md);
-      }
-
-      footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-
-        .source {
-          font-size: var(--font-size-sm);
-          color: var(--text-secondary);
-        }
-
-        .bookmark {
-          font-size: var(--font-size-sm);
-          color: var(--primary);
-          background: none;
-          border: none;
-          padding: 0;
-          cursor: pointer;
-        }
-      }
-    }
-  }
-
   .stats {
     color: var(--text-secondary);
     font-size: var(--font-size-sm);
@@ -184,10 +96,6 @@ import Layout from "~/layouts/Layout.astro";
   }
 
   @media (max-width: 768px) {
-    .feed-grid {
-      grid-template-columns: 1fr;
-    }
-
     .article-list article header {
       flex-direction: column;
       align-items: flex-start;
