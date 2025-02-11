@@ -62,6 +62,7 @@
   display: flex;
   gap: var(--spacing-sm);
   align-items: center;
+  white-space: nowrap;
 }
 
 /* アイテムヘッダー */
