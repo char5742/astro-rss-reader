@@ -1,0 +1,59 @@
+---
+interface Props {
+  keywords?: string[];
+}
+
+const { keywords = [] } = Astro.props;
+---
+
+<div class="keyword-chips">
+  {
+    keywords.map((keyword) => (
+      <span class="keyword-chip">
+        {keyword}
+        <button class="remove-keyword" aria-label="削除">
+          ×
+        </button>
+      </span>
+    ))
+  }
+  <button class="add-keyword">+ 追加</button>
+</div>
+
+<style>
+  .keyword-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    padding-top: var(--space-sm);
+  }
+
+  .keyword-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-xs) var(--space-sm);
+    background: var(--color-border);
+    border-radius: 16px;
+    font-size: 0.875rem;
+  }
+
+  .remove-keyword {
+    border: none;
+    background: none;
+    color: var(--color-text-secondary);
+    font-size: 1rem;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  .add-keyword {
+    padding: var(--space-xs) var(--space-sm);
+    border: 1px dashed var(--color-border);
+    border-radius: 16px;
+    background: none;
+    color: var(--color-primary);
+    font-size: 0.875rem;
+    cursor: pointer;
+  }
+</style>
