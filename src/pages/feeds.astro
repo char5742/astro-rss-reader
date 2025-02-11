@@ -1,197 +1,198 @@
 ---
+import Layout from "~/layouts/Layout.astro";
 ---
 
 <Layout title="フィード管理">
-	<div class="feed-management">
-		<header class="page-header">
-			<h1>フィード管理</h1>
-			<div class="header-actions">
-				<button class="btn primary">新規フィード追加</button>
-				<button class="btn secondary">OPMLインポート</button>
-				<button class="btn secondary">OPMLエクスポート</button>
-			</div>
-		</header>
+  <div class="feed-management">
+    <header class="page-header">
+      <h1>フィード管理</h1>
+      <div class="header-actions">
+        <button class="btn primary">新規フィード追加</button>
+        <button class="btn secondary">OPMLインポート</button>
+        <button class="btn secondary">OPMLエクスポート</button>
+      </div>
+    </header>
 
-		<section class="category-section">
-			<h2>カテゴリー管理</h2>
-			<div class="category-list">
-				<article class="category-card">
-					<h3>テクノロジー</h3>
-					<span class="feed-count">5フィード</span>
-					<div class="category-actions">
-						<button class="btn text">編集</button>
-						<button class="btn text">削除</button>
-					</div>
-				</article>
-				<!-- サンプルデータ -->
-			</div>
-		</section>
+    <section class="category-section">
+      <h2>カテゴリー管理</h2>
+      <div class="category-list">
+        <article class="category-card">
+          <h3>テクノロジー</h3>
+          <span class="feed-count">5フィード</span>
+          <div class="category-actions">
+            <button class="btn text">編集</button>
+            <button class="btn text">削除</button>
+          </div>
+        </article>
+        <!-- サンプルデータ -->
+      </div>
+    </section>
 
-		<section class="feeds-section">
-			<h2>フィード一覧</h2>
-			<div class="feed-list">
-				<article class="feed-item">
-					<div class="feed-info">
-						<h3>TechCrunch</h3>
-						<p class="feed-url">https://techcrunch.com/feed</p>
-						<span class="category-tag">テクノロジー</span>
-					</div>
-					<div class="feed-stats">
-						<span>200記事</span>
-						<span>最終更新: 10分前</span>
-					</div>
-					<div class="feed-actions">
-						<button class="btn secondary">編集</button>
-						<button class="btn danger">削除</button>
-					</div>
-				</article>
-				<!-- サンプルデータ -->
-			</div>
-		</section>
-	</div>
+    <section class="feeds-section">
+      <h2>フィード一覧</h2>
+      <div class="feed-list">
+        <article class="feed-item">
+          <div class="feed-info">
+            <h3>TechCrunch</h3>
+            <p class="feed-url">https://techcrunch.com/feed</p>
+            <span class="category-tag">テクノロジー</span>
+          </div>
+          <div class="feed-stats">
+            <span>200記事</span>
+            <span>最終更新: 10分前</span>
+          </div>
+          <div class="feed-actions">
+            <button class="btn secondary">編集</button>
+            <button class="btn danger">削除</button>
+          </div>
+        </article>
+        <!-- サンプルデータ -->
+      </div>
+    </section>
+  </div>
 </Layout>
 
 <style>
-	.feed-management {
-		max-width: 1200px;
-		margin: 0 auto;
-	}
+  .feed-management {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
 
-	.page-header {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		margin-bottom: var(--space-xl);
-	}
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-xl);
+  }
 
-	.header-actions {
-		display: flex;
-		gap: var(--space-sm);
-	}
+  .header-actions {
+    display: flex;
+    gap: var(--space-sm);
+  }
 
-	.btn {
-		padding: var(--space-sm) var(--space-md);
-		border-radius: 6px;
-		font-weight: 500;
-		transition: background-color 0.2s;
-	}
+  .btn {
+    padding: var(--space-sm) var(--space-md);
+    border-radius: 6px;
+    font-weight: 500;
+    transition: background-color 0.2s;
+  }
 
-	.btn.primary {
-		background-color: var(--color-primary);
-		color: white;
-	}
+  .btn.primary {
+    background-color: var(--color-primary);
+    color: white;
+  }
 
-	.btn.secondary {
-		background-color: var(--color-surface);
-		border: 1px solid var(--color-border);
-		color: var(--color-text);
-	}
+  .btn.secondary {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+  }
 
-	.btn.danger {
-		background-color: #ef4444;
-		color: white;
-	}
+  .btn.danger {
+    background-color: #ef4444;
+    color: white;
+  }
 
-	.btn.text {
-		color: var(--color-text);
-	}
+  .btn.text {
+    color: var(--color-text);
+  }
 
-	.category-section,
-	.feeds-section {
-		margin-bottom: var(--space-xl);
-	}
+  .category-section,
+  .feeds-section {
+    margin-bottom: var(--space-xl);
+  }
 
-	.category-list {
-		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-		gap: var(--space-md);
-	}
+  .category-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: var(--space-md);
+  }
 
-	.category-card {
-		background: var(--color-surface);
-		border: 1px solid var(--color-border);
-		border-radius: 8px;
-		padding: var(--space-md);
-	}
+  .category-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: var(--space-md);
+  }
 
-	.category-card h3 {
-		margin-bottom: var(--space-xs);
-	}
+  .category-card h3 {
+    margin-bottom: var(--space-xs);
+  }
 
-	.feed-count {
-		color: var(--color-text-secondary);
-		font-size: 0.875rem;
-	}
+  .feed-count {
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+  }
 
-	.category-actions {
-		display: flex;
-		justify-content: flex-end;
-		gap: var(--space-sm);
-		margin-top: var(--space-sm);
-	}
+  .category-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-sm);
+    margin-top: var(--space-sm);
+  }
 
-	.feed-list {
-		display: grid;
-		gap: var(--space-md);
-	}
+  .feed-list {
+    display: grid;
+    gap: var(--space-md);
+  }
 
-	.feed-item {
-		display: grid;
-		grid-template-columns: 1fr auto auto;
-		align-items: center;
-		gap: var(--space-md);
-		background: var(--color-surface);
-		border: 1px solid var(--color-border);
-		border-radius: 8px;
-		padding: var(--space-md);
-	}
+  .feed-item {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: var(--space-md);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: var(--space-md);
+  }
 
-	.feed-url {
-		color: var(--color-text-secondary);
-		font-size: 0.875rem;
-		margin: var(--space-xs) 0;
-	}
+  .feed-url {
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+    margin: var(--space-xs) 0;
+  }
 
-	.category-tag {
-		display: inline-block;
-		padding: 2px 8px;
-		background: var(--color-border);
-		border-radius: 4px;
-		font-size: 0.75rem;
-	}
+  .category-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    background: var(--color-border);
+    border-radius: 4px;
+    font-size: 0.75rem;
+  }
 
-	.feed-stats {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-end;
-		gap: var(--space-xs);
-		color: var(--color-text-secondary);
-		font-size: 0.875rem;
-	}
+  .feed-stats {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--space-xs);
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+  }
 
-	.feed-actions {
-		display: flex;
-		gap: var(--space-sm);
-	}
+  .feed-actions {
+    display: flex;
+    gap: var(--space-sm);
+  }
 
-	@media (max-width: 768px) {
-		.page-header {
-			flex-direction: column;
-			align-items: stretch;
-			gap: var(--space-md);
-		}
+  @media (max-width: 768px) {
+    .page-header {
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--space-md);
+    }
 
-		.header-actions {
-			flex-wrap: wrap;
-		}
+    .header-actions {
+      flex-wrap: wrap;
+    }
 
-		.feed-item {
-			grid-template-columns: 1fr;
-		}
+    .feed-item {
+      grid-template-columns: 1fr;
+    }
 
-		.feed-stats,
-		.feed-actions {
-			justify-content: flex-start;
-		}
-	}
+    .feed-stats,
+    .feed-actions {
+      justify-content: flex-start;
+    }
+  }
 </style>

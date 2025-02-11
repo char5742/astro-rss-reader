@@ -1,305 +1,141 @@
 ---
+import KeywordChips from "~/components/settings/KeywordChips.astro";
+import SettingItem from "~/components/settings/SettingItem.astro";
+import SettingSection from "~/components/settings/SettingSection.astro";
+import ToggleSwitch from "~/components/settings/ToggleSwitch.astro";
+import Layout from "~/layouts/Layout.astro";
 ---
 
 <Layout title="設定">
-	<div class="settings-page">
-		<header class="page-header">
-			<h1>設定</h1>
-		</header>
+  <div class="settings-page">
+    <header class="page-header">
+      <h1>設定</h1>
+    </header>
 
-		<div class="settings-grid">
-			<section class="settings-section">
-				<h2>アピアランス</h2>
-				<div class="setting-group">
-					<div class="setting-item">
-						<div class="setting-info">
-							<h3>カラーテーマ</h3>
-							<p>アプリのカラーテーマを選択</p>
-						</div>
-						<select class="setting-control">
-							<option value="system">システム設定に従う</option>
-							<option value="light">ライトモード</option>
-							<option value="dark">ダークモード</option>
-						</select>
-					</div>
+    <div class="settings-grid">
+      <SettingSection title="アピアランス">
+        <SettingItem
+          title="カラーテーマ"
+          description="アプリのカラーテーマを選択"
+        >
+          <select class="setting-control">
+            <option value="system">システム設定に従う</option>
+            <option value="light">ライトモード</option>
+            <option value="dark">ダークモード</option>
+          </select>
+        </SettingItem>
 
-					<div class="setting-item">
-						<div class="setting-info">
-							<h3>フォントサイズ</h3>
-							<p>記事の表示サイズを調整</p>
-						</div>
-						<select class="setting-control">
-							<option value="small">小</option>
-							<option value="medium">中</option>
-							<option value="large">大</option>
-						</select>
-					</div>
-				</div>
-			</section>
+        <SettingItem
+          title="フォントサイズ"
+          description="記事の表示サイズを調整"
+        >
+          <select class="setting-control">
+            <option value="small">小</option>
+            <option value="medium">中</option>
+            <option value="large">大</option>
+          </select>
+        </SettingItem>
+      </SettingSection>
 
-			<section class="settings-section">
-				<h2>通知設定</h2>
-				<div class="setting-group">
-					<div class="setting-item">
-						<div class="setting-info">
-							<h3>新着通知</h3>
-							<p>フィードの新着記事を通知</p>
-						</div>
-						<label class="toggle">
-							<input type="checkbox" checked />
-							<span class="toggle-slider"></span>
-						</label>
-					</div>
+      <SettingSection title="通知設定">
+        <SettingItem title="新着通知" description="フィードの新着記事を通知">
+          <ToggleSwitch checked name="new-articles" />
+        </SettingItem>
 
-					<div class="setting-item">
-						<div class="setting-info">
-							<h3>キーワード通知</h3>
-							<p>指定したキーワードを含む記事を通知</p>
-						</div>
-						<label class="toggle">
-							<input type="checkbox" />
-							<span class="toggle-slider"></span>
-						</label>
-					</div>
+        <SettingItem
+          title="キーワード通知"
+          description="指定したキーワードを含む記事を通知"
+        >
+          <ToggleSwitch name="keyword-notifications" />
+        </SettingItem>
 
-					<div class="setting-item notification-keywords">
-						<div class="setting-info">
-							<h3>通知キーワード</h3>
-							<p>通知したいキーワードを入力</p>
-						</div>
-						<div class="keyword-chips">
-							<span class="keyword-chip">
-								AI
-								<button class="remove-keyword" aria-label="削除">×</button>
-							</span>
-							<span class="keyword-chip">
-								Machine Learning
-								<button class="remove-keyword" aria-label="削除">×</button>
-							</span>
-							<button class="add-keyword">+ 追加</button>
-						</div>
-					</div>
-				</div>
-			</section>
+        <SettingItem
+          title="通知キーワード"
+          description="通知したいキーワードを入力"
+        >
+          <KeywordChips keywords={["AI", "Machine Learning"]} />
+        </SettingItem>
+      </SettingSection>
 
-			<section class="settings-section">
-				<h2>アカウント</h2>
-				<div class="setting-group">
-					<div class="setting-item">
-						<div class="setting-info">
-							<h3>同期設定</h3>
-							<p>複数デバイス間で設定を同期</p>
-						</div>
-						<label class="toggle">
-							<input type="checkbox" checked />
-							<span class="toggle-slider"></span>
-						</label>
-					</div>
+      <SettingSection title="アカウント">
+        <SettingItem title="同期設定" description="複数デバイス間で設定を同期">
+          <ToggleSwitch checked name="sync-settings" />
+        </SettingItem>
 
-					<div class="setting-item">
-						<div class="setting-info">
-							<h3>データエクスポート</h3>
-							<p>設定とデータをエクスポート</p>
-						</div>
-						<button class="btn secondary">エクスポート</button>
-					</div>
+        <SettingItem
+          title="データエクスポート"
+          description="設定とデータをエクスポート"
+        >
+          <button class="btn secondary">エクスポート</button>
+        </SettingItem>
 
-					<div class="setting-item danger-zone">
-						<div class="setting-info">
-							<h3>アカウント削除</h3>
-							<p>すべてのデータが削除されます</p>
-						</div>
-						<button class="btn danger">削除</button>
-					</div>
-				</div>
-			</section>
-		</div>
-	</div>
+        <div class="danger-zone">
+          <SettingItem
+            title="アカウント削除"
+            description="すべてのデータが削除されます"
+          >
+            <button class="btn danger">削除</button>
+          </SettingItem>
+        </div>
+      </SettingSection>
+    </div>
+  </div>
 </Layout>
 
 <style>
-	.settings-page {
-		max-width: 800px;
-		margin: 0 auto;
-		padding: var(--space-md);
-	}
+  .settings-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: var(--space-md);
+  }
 
-	.page-header {
-		margin-bottom: var(--space-xl);
-	}
+  .page-header {
+    margin-bottom: var(--space-xl);
+  }
 
-	.settings-grid {
-		display: grid;
-		gap: var(--space-xl);
-	}
+  .settings-grid {
+    display: grid;
+    gap: var(--space-xl);
+  }
 
-	.settings-section {
-		background: var(--color-surface);
-		border: 1px solid var(--color-border);
-		border-radius: 8px;
-		padding: var(--space-lg);
-	}
+  .danger-zone {
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--color-border);
+  }
 
-	.settings-section h2 {
-		font-size: 1.25rem;
-		margin-bottom: var(--space-lg);
-		color: var(--color-text);
-	}
+  .setting-control {
+    min-width: 150px;
+    padding: var(--space-sm) var(--space-md);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    background: var(--color-background);
+    color: var(--color-text);
+    font-size: 0.875rem;
+  }
 
-	.setting-group {
-		display: grid;
-		gap: var(--space-md);
-	}
+  /* Buttons */
+  .btn {
+    padding: var(--space-sm) var(--space-md);
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
 
-	.setting-item {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		gap: var(--space-lg);
-	}
+  .btn.secondary {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+  }
 
-	.setting-info h3 {
-		font-size: 1rem;
-		margin-bottom: var(--space-xs);
-		color: var(--color-text);
-	}
+  .btn.danger {
+    background: #ef4444;
+    border: none;
+    color: white;
+  }
 
-	.setting-info p {
-		font-size: 0.875rem;
-		color: var(--color-text-secondary);
-	}
-
-	.setting-control {
-		min-width: 150px;
-		padding: var(--space-sm) var(--space-md);
-		border: 1px solid var(--color-border);
-		border-radius: 6px;
-		background: var(--color-background);
-		color: var(--color-text);
-		font-size: 0.875rem;
-	}
-
-	/* Toggle Switch */
-	.toggle {
-		position: relative;
-		display: inline-block;
-		width: 50px;
-		height: 24px;
-	}
-
-	.toggle input {
-		opacity: 0;
-		width: 0;
-		height: 0;
-	}
-
-	.toggle-slider {
-		position: absolute;
-		cursor: pointer;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		background-color: var(--color-border);
-		transition: 0.4s;
-		border-radius: 24px;
-	}
-
-	.toggle-slider:before {
-		position: absolute;
-		content: "";
-		height: 20px;
-		width: 20px;
-		left: 2px;
-		bottom: 2px;
-		background-color: white;
-		transition: 0.4s;
-		border-radius: 50%;
-	}
-
-	.toggle input:checked + .toggle-slider {
-		background-color: var(--color-primary);
-	}
-
-	.toggle input:checked + .toggle-slider:before {
-		transform: translateX(26px);
-	}
-
-	/* Keyword Chips */
-	.notification-keywords {
-		flex-direction: column;
-		align-items: stretch;
-	}
-
-	.keyword-chips {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--space-xs);
-		padding-top: var(--space-sm);
-	}
-
-	.keyword-chip {
-		display: inline-flex;
-		align-items: center;
-		gap: var(--space-xs);
-		padding: var(--space-xs) var(--space-sm);
-		background: var(--color-border);
-		border-radius: 16px;
-		font-size: 0.875rem;
-	}
-
-	.remove-keyword {
-		border: none;
-		background: none;
-		color: var(--color-text-secondary);
-		font-size: 1rem;
-		padding: 0;
-		cursor: pointer;
-	}
-
-	.add-keyword {
-		padding: var(--space-xs) var(--space-sm);
-		border: 1px dashed var(--color-border);
-		border-radius: 16px;
-		background: none;
-		color: var(--color-primary);
-		font-size: 0.875rem;
-	}
-
-	/* Buttons */
-	.btn {
-		padding: var(--space-sm) var(--space-md);
-		border-radius: 6px;
-		font-size: 0.875rem;
-		font-weight: 500;
-	}
-
-	.btn.secondary {
-		background: var(--color-surface);
-		border: 1px solid var(--color-border);
-		color: var(--color-text);
-	}
-
-	.btn.danger {
-		background: #ef4444;
-		border: none;
-		color: white;
-	}
-
-	.danger-zone {
-		padding-top: var(--space-md);
-		border-top: 1px solid var(--color-border);
-	}
-
-	@media (max-width: 768px) {
-		.setting-item {
-			flex-direction: column;
-			align-items: stretch;
-			gap: var(--space-sm);
-		}
-
-		.setting-control {
-			width: 100%;
-		}
-	}
+  @media (max-width: 768px) {
+    .setting-control {
+      width: 100%;
+    }
+  }
 </style>

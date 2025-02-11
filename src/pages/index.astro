@@ -1,169 +1,170 @@
 ---
+import Layout from "~/layouts/Layout.astro";
 ---
 
 <Layout title="ホーム">
-	<div class="dashboard">
-		<header class="page-header">
-			<h1>ダッシュボード</h1>
-		</header>
+  <div class="dashboard">
+    <header class="page-header">
+      <h1>ダッシュボード</h1>
+    </header>
 
-		<section class="feed-overview">
-			<h2>フィード一覧</h2>
-			<div class="feed-grid">
-				<article class="feed-card">
-					<h3>Tech News</h3>
-					<p class="unread-count">12 件の未読</p>
-					<div class="feed-stats">
-						<span>総記事数: 156</span>
-						<span>更新: 10分前</span>
-					</div>
-				</article>
-				<article class="feed-card">
-					<h3>Design Weekly</h3>
-					<p class="unread-count">5 件の未読</p>
-					<div class="feed-stats">
-						<span>総記事数: 89</span>
-						<span>更新: 2時間前</span>
-					</div>
-				</article>
-			</div>
-		</section>
+    <section class="feed-overview">
+      <h2>フィード一覧</h2>
+      <div class="feed-grid">
+        <article class="feed-card">
+          <h3>Tech News</h3>
+          <p class="unread-count">12 件の未読</p>
+          <div class="feed-stats">
+            <span>総記事数: 156</span>
+            <span>更新: 10分前</span>
+          </div>
+        </article>
+        <article class="feed-card">
+          <h3>Design Weekly</h3>
+          <p class="unread-count">5 件の未読</p>
+          <div class="feed-stats">
+            <span>総記事数: 89</span>
+            <span>更新: 2時間前</span>
+          </div>
+        </article>
+      </div>
+    </section>
 
-		<section class="latest-articles">
-			<h2>最新記事</h2>
-			<div class="article-list">
-				<article class="article-card">
-					<header>
-						<h3>記事タイトル</h3>
-						<time datetime="2024-02-20">2024.02.20</time>
-					</header>
-					<p>記事の要約テキストがここに表示されます...</p>
-					<footer>
-						<span class="source">Tech News</span>
-						<button class="bookmark-btn">ブックマーク</button>
-					</footer>
-				</article>
-			</div>
-		</section>
-	</div>
+    <section class="l atest-articles">
+      <h2>最新記事</h2>
+      <div class="article-list">
+        <article class="article-card">
+          <header>
+            <h3>記事タイトル</h3>
+            <time datetime="2024-02-20">2024.02.20</time>
+          </header>
+          <p>記事の要約テキストがここに表示されます...</p>
+          <footer>
+            <span class="source">Tech News</span>
+            <button class="bookmark-btn">ブックマーク</button>
+          </footer>
+        </article>
+      </div>
+    </section>
+  </div>
 </Layout>
 
 <style>
-	.dashboard {
-		max-width: 1200px;
-		margin: 0 auto;
-	}
+  .dashboard {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
 
-	.page-header {
-		margin-bottom: var(--space-xl);
-	}
+  .page-header {
+    margin-bottom: var(--space-xl);
+  }
 
-	.page-header h1 {
-		font-size: 2rem;
-		color: var(--color-text);
-	}
+  .page-header h1 {
+    font-size: 2rem;
+    color: var(--color-text);
+  }
 
-	.feed-overview,
-	.latest-articles {
-		margin-bottom: var(--space-xl);
-	}
+  .feed-overview,
+  .latest-articles {
+    margin-bottom: var(--space-xl);
+  }
 
-	h2 {
-		font-size: 1.5rem;
-		margin-bottom: var(--space-lg);
-		color: var(--color-text);
-	}
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: var(--space-lg);
+    color: var(--color-text);
+  }
 
-	.feed-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-		gap: var(--space-md);
-		margin-bottom: var(--space-xl);
-	}
+  .feed-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+  }
 
-	.feed-card {
-		background: var(--color-surface);
-		border: 1px solid var(--color-border);
-		border-radius: 8px;
-		padding: var(--space-md);
-	}
+  .feed-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: var(--space-md);
+  }
 
-	.feed-card h3 {
-		margin-bottom: var(--space-sm);
-		color: var(--color-text);
-	}
+  .feed-card h3 {
+    margin-bottom: var(--space-sm);
+    color: var(--color-text);
+  }
 
-	.unread-count {
-		font-weight: 500;
-		color: var(--color-primary);
-		margin-bottom: var(--space-sm);
-	}
+  .unread-count {
+    font-weight: 500;
+    color: var(--color-primary);
+    margin-bottom: var(--space-sm);
+  }
 
-	.feed-stats {
-		display: flex;
-		justify-content: space-between;
-		color: var(--color-text-secondary);
-		font-size: 0.875rem;
-	}
+  .feed-stats {
+    display: flex;
+    justify-content: space-between;
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+  }
 
-	.article-list {
-		display: grid;
-		gap: var(--space-md);
-	}
+  .article-list {
+    display: grid;
+    gap: var(--space-md);
+  }
 
-	.article-card {
-		background: var(--color-surface);
-		border: 1px solid var(--color-border);
-		border-radius: 8px;
-		padding: var(--space-md);
-	}
+  .article-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: var(--space-md);
+  }
 
-	.article-card header {
-		display: flex;
-		justify-content: space-between;
-		align-items: start;
-		margin-bottom: var(--space-sm);
-	}
+  .article-card header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: var(--space-sm);
+  }
 
-	.article-card h3 {
-		font-size: 1.25rem;
-		color: var(--color-text);
-	}
+  .article-card h3 {
+    font-size: 1.25rem;
+    color: var(--color-text);
+  }
 
-	.article-card time {
-		font-size: 0.875rem;
-		color: var(--color-text-secondary);
-	}
+  .article-card time {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+  }
 
-	.article-card p {
-		font-size: 0.875rem;
-		color: var(--color-text-secondary);
-		margin-bottom: var(--space-md);
-	}
+  .article-card p {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-md);
+  }
 
-	.article-card footer {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-	}
+  .article-card footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
-	.source {
-		font-size: 0.875rem;
-		color: var(--color-text-secondary);
-	}
+  .source {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+  }
 
-	.bookmark-btn {
-		font-size: 0.875rem;
-		color: var(--color-primary);
-	}
+  .bookmark-btn {
+    font-size: 0.875rem;
+    color: var(--color-primary);
+  }
 
-	@media (max-width: 768px) {
-		.feed-grid {
-			grid-template-columns: 1fr;
-		}
-		.article-card header {
-			flex-direction: column;
-			align-items: flex-start;
-		}
-	}
+  @media (max-width: 768px) {
+    .feed-grid {
+      grid-template-columns: 1fr;
+    }
+    .article-card header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
 </style>
