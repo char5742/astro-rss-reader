@@ -16,4 +16,6 @@ export default defineConfig({
       },
     },
   },
+  site: "https://char5742.github.io",
+  base: "astro-rss-reader",
 });
