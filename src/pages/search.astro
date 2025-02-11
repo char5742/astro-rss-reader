@@ -3,70 +3,61 @@ import Layout from "~/layouts/Layout.astro";
 ---
 
 <Layout title="検索">
-  <div class="container">
-    <header class="page-header">
+  <div class="search-page">
+    <header>
       <h1>記事検索</h1>
     </header>
 
-    <div class="card mb-xl">
+    <section class="search-form">
       <form>
-        <div class="flex gap-sm mb-md md:flex-col">
-          <input
-            type="search"
-            name="q"
-            placeholder="キーワードで検索..."
-            class="form-control"
-          />
-          <select name="filter" class="form-control">
+        <div class="search-inputs">
+          <input type="search" name="q" placeholder="キーワードで検索..." />
+          <select name="filter">
             <option value="all">すべて</option>
             <option value="title">タイトル</option>
             <option value="content">本文</option>
             <option value="tags">タグ</option>
           </select>
-          <button type="submit" class="btn primary">検索</button>
+          <button type="submit">検索</button>
         </div>
 
-        <div class="flex gap-lg md:flex-col">
-          <label class="flex gap-sm items-center">
+        <div class="search-filters">
+          <label>
             <input type="checkbox" name="read" />
             未読のみ
           </label>
-          <label class="flex gap-sm items-center">
+          <label>
             <input type="checkbox" name="bookmarked" />
             ブックマーク済み
           </label>
         </div>
       </form>
-    </div>
+    </section>
 
-    <section class="mb-xl">
+    <section class="recent-searches">
       <h2>最近の検索</h2>
-      <div class="item-list">
-        <article class="card">
-          <div class="flex justify-between items-center">
-            <span>AI technology trends</span>
-            <time class="text-secondary text-sm">2時間前</time>
-            <button class="btn">再検索</button>
-          </div>
+      <div class="search-history">
+        <article>
+          <span>AI technology trends</span>
+          <time datetime="2024-02-20T10:00:00">2時間前</time>
+          <button>再検索</button>
         </article>
-        <article class="card">
-          <div class="flex justify-between items-center">
-            <span>Web development best practices</span>
-            <time class="text-secondary text-sm">昨日</time>
-            <button class="btn">再検索</button>
-          </div>
+        <article>
+          <span>Web development best practices</span>
+          <time datetime="2024-02-19">昨日</time>
+          <button>再検索</button>
         </article>
       </div>
     </section>
 
-    <section>
-      <header class="flex gap-md items-center mb-lg">
+    <section class="search-results">
+      <header>
         <h2>検索結果</h2>
-        <span class="text-secondary">15件</span>
+        <span>15件</span>
       </header>
 
-      <div class="item-list">
-        <article class="card">
+      <div class="results-list">
+        <article>
           <h3>
             <a href="/articles/1">最新のAI開発動向：2024年の展望と課題</a>
           </h3>
@@ -74,56 +65,204 @@ import Layout from "~/layouts/Layout.astro";
             ...最新の<mark>AI</mark>技術トレンドについて解説します。
             特に注目すべき点として、大規模言語モデルの発展と...
           </p>
-          <footer class="meta-info">
+          <footer>
             <span>Tech News</span>
             <time datetime="2024-02-20">2024.02.20</time>
           </footer>
         </article>
       </div>
 
-      <nav class="flex gap-md justify-center mt-xl">
-        <button class="btn" disabled>&lt; 前へ</button>
-        <span class="text-secondary">1 / 3</span>
-        <button class="btn">次へ &gt;</button>
+      <nav class="pagination">
+        <button disabled>&lt; 前へ</button>
+        <span>1 / 3</span>
+        <button>次へ &gt;</button>
       </nav>
     </section>
   </div>
 </Layout>
 
 <style>
-  h2 {
-    font-size: 1.25rem;
-    margin-bottom: var(--spacing-md);
+  .search-page {
+    max-width: var(--grid-max-width);
+    margin: 0 auto;
+    padding: var(--spacing-md);
+
+    > header {
+      margin-bottom: var(--spacing-lg);
+    }
   }
 
-  h3 {
-    margin-bottom: var(--spacing-sm);
+  .search-form {
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-md);
+    background: var(--background);
+    border: 1px solid var(--neutral);
+    border-radius: var(--border-radius-sm);
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
+    }
+
+    .search-inputs {
+      display: flex;
+      gap: var(--spacing-sm);
+
+      input[type="search"],
+      select {
+        padding: var(--spacing-sm);
+        border: 1px solid var(--neutral);
+        border-radius: var(--border-radius-sm);
+        font-size: var(--font-size-sm);
+      }
+
+      input[type="search"] {
+        flex: 1;
+      }
+
+      button {
+        padding: var(--spacing-sm) var(--spacing-md);
+        background-color: var(--primary);
+        color: var(--on-primary);
+        border: none;
+        border-radius: var(--border-radius-sm);
+        cursor: pointer;
+      }
+    }
+
+    .search-filters {
+      display: flex;
+      gap: var(--spacing-lg);
+
+      label {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        font-size: var(--font-size-sm);
+      }
+    }
   }
 
-  h3 a {
-    color: var(--text-primary);
-    text-decoration: none;
+  .recent-searches {
+    margin-bottom: var(--spacing-lg);
+
+    h2 {
+      margin-bottom: var(--spacing-md);
+    }
+
+    .search-history {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
+
+      article {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: var(--spacing-md);
+        background: var(--background);
+        border: 1px solid var(--neutral);
+        border-radius: var(--border-radius-sm);
+
+        time {
+          font-size: var(--font-size-sm);
+          color: var(--text-secondary);
+        }
+
+        button {
+          color: var(--primary);
+          background: none;
+          border: none;
+          cursor: pointer;
+        }
+      }
+    }
   }
 
-  h3 a:hover {
-    color: var(--primary);
+  .search-results {
+    > header {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-lg);
+
+      span {
+        color: var(--text-secondary);
+      }
+    }
+
+    .results-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
+
+      article {
+        padding: var(--spacing-md);
+        background: var(--background);
+        border: 1px solid var(--neutral);
+        border-radius: var(--border-radius-sm);
+
+        h3 {
+          margin-bottom: var(--spacing-sm);
+        }
+
+        p {
+          line-height: 1.6;
+          color: var(--text-secondary);
+          margin-bottom: var(--spacing-sm);
+        }
+
+        footer {
+          display: flex;
+          justify-content: space-between;
+          font-size: var(--font-size-sm);
+          color: var (--text-secondary);
+        }
+      }
+    }
   }
 
-  p {
-    margin-bottom: var(--spacing-sm);
-    color: var(--text-secondary);
-    line-height: 1.6;
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+
+    button {
+      color: var(--primary);
+      background: none;
+      border: none;
+      cursor: pointer;
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+
+    span {
+      color: var(--text-secondary);
+    }
   }
 
-  mark {
-    background: #fef08a;
-    color: var(--text-primary);
-    padding: 0 2px;
-    border-radius: 2px;
-  }
+  @media (max-width: 768px) {
+    .search-form {
+      .search-inputs {
+        flex-direction: column;
+      }
 
-  button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+      .search-filters {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+      }
+    }
+
+    .search-history article {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--spacing-sm);
+    }
   }
 </style>

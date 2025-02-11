@@ -12,8 +12,8 @@ import Layout from "~/layouts/Layout.astro";
       </div>
     </header>
 
-    <div class="wrapper">
-      <section class="notification-group">
+    <div class="notification-groups">
+      <section>
         <h2>今日</h2>
         <div class="notification">
           <article class="unread">
@@ -38,7 +38,7 @@ import Layout from "~/layouts/Layout.astro";
         </div>
       </section>
 
-      <section class="notification-group">
+      <section>
         <h2>昨日</h2>
         <div class="notification">
           <article>
@@ -54,23 +54,21 @@ import Layout from "~/layouts/Layout.astro";
 
       <section class="keywords">
         <h2>キーワード通知設定</h2>
-        <div>
-          <div class="tags">
-            <span
-              >AI<label class="toggle">
-                <input type="checkbox" checked />
-                <span></span>
-              </label></span
-            >
-            <span
-              >Machine Learning<label class="toggle">
-                <input type="checkbox" checked />
-                <span></span>
-              </label></span
-            >
-          </div>
-          <a href="/settings">通知設定を編集</a>
+        <div class="tags">
+          <span
+            >AI<label>
+              <input type="checkbox" checked />
+              <span></span>
+            </label></span
+          >
+          <span
+            >Machine Learning<label>
+              <input type="checkbox" checked />
+              <span></span>
+            </label></span
+          >
         </div>
+        <a href="/settings">通知設定を編集</a>
       </section>
     </div>
   </div>
@@ -94,15 +92,15 @@ import Layout from "~/layouts/Layout.astro";
         gap: var(--spacing-sm);
       }
     }
-  }
 
-  .notification-group {
-    margin-bottom: var(--spacing-lg);
+    section {
+      margin-bottom: var(--spacing-lg);
 
-    h2 {
-      font-size: 1rem;
-      color: var(--text-secondary);
-      margin-bottom: var(--spacing-md);
+      h2 {
+        font-size: var(--font-size-md);
+        color: var(--text-secondary);
+        margin-bottom: var(--spacing-md);
+      }
     }
   }
 
@@ -116,44 +114,48 @@ import Layout from "~/layouts/Layout.astro";
       padding: var(--spacing-md);
       background: var(--background);
       border: 1px solid var(--neutral);
-      border-radius: 8px;
+      border-radius: var(--border-radius-sm);
 
       &.unread {
-        background: var(--color-background);
+        background: var(--background);
         border-left: 3px solid var(--primary);
       }
 
       img {
         width: 2rem;
         height: 2rem;
-        border-radius: 8px;
+        border-radius: var(--border-radius-sm);
         background: var(--neutral);
         padding: 0.5rem;
       }
 
-      h3 {
-        font-size: 1rem;
-        margin-bottom: var(--spacing-sm);
-      }
+      div {
+        flex: 1;
 
-      time {
-        font-size: var(--font-size-sm);
-        color: var(--text-secondary);
-      }
+        h3 {
+          font-size: var(--font-size-md);
+          margin-bottom: var(--spacing-sm);
+        }
 
-      p {
-        color: var(--text-secondary);
-        font-size: var(--font-size-sm);
-        margin: var(--spacing-sm) 0;
-      }
+        time {
+          font-size: var(--font-size-sm);
+          color: var(--text-secondary);
+        }
 
-      a {
-        color: var(--primary);
-        font-size: var(--font-size-sm);
-        text-decoration: none;
+        p {
+          color: var(--text-secondary);
+          font-size: var(--font-size-sm);
+          margin: var(--spacing-sm) 0;
+        }
 
-        &:hover {
-          text-decoration: underline;
+        a {
+          color: var(--primary);
+          font-size: var(--font-size-sm);
+          text-decoration: none;
+
+          &:hover {
+            text-decoration: underline;
+          }
         }
       }
     }
@@ -162,7 +164,7 @@ import Layout from "~/layouts/Layout.astro";
   .keywords {
     background: var(--background);
     border: 1px solid var(--neutral);
-    border-radius: 8px;
+    border-radius: var(--border-radius-sm);
     padding: var(--spacing-md);
 
     .tags {
@@ -179,6 +181,51 @@ import Layout from "~/layouts/Layout.astro";
         border-radius: 16px;
         font-size: var(--font-size-sm);
       }
+
+      label {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 24px;
+
+        input {
+          opacity: 0;
+          width: 0;
+          height: 0;
+        }
+
+        span {
+          position: absolute;
+          cursor: pointer;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: var(--neutral);
+          border-radius: 24px;
+          transition: var(--duration-normal);
+
+          &:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 2px;
+            bottom: 2px;
+            background: white;
+            transition: var(--duration-normal);
+            border-radius: 50%;
+          }
+        }
+
+        input:checked + span {
+          background: var(--primary);
+
+          &:before {
+            transform: translateX(26px);
+          }
+        }
+      }
     }
 
     a {
@@ -194,58 +241,7 @@ import Layout from "~/layouts/Layout.astro";
     }
   }
 
-  .toggle {
-    position: relative;
-    display: inline-block;
-    width: 50px;
-    height: 24px;
-
-    input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    span {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: var(--neutral);
-      border-radius: 24px;
-      transition: var(--duration-normal);
-
-      &:before {
-        position: absolute;
-        content: "";
-        height: 20px;
-        width: 20px;
-        left: 2px;
-        bottom: 2px;
-        background: white;
-        transition: var(--duration-normal);
-        border-radius: 50%;
-      }
-    }
-
-    input:checked + span {
-      background: var(--primary);
-
-      &:before {
-        transform: translateX(26px);
-      }
-    }
-  }
-
   @media (max-width: 768px) {
-    header {
-      flex-direction: column;
-      align-items: stretch;
-      gap: var(--spacing-md);
-    }
-
     .notification article {
       flex-direction: column;
 
