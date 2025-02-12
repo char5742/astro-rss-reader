@@ -45,6 +45,8 @@
   --on-background: var(--color-contrast);
   --on-primary: var(--color-contrast);
 
+  --color-content: white;
+
   /* テキストカラー */
   /* メイン文章で使う濃い色 */
   --text-primary: var(--color-contrast);

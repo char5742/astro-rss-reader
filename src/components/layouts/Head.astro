@@ -1,0 +1,32 @@
+---
+type Props = {
+  title?: string;
+
+  site: string;
+  base: string;
+};
+
+const { title, site, base } = Astro.props;
+---
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="Modern RSS Reader" />
+  <meta name="viewport" content="width=device-width" />
+  <link rel="icon" type="image/svg+xml" href="/astro-rss-reader/favicon.svg" />
+  <title>{title ? `${title} | RSS Reader` : "RSS Reader"}</title>
+
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:type" content="website" />
+  <meta
+    property="og:title"
+    content={title ? `${title} | RSS Reader` : "RSS Reader"}
+  />
+  <meta
+    property="og:description"
+    content="最新のRSSフィードを管理・閲覧できるモダンなRSSリーダー。"
+  />
+  <meta property="og:url" content={site + base} />
+  <meta property="og:image" content={site + base + "/og-image.png"} />
+  <meta name="twitter:card" content="summary_large_image" />
+</head>

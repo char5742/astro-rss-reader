@@ -1,0 +1,79 @@
+---
+import { Icon } from "astro-icon/components";
+import type { Feed, FeedCategoryId, FeedId } from "~/types/feed";
+
+// type Props = {
+//   feedList: Feed[];
+// };
+
+// const { feedList } = Astro.props as Props;
+const feedList = [
+  {
+    id: "abc123" as FeedId,
+    title: "TechCrunch",
+    url: "https://techcrunch.com/feed",
+    categoryIds: ["tech" as FeedCategoryId],
+  },
+] satisfies Feed[];
+---
+
+<aside class="sidebar">
+  <!-- 必要に応じてアプリロゴやタイトルなど -->
+  <header>
+    <nav>
+      <ul role="list">
+        <li>
+          <a href="/astro-rss-reader/settings">
+            <Icon name="settings" />
+          </a>
+        </li>
+
+        <li>
+          <a href="/astro-rss-reader/search">
+            <Icon name="search" />
+          </a>
+        </li>
+        <li>
+          <a href="/astro-rss-reader/bookmarks">
+            <Icon name="bookmark" />
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </header>
+  <!-- フィード一覧やカテゴリ一覧など -->
+  <div>
+    <h2>Feeds</h2>
+    <ul role="list">
+      {
+        feedList.map((feed) => (
+          <li>
+            <a href={`/astro-rss-reader/articles`}>{feed.title}</a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</aside>
+
+<style>
+  header {
+    padding: var(--spacing-md);
+
+    ul {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    a {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: var(--spacing-md);
+      margin: 0 var(--spacing-sm);
+      border-radius: var(--border-radius-sm);
+      background-color: var(--primary-container);
+    }
+  }
+</style>
