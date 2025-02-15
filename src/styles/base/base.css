@@ -4,86 +4,83 @@
 ───────────────────────────────────────────────────────────*/
 /* スコープCSSの一例: カード内だけの .button をスコープ化する場合 */
 
-@layer base;
 @import "./form.css";
+@import "./line.css";
 
-@layer base {
-  html,
-  body {
-    margin: 0;
-    padding: 0;
-    font-family: var(--font-family-base);
-    background-color: var(--color-background-base);
-    height: 100%;
-    line-height: var(--line-height-normal);
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family-base);
+  background-color: var(--color-background-base);
+  height: 100%;
+  width: 100%;
+  line-height: var(--line-height-normal);
+}
+
+/* 初期状態で使う例: :has でdialogのopen状態を検知し、ボディスクロールを止める */
+html:has(dialog[open]) {
+  overflow: hidden;
+}
+
+main {
+  margin: 3em;
+  padding: 3em 1em;
+  border-radius: var(--border-radius-3xl);
+  background-color: var(--color-background-surface);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0 0 0.5rem 0;
+  color: var(--color-text-primary);
+  line-height: var(--line-height-tight);
+  font-family: var(--font-family-heading);
+  font-weight: var(--font-weight-bold);
+}
+
+h1 {
+  font-size: var(--font-size-3xl);
+}
+
+h2 {
+  font-size: var(--font-size-2xl);
+}
+
+h3 {
+  font-size: var(--font-size-xl);
+}
+
+h4 {
+  font-size: var(--font-size-lg);
+}
+
+h5 {
+  font-size: var(--font-size-base);
+}
+
+p {
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-relaxed);
+}
+
+a {
+  color: var(--color-surface-primary);
+
+  &:hover {
+    color: var(--color-state-hover);
   }
 
-  /* 初期状態で使う例: :has でdialogのopen状態を検知し、ボディスクロールを止める */
-  html:has(dialog[open]) {
-    overflow: hidden;
+  &:visited {
+    color: var(--color-surface-tertiary);
   }
 
-  main {
-    width: 100%;
-    max-width: calc(100% - 2em);
-    margin: 3em;
-    padding: 3em 1em;
-    border-radius: var(--border-radius-md);
-    background-color: var(--color-background-surface);
-  }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    margin: 0 0 0.5rem 0;
-    color: var(--color-text-primary);
-    line-height: var(--line-height-tight);
-    font-family: var(--font-family-heading);
-    font-weight: var(--font-weight-bold);
-  }
-
-  h1 {
-    font-size: var(--font-size-3xl);
-  }
-
-  h2 {
-    font-size: var(--font-size-2xl);
-  }
-
-  h3 {
-    font-size: var(--font-size-xl);
-  }
-
-  h4 {
-    font-size: var(--font-size-lg);
-  }
-
-  h5 {
-    font-size: var(--font-size-base);
-  }
-
-  p {
-    font-size: var(--font-size-base);
-    color: var(--color-text-secondary);
-    line-height: var(--line-height-relaxed);
-  }
-
-  a {
-    color: var(--color-surface-primary);
-
-    &:hover {
-      color: var(--color-state-hover);
-    }
-
-    &:visited {
-      color: var(--color-surface-tertiary);
-    }
-
-    &:active {
-      color: var(--color-state-active);
-    }
+  &:active {
+    color: var(--color-state-active);
   }
 }

@@ -1,35 +1,33 @@
-@layer tokens {
-  :root {
-    /* フォントファミリー */
-    --font-family-base: "Yomogi", sans-serif;
-    --font-family-heading: "Yasashisa Gothic", sans-serif;
+:root {
+  /* フォントファミリー */
+  --font-family-base: "Yomogi", sans-serif;
+  --font-family-heading: "Yasashisa Gothic", sans-serif;
 
-    /* フォントサイズ - モバイルファースト */
-    --font-size-xs: clamp(0.75rem, calc(0.75rem + 0.25vw), 0.875rem);
-    --font-size-sm: clamp(0.875rem, calc(0.875rem + 0.25vw), 1rem);
-    --font-size-base: clamp(1rem, calc(1rem + 0.25vw), 1.125rem);
-    --font-size-lg: clamp(1.125rem, calc(1.125rem + 0.5vw), 1.25rem);
-    --font-size-xl: clamp(1.25rem, calc(1.25rem + 0.75vw), 1.5rem);
-    --font-size-2xl: clamp(1.5rem, calc(1.5rem + 1vw), 2rem);
-    --font-size-3xl: clamp(2rem, calc(2rem + 1.5vw), 3rem);
+  /* フォントサイズ - モバイルファースト */
+  --font-size-xs: clamp(0.75rem, calc(0.75rem + 0.25vw), 0.875rem);
+  --font-size-sm: clamp(0.875rem, calc(0.875rem + 0.25vw), 1rem);
+  --font-size-base: clamp(1rem, calc(1rem + 0.25vw), 1.125rem);
+  --font-size-lg: clamp(1.125rem, calc(1.125rem + 0.5vw), 1.25rem);
+  --font-size-xl: clamp(1.25rem, calc(1.25rem + 0.75vw), 1.5rem);
+  --font-size-2xl: clamp(1.5rem, calc(1.5rem + 1vw), 2rem);
+  --font-size-3xl: clamp(2rem, calc(2rem + 1.5vw), 3rem);
 
-    /* 行の高さ */
-    --line-height-tight: 1.2;
-    --line-height-snug: 1.375;
-    --line-height-normal: 1.5;
-    --line-height-relaxed: 1.625;
-    --line-height-loose: 2;
+  /* 行の高さ */
+  --line-height-tight: 1.2;
+  --line-height-snug: 1.375;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.625;
+  --line-height-loose: 2;
 
-    /* フォントウェイト */
-    --font-weight-light: 300;
-    --font-weight-normal: 400;
-    --font-weight-medium: 500;
-    --font-weight-bold: 700;
+  /* フォントウェイト */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
 
-    /* 文字間隔 */
-    --letter-spacing-tight: -0.025em;
-    --letter-spacing-normal: 0;
-    --letter-spacing-wide: 0.025em;
-    --letter-spacing-wider: 0.05em;
-  }
+  /* 文字間隔 */
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.025em;
+  --letter-spacing-wider: 0.05em;
 }

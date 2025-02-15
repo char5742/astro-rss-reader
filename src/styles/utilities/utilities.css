@@ -3,22 +3,16 @@
      便利クラス、mixin的なもの、アニメ定義、scroll-driven animなど
 ───────────────────────────────────────────────────────────*/
 
-/* コンテナ幅制御 */
-.container {
-  max-width: var(--grid-max-width);
-  margin: 0 auto;
-  padding: var(--spacing-md);
+/* ユーティリティクラス */
+.sr-only {
+  @media (--sm) {
+    display: none;
+  }
 }
 
-.container-sm {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: var(--spacing-md);
-}
-
-/* 状態 */
-.active {
-  background: var(--primary);
-  color: white;
-  border-color: var(--primary);
+.not-sr-only {
+  display: none;
+  @media (--sm) {
+    display: block;
+  }
 }

@@ -3,10 +3,5 @@
   3) コンポーネントレイヤ (@layer components):
      ボタンやメニュー、ポップオーバーなどのコンポーネント
 ───────────────────────────────────────────────────────────*/
-@import "./card.css";
 @import "./button.css";
 @import "./tag.css";
-@import "./form.css";
-@import "./layout.css";
-@import "./container.css";
-@import "./article.css";

@@ -7,22 +7,22 @@
   color: var(--text-primary);
   transition: all var(--duration-fast);
   box-shadow: inset 0 0 0 1px var(--neutral);
-}
 
-.tag:hover {
-  background: var(--neutral);
+  &:hover {
+    background: var(--neutral);
+  }
+
+  &.active {
+    background: var(--primary);
+    color: var(--on-primary);
+    box-shadow: none;
+  }
 }
 
 .tag-list {
   display: flex;
   gap: var(--spacing-sm);
   flex-wrap: wrap;
-}
-
-.tag.active {
-  background: var(--primary);
-  color: var(--on-primary);
-  box-shadow: none;
 }
 
 .tag-count {
