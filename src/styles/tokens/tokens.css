@@ -3,159 +3,51 @@
      デザイントークン（カラー、フォント、空間、アニメ関連など）
 ───────────────────────────────────────────────────────────*/
 
-:root {
-  /* カラー */
-  color-scheme: light;
+@import "./color.css" layer(tokens);
+@import "./typography.css" layer(tokens);
+@import "./spacing.css" layer(tokens);
+@import "./animation.css" layer(tokens);
+@import "./elevation.css" layer(tokens);
 
-  --color-brand: #b567f8;
-  --color-contrast: #333;
-
-  /* Primary 基準カラー ミント*/
-  --primary: oklab(from var(--color-brand) calc(l + 0.1) a b / 1);
-  --primary-container: oklab(from var(--primary) calc(l - 0.05) a b / 1);
-
-  /* Secondary: 補助カラー クールな雪 */
-  --secondary: oklab(
-    from var(--color-brand) calc(l) calc(a + 0.1) calc(b - 0.1) / 1
-  );
-  --secondary-container: oklab(from var(--secondary) calc(l - 0.05) a b / 1);
-
-  /* Accent: 彩度を上げて視認性を高める */
-  --accent: oklab(from var(--color-brand) l calc(a + 0.1) calc(b - 0.1) / 1);
-
-  /* Neutral: 無彩色で背景やボーダーに使える色 */
-  --neutral: oklab(from var(--color-brand) calc(l - 0.15) 0 0 / 1);
-
-  /* Highlight: 明るさを増して、目を引く要素に */
-  --highlight: oklab(from var(--color-brand) calc(l + 0.15) a b / 1);
-
-  /* Muted: 彩度を抑えて補助的な要素に */
-  --muted: oklab(from var(--color-brand) l calc(a - 0.05) calc(b - 0.05) / 1);
-
-  /* リンク用カラー */
-  /* アクセントよりやや暗めにして存在感を出す */
-  --link: oklab(from var(--accent) calc(l - 0.05) a b / 1);
-  /* ホバー時は少し明るく */
-  --link-hover: oklab(from var(--accent) calc(l + 0.05) a b / 1);
-  /* 訪問後はややトーンダウン */
-  --link-visited: oklab(
-    from var(--accent) calc(l - 0.1) calc(a - 0.03) calc(b - 0.03) / 1
-  );
-  --background: oklab(from var(--color-brand) calc(l - 0.1) a b / 0.05);
-  --on-background: var(--color-contrast);
-  --on-primary: var(--color-contrast);
-
-  --color-content: white;
-
-  /* テキストカラー */
-  /* メイン文章で使う濃い色 */
-  --text-primary: var(--color-contrast);
-  /* primaryより少し明るめ */
-  --text-secondary: oklab(from var(--color-contrast) calc(l + 0.15) a b / 1);
-  /* さらに明度を上げる */
-  /* 透明度を下げて印象を薄く */
-  --text-disabled: oklab(from var(--color-contrast) calc(l + 0.4) a b / 0.6);
-  /* disabledより少し暗めにして、より低いコントラスト */
-  /* 透明度をさらに低く設定 */
-  --text-hint: oklab(from var(--color-contrast) calc(l + 0.15) a b / 0.5);
-
-  /* フォントサイズ */
-  --font-size-xs: clamp(0.75rem, 0.75vw, 0.875rem); /* 12px ～ 14px 程度 */
-  --font-size-sm: clamp(0.875rem, 1vw, 1rem); /* 14px ～ 16px 程度 */
-  --font-size-md: clamp(1rem, 1.125vw, 1.125rem); /* 16px ～ 20px 程度 */
-  --font-size-lg: clamp(1.125rem, 1.25vw, 1.25rem); /* 20px ～ 24px 程度 */
-  --font-size-xl: clamp(1.25rem, 1.5vw, 1.5rem); /* 24px ～ 32px 程度 */
-  --font-size-2xl: clamp(1.5rem, 1.75vw, 1.75rem); /* 32px ～ 48px 程度 */
-  --font-size-3xl: clamp(1.75rem, 2vw, 2rem); /* 48px ～ 64px 程度 */
-  --font-size-4xl: clamp(2rem, 2.25vw, 2.25rem);
-
-  /* ダイナミックビューポート単位をサンプルに */
-  --header-height: 10dvh; /* 画面が動的に変化してもヘッダーを10%に */
-
-  /* フォントや空間 */
-  /* ★改善: ベースフォントを変数にまとめ、参照しやすく */
-  --font-base: "Yomogi", sans-serif;
-  --font-heading: "Yasashisa Gothic", sans-serif; /* 見出し用 */
-
-  /* spacing系 */
-  --spacing-sm: 0.5rem;
-  --spacing-md: 1rem;
-  --spacing-lg: 2rem;
-
-  /* シャドウ */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.2);
-  --elevation-1: 0 0 0 rgba(0, 0, 0, 0);
-  --elevation-2: 0 2px 4px rgba(0, 0, 0, 0.1);
-
-  /* トランスフォーム用(三角関数の例) */
-  --angle-step: calc(360deg / 8);
-
-  /* アニメーション */
-  --duration-fast: 150ms;
-  --duration-normal: 300ms;
-  --duration-slow: 500ms;
-  --easing-linear: cubic-bezier(0, 0, 1, 1);
-  --easing-ease: cubic-bezier(0.25, 0.1, 0.25, 1);
-  --easing-ease-in-out: cubic-bezier(0.42, 0, 0.58, 1);
-
-  /* ボーダー */
-  --border-width-sm: 0.075rem;
-  --border-width-md: 0.125rem;
-  --border-width-lg: 0.25rem;
-  --border-radius-sm: 0.5rem;
-  --border-radius-md: 1rem;
-  --border-radius-lg: 2rem;
-
-  /* レスポンシブ */
-  --breakpoint-xs: 480px;
-  --breakpoint-sm: 768px;
-  --breakpoint-md: 1024px;
-  --breakpoint-lg: 1440px;
-  --breakpoint-xl: 1920px;
-
-  /* グリッド */
-  --grid-gap: 1rem;
-  --grid-columns: 12;
-  --grid-max-width: 1200px;
-
-  /* タイポグラフィ */
-  --font-weight-light: 300;
-  --font-weight-normal: 400;
-  --font-weight-bold: 700;
-
-  /*アクセシビリティ*/
-  --focus-outline-width: 2px;
-  --focus-outline-color: rgba(0, 123, 255, 0.75);
-  --focus-outline-offset: 2px;
-
-  /* ★改善: prefers-reduced-motion対応を想定し、アニメーション全体切り替えを簡易管理 */
-  --reduce-motion: 0;
-}
-
-@font-face {
-  font-family: "Yomogi";
-  src: url("/fonts/Yomogi-Regular.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Yasashisa Gothic";
-  src: url("/fonts/YasashisaGothicBold-V2.woff2") format("woff2");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* ★改善: prefers-reduced-motionメディアクエリでアニメーション時間をゼロに */
-@media (prefers-reduced-motion: reduce) {
+/* その他のグローバル設定 */
+@layer tokens {
   :root {
-    --reduce-motion: 1;
-    --duration-fast: 0ms;
-    --duration-normal: 0ms;
-    --duration-slow: 0ms;
+    /* ブレイクポイント */
+    --breakpoint-sm: 640px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 1024px;
+
+    /* アスペクト比 */
+    --aspect-video: 16 / 9;
+    --aspect-square: 1 / 1;
+    --aspect-portrait: 3 / 4;
+
+    /* ボーダー */
+    --border-width-thin: 1px;
+    --border-width-medium: 2px;
+    --border-width-thick: 4px;
+
+    --border-radius-none: 0;
+    --border-radius-sm: 0.125rem;
+    --border-radius-md: 0.25rem;
+    --border-radius-lg: 0.5rem;
+    --border-radius-xl: 1rem;
+    --border-radius-full: 9999px;
+
+    /* Z-index */
+    --z-negative: -1;
+    --z-elevate: 1;
+    --z-sticky: 100;
+    --z-drawer: 200;
+    --z-dropdown: 300;
+    --z-modal: 400;
+    --z-popover: 500;
+    --z-toast: 600;
+    --z-tooltip: 700;
+
+    /* フォーカス */
+    --focus-ring-width: 2px;
+    --focus-ring-offset: 2px;
+    --focus-ring-color: var(--color-brand-primary);
   }
 }

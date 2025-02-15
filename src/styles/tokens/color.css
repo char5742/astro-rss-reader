@@ -1,0 +1,87 @@
+:root {
+  /* ブランドカラー定義 */
+  --color-brand-primary: #b567f8;
+  --color-brand-secondary: oklch(from var(--color-brand-primary) l c h);
+  --color-brand-tertiary: oklch(
+    from var(--color-brand-primary) l calc(c * 0.8) h
+  );
+  --color-brand-accent: oklch(
+    from var(--color-brand-primary) l calc(c * 1.2) h
+  );
+
+  /* セマンティックカラー */
+  --color-surface-primary: var(--color-brand-primary);
+  --color-surface-secondary: var(--color-brand-secondary);
+  --color-surface-tertiary: var(--color-brand-tertiary);
+  --color-surface-accent: var(--color-brand-accent);
+  --color-surface-muted: oklch(
+    from var(--color-brand-primary) l calc(c * 0.5) h
+  );
+  --color-surface-disabled: oklch(
+    from var(--color-brand-primary) calc(l + 0.1) calc(c * 0.3) h
+  );
+
+  /* テキストカラー */
+  --color-text-primary: oklch(0.2 0 0);
+  --color-text-secondary: oklch(0.3 0 0);
+  --color-text-muted: oklch(0.5 0 0);
+  --color-text-disabled: oklch(0.6 0 0 / 0.5);
+  --color-text-on-primary: oklch(0.98 0 0);
+  --color-text-on-secondary: oklch(0.98 0 0);
+  --color-text-on-accent: oklch(0.98 0 0);
+
+  /* 状態カラー */
+  --color-state-hover: oklch(
+    from var(--color-brand-primary) calc(l + 0.05) c h
+  );
+  --color-state-active: oklch(
+    from var(--color-brand-primary) calc(l - 0.05) c h
+  );
+  --color-state-focus: oklch(from var(--color-brand-primary) l calc(c * 1.1) h);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* ブランドカラー定義 */
+    --color-brand-primary: #a370f0;
+    --color-brand-secondary: oklch(from var(--color-brand-primary) l c h);
+    --color-brand-tertiary: oklch(
+      from var(--color-brand-primary) l calc(c * 0.8) h
+    );
+    --color-brand-accent: oklch(
+      from var(--color-brand-primary) l calc(c * 1.2) h
+    );
+
+    /* セマンティックカラー */
+    --color-surface-primary: var(--color-brand-primary);
+    --color-surface-secondary: var(--color-brand-secondary);
+    --color-surface-tertiary: var(--color-brand-tertiary);
+    --color-surface-accent: var(--color-brand-accent);
+    --color-surface-muted: oklch(
+      from var(--color-brand-primary) l calc(c * 0.5) h
+    );
+    --color-surface-disabled: oklch(
+      from var(--color-brand-primary) calc(l + 0.1) calc(c * 0.3) h
+    );
+
+    /* テキストカラー */
+    --color-text-primary: oklch(0.98 0 0);
+    --color-text-secondary: oklch(0.88 0 0);
+    --color-text-muted: oklch(0.68 0 0);
+    --color-text-disabled: oklch(0.5 0 0 / 0.5);
+    --color-text-on-primary: oklch(0.2 0 0);
+    --color-text-on-secondary: oklch(0.2 0 0);
+    --color-text-on-accent: oklch(0.2 0 0);
+
+    /* 状態カラー */
+    --color-state-hover: oklch(
+      from var(--color-brand-primary) calc(l + 0.05) c h
+    );
+    --color-state-active: oklch(
+      from var(--color-brand-primary) calc(l - 0.05) c h
+    );
+    --color-state-focus: oklch(
+      from var(--color-brand-primary) l calc(c * 1.1) h
+    );
+  }
+}

@@ -1,0 +1,48 @@
+@layer tokens {
+  :root {
+    /* ベーススペーシング */
+    --spacing-unit: 0.25rem;
+
+    /* スペーシングスケール */
+    --spacing-xs: calc(var(--spacing-unit) * 1);
+    /* 4px */
+    --spacing-sm: calc(var(--spacing-unit) * 2);
+    /* 8px */
+    --spacing-md: calc(var(--spacing-unit) * 4);
+    /* 16px */
+    --spacing-lg: calc(var(--spacing-unit) * 6);
+    /* 24px */
+    --spacing-xl: calc(var(--spacing-unit) * 8);
+    /* 32px */
+    --spacing-2xl: calc(var(--spacing-unit) * 12);
+    /* 48px */
+    --spacing-3xl: calc(var(--spacing-unit) * 16);
+    /* 64px */
+
+    /* コンポーネント間のギャップ */
+    --gap-xs: var(--spacing-xs);
+    --gap-sm: var(--spacing-sm);
+    --gap-md: var(--spacing-md);
+    --gap-lg: var(--spacing-lg);
+    --gap-xl: var(--spacing-xl);
+
+    /* パディング */
+    --padding-xs: var(--spacing-xs);
+    --padding-sm: var(--spacing-sm);
+    --padding-md: var(--spacing-md);
+    --padding-lg: var(--spacing-lg);
+    --padding-xl: var(--spacing-xl);
+
+    /* マージン */
+    --margin-xs: var(--spacing-xs);
+    --margin-sm: var(--spacing-sm);
+    --margin-md: var(--spacing-md);
+    --margin-lg: var(--spacing-lg);
+    --margin-xl: var(--spacing-xl);
+
+    /* レイアウト */
+    --container-padding: var(--spacing-md);
+    --section-spacing: var(--spacing-2xl);
+    --content-max-width: 75rem;
+  }
+}
