@@ -1,0 +1,11 @@
+.hover-card {
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius-md);
+  &:hover {
+    transition: filter 0.3s;
+    backdrop-filter: brightness(0.95);
+    @media (prefers-color-scheme: dark) {
+      backdrop-filter: brightness(1.3);
+    }
+  }
+}
