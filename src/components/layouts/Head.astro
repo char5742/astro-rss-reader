@@ -14,6 +14,7 @@ const { title, site, base } = Astro.props;
   <meta name="description" content="Modern RSS Reader" />
   <meta name="viewport" content="width=device-width" />
   <link rel="icon" type="image/svg+xml" href="/astro-rss-reader/favicon.svg" />
+  <meta name="theme-color" content="#b567f8" />
   <title>{title ? `${title} | RSS Reader` : "RSS Reader"}</title>
 
   <!-- Open Graph Meta Tags -->
@@ -29,4 +30,8 @@ const { title, site, base } = Astro.props;
   <meta property="og:url" content={site + base} />
   <meta property="og:image" content={site + base + "/og-image.png"} />
   <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- アクセシビリティ関連のメタタグ -->
+  <meta name="color-scheme" content="light dark" />
+  <meta name="format-detection" content="telephone=no,address=no,email=no" />
 </head>

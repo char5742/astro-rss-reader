@@ -18,32 +18,33 @@ const feedList = [
 ---
 
 <aside class="sidebar">
-  <!-- 必要に応じてアプリロゴやタイトルなど -->
   <header>
     <nav>
       <ul role="list">
         <li>
-          <a href="/astro-rss-reader/settings">
+          <a href="/astro-rss-reader/settings" title="設定">
             <Icon name="settings" />
+            <span class="sr-only">設定</span>
           </a>
         </li>
-
         <li>
-          <a href="/astro-rss-reader/search">
+          <a href="/astro-rss-reader/search" title="検索">
             <Icon name="search" />
+            <span class="sr-only">検索</span>
           </a>
         </li>
         <li>
-          <a href="/astro-rss-reader/bookmarks">
+          <a href="/astro-rss-reader/bookmarks" title="ブックマーク">
             <Icon name="bookmark" />
+            <span class="sr-only">ブックマーク</span>
           </a>
         </li>
       </ul>
     </nav>
   </header>
-  <!-- フィード一覧やカテゴリ一覧など -->
-  <div>
-    <h2>Feeds</h2>
+
+  <div class="feed-section">
+    <h2>フィード一覧</h2>
     <ul role="list">
       {
         feedList.map((feed) => (
@@ -56,24 +57,4 @@ const feedList = [
   </div>
 </aside>
 
-<style>
-  header {
-    padding: var(--spacing-md);
-
-    ul {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    a {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: var(--spacing-md);
-      margin: 0 var(--spacing-sm);
-      border-radius: var(--border-radius-sm);
-      background-color: var(--primary-container);
-    }
-  }
-</style>
+<style></style>
