@@ -1,75 +1,191 @@
 ---
 import Layout from "~/layouts/Layout.astro";
+import {
+  type Article,
+  type ArticleCategoryId,
+  type ArticleId,
+  ArticleStatus,
+} from "~/types/article";
+import type { FeedId } from "~/types/feed";
+
+const articles = [
+  {
+    id: "1" as ArticleId,
+    feedId: "1" as FeedId,
+    title: "AI技術の最新動向：2024年の展望と課題",
+    url: "/astro-rss-reader/articles/1",
+    content: "本文の内容がここに入ります。",
+    summary:
+      "人工知能技術は2024年も急速な進化を続けています。本記事では、主要な技術トレンドと、企業が直面している実装上の課題について詳しく解説します...",
+    categories: [
+      { id: "1" as ArticleCategoryId, name: "AI" },
+      { id: "2" as ArticleCategoryId, name: "Technology" },
+    ],
+    publishedAt: new Date("2024-02-20"),
+    status: ArticleStatus.UNREAD,
+    isFavorite: false,
+  },
+  {
+    id: "2" as ArticleId,
+    feedId: "1" as FeedId,
+    title: "データサイエンスの基礎：統計学と機械学習の違い",
+    url: "/astro-rss-reader/articles/1",
+    content: "本文の内容がここに入ります。",
+    summary:
+      "データサイエンスの基礎となる統計学と機械学習は、どのように異なるのでしょうか？本記事では、両者の違いについてわかりやすく解説します...",
+    categories: [
+      { id: "1" as ArticleCategoryId, name: "Data Science" },
+      { id: "2" as ArticleCategoryId, name: "Statistics" },
+    ],
+    publishedAt: new Date("2024-02-18"),
+    status: ArticleStatus.UNREAD,
+    isFavorite: true,
+  },
+  {
+    id: "3" as ArticleId,
+    feedId: "1" as FeedId,
+    title: "量子コンピュータの基礎：量子ビットと古典ビットの違い",
+    url: "/astro-rss-reader/articles/1",
+    content: "本文の内容がここに入ります。",
+    summary:
+      "量子コンピュータは、古典コンピュータとは異なる仕組みで動作します。本記事では、量子ビットと古典ビットの違いについて詳しく解説します...",
+    categories: [
+      { id: "1" as ArticleCategoryId, name: "Quantum Computing" },
+      { id: "2" as ArticleCategoryId, name: "Technology" },
+    ],
+    publishedAt: new Date("2024-02-15"),
+    status: ArticleStatus.UNREAD,
+    isFavorite: false,
+  },
+  {
+    id: "4" as ArticleId,
+    feedId: "1" as FeedId,
+    title: "Web開発の最新技術：2024年のトレンドと注目ポイント",
+    url: "/astro-rss-reader/articles/1",
+    content: "本文の内容がここに入ります。",
+    summary:
+      "Web開発技術は2024年も進化を続けています。本記事では、最新の技術トレンドと注目ポイントについて詳しく解説します...",
+    categories: [
+      { id: "1" as ArticleCategoryId, name: "WebDevelopment" },
+      { id: "2" as ArticleCategoryId, name: "Technology" },
+    ],
+    publishedAt: new Date("2024-02-10"),
+    status: ArticleStatus.READ,
+    isFavorite: false,
+  },
+] satisfies Article[];
 ---
 
 <Layout title="記事一覧">
-  <div class="container">
-    <header class="container-header">
-      <div class="header-content">
-        <h1>記事一覧</h1>
-        <span class="article-source">Tech News</span>
-      </div>
-
-      <div class="container-actions">
-        <nav class="filter">
-          <button class="btn secondary active">すべて</button>
-          <button class="btn secondary">未読</button>
-          <button class="btn secondary">既読</button>
-        </nav>
-        <select class="form-control">
-          <option value="newest">新着順</option>
-          <option value="oldest">古い順</option>
-          <option value="popular">人気順</option>
-        </select>
-        <nav class="view-mode">
-          <button class="icon-btn active" aria-label="リスト表示">
-            <span>📝</span>
-          </button>
-          <button class="icon-btn" aria-label="グリッド表示">
-            <span>📰</span>
-          </button>
-        </nav>
-      </div>
-    </header>
-
-    <div class="container-list">
-      <article class="item-container">
-        <div class="item-header">
-          <time datetime="2024-02-20">2024.02.20</time>
-          <span class="article-status unread">未読</span>
-        </div>
-        <div class="item-content">
-          <h2>
-            <a href="/astro-rss-reader/articles/1" class="item-title"
-              >AI技術の最新動向：2024年の展望と課題</a
-            >
-          </h2>
-          <p class="item-description">
-            人工知能技術は2024年も急速な進化を続けています。本記事では、主要な技術トレンドと、
-            企業が直面している実装上の課題について詳しく解説します...
-          </p>
-        </div>
-        <footer class="item-footer">
-          <div class="tag-list">
-            <span class="tag">AI</span>
-            <span class="tag">Technology</span>
-          </div>
-          <div class="container-actions">
-            <button class="icon-btn" aria-label="ブックマーク">
-              <span>🔖</span>
-            </button>
-            <button class="icon-btn" aria-label="シェア">
-              <span>📤</span>
-            </button>
-          </div>
-        </footer>
-      </article>
+  <main>
+    <h1>記事一覧</h1>
+    <div class="articles-grid">
+      {
+        articles.map((article) => (
+          <article
+            class={`border-card ${article.status === ArticleStatus.UNREAD ? "unread" : ""}`}
+          >
+            <header>
+              <h2>
+                {article.isFavorite && <span class="status-badge">★</span>}
+                <a href={article.url}>{article.title}</a>
+              </h2>
+              <time datetime={article.publishedAt.toISOString()}>
+                {article.publishedAt.toLocaleDateString()}
+              </time>
+            </header>
+            <p>{article.summary}</p>
+            <footer>
+              <ul class="category-list">
+                {article.categories.map((category) => (
+                  <li class="category-item rounded-card">{category.name}</li>
+                ))}
+              </ul>
+            </footer>
+          </article>
+        ))
+      }
     </div>
-
-    <footer class="container-footer">
-      <button class="btn secondary">さらに読み込む</button>
-    </footer>
-  </div>
+  </main>
 </Layout>
 
-<style></style>
+<style>
+  @layer components {
+    main {
+      padding: var(--spacing-lg);
+
+      h1 {
+        margin-block-end: var(--spacing-xl);
+        font-size: var(--font-size-2xl);
+        font-weight: var(--font-weight-bold);
+      }
+    }
+
+    .articles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 30ch), 1fr));
+      gap: var(--spacing-xl);
+    }
+
+    article {
+      &:not(.unread) {
+        background: var(--color-surface-disabled);
+      }
+
+      p {
+        color: var(--color-text);
+        margin-block-end: var(--spacing-md);
+        line-height: var(--line-height-relaxed);
+      }
+    }
+
+    header {
+      margin-block-end: var(--spacing-sm);
+
+      h2 {
+        font-size: var(--font-size-lg);
+        margin-block-end: var(--spacing-xs);
+
+        a {
+          color: var(--color-text);
+          text-decoration: none;
+
+          &:hover {
+            color: var(--color-primary);
+          }
+        }
+      }
+
+      time {
+        color: var(--color-text-muted);
+        font-size: var(--font-size-sm);
+      }
+    }
+
+    footer {
+      display: flex;
+      justify-content: spacing-between;
+      align-items: center;
+      gap: var(--spacing-md);
+    }
+
+    .category-list {
+      display: flex;
+      gap: var(--spacing-xs);
+      list-style: none;
+      padding: 0;
+    }
+
+    .category-item {
+      background: var(--color-surface-accent);
+      padding: var(--spacing-xs) var(--spacing-sm);
+      font-size: var(--font-size-sm);
+      color: var(--color-text-on-accent);
+    }
+
+    .status-badge {
+      color: var(--color-surface-tertiary);
+      font-size: var(--font-size-lg);
+    }
+  }
+</style>
