@@ -22,4 +22,17 @@ const { title } = Astro.props;
   </body>
 </html>
 
-<style></style>
+<style>
+  body {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+  }
+
+  main {
+    overflow-x: scroll;
+  }
+
+  main::-webkit-scrollbar {
+    display: none;
+  }
+</style>

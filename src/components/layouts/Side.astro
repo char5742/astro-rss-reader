@@ -14,42 +14,57 @@ const feedList = [
     url: "https://techcrunch.com/feed",
     categoryIds: ["tech" as FeedCategoryId],
   },
+  {
+    id: "def456" as FeedId,
+    title: "The Verge",
+    url: "https://www.theverge.com/rss/index.xml",
+    categoryIds: ["tech" as FeedCategoryId],
+  },
+  {
+    id: "ghi789" as FeedId,
+    title: "Wired",
+    url: "https://www.wired.com/feed/rss",
+    categoryIds: ["tech" as FeedCategoryId],
+  },
 ] satisfies Feed[];
 ---
 
-<aside class="sidebar">
+<aside>
   <header>
     <nav>
       <ul role="list">
         <li>
           <a href="/astro-rss-reader/settings" title="設定">
-            <Icon name="settings" />
-            <span class="sr-only">設定</span>
+            <Icon name="settings" class="not-sr-only hover-card" />
+            <span class="sr-only hover-card">設定</span>
           </a>
         </li>
         <li>
           <a href="/astro-rss-reader/search" title="検索">
-            <Icon name="search" />
-            <span class="sr-only">検索</span>
+            <Icon name="search" class="not-sr-only hover-card" />
+            <span class="sr-only hover-card">検索</span>
           </a>
         </li>
         <li>
           <a href="/astro-rss-reader/bookmarks" title="ブックマーク">
-            <Icon name="bookmark" />
-            <span class="sr-only">ブックマーク</span>
+            <Icon name="bookmark" class="not-sr-only hover-card" />
+            <span class="sr-only hover-card">ブックマーク</span>
           </a>
         </li>
       </ul>
     </nav>
   </header>
+  <hr />
 
   <div class="feed-section">
-    <h2>フィード一覧</h2>
+    <h2>Feeds</h2>
     <ul role="list">
       {
         feedList.map((feed) => (
           <li>
-            <a href={`/astro-rss-reader/articles`}>{feed.title}</a>
+            <a href={`/astro-rss-reader/articles`} class="hover-card">
+              {feed.title}
+            </a>
           </li>
         ))
       }
@@ -57,4 +72,36 @@ const feedList = [
   </div>
 </aside>
 
-<style></style>
+<style>
+  aside {
+    background-color: var(--color-gray-100);
+    border-right: 1px solid var(--color-gray-200);
+    padding: var(--spacing-md);
+  }
+
+  [data-icon] {
+    font-size: var(--font-size-3xl);
+  }
+
+  h2 {
+    font-size: var(--font-size-xs);
+    margin-bottom: var(--spacing-md);
+  }
+
+  nav {
+    ul {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+  }
+
+  .feed-section {
+    li {
+      a {
+        display: block;
+        text-decoration: none;
+      }
+    }
+  }
+</style>
