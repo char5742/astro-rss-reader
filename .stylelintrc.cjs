@@ -12,7 +12,14 @@ module.exports = {
     "csstools/value-no-unknown-custom-properties": [
       true,
       {
-        importFrom: ["src/styles/tokens/tokens.css"],
+        importFrom: [
+          "src/styles/tokens/tokens.css",
+          "src/styles/tokens/animation.css",
+          "src/styles/tokens/color.css",
+          "src/styles/tokens/spacing.css",
+          "src/styles/tokens/typography.css",
+          "src/styles/tokens/elevation.css",
+        ],
       },
     ],
   },
