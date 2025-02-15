@@ -1,67 +1,124 @@
-/* 基本的なボタンスタイル */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--border-radius-sm);
-  background: var(--background);
-  color: var(--text-primary);
-  font-size: var(--font-size-sm);
-  transition: all var(--duration-fast);
-  border: none;
-  cursor: pointer;
-}
+@layer components {
+  .btn {
+    /* 基本設定 */
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius-sm);
+    background: var(--color-background-surface);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-sm);
+    border: none;
+    cursor: pointer;
+    transition: background var(--duration-fast)
+      linear(
+        0,
+        0.009,
+        0.035 2.1%,
+        0.141,
+        0.281 6.7%,
+        0.723 12.9%,
+        0.938 16.7%,
+        1.017,
+        1.077,
+        1.121,
+        1.149 24.3%,
+        1.159,
+        1.163,
+        1.161,
+        1.154 29.9%,
+        1.129 32.8%,
+        1.051 39.6%,
+        1.017 43.1%,
+        0.991,
+        0.977 51%,
+        0.974 53.8%,
+        0.975 57.1%,
+        0.997 69.8%,
+        1.003 76.9%,
+        1.004 83.8%,
+        1
+      );
 
-.btn:hover {
-  background: var(--neutral);
-}
+    /* ホバー */
+    &:hover {
+      background: var(--color-state-hover);
+    }
 
-.btn.primary {
-  background-color: var(--primary);
-  color: var(--on-primary);
-}
+    /* フォーカスリングの統一（:focus-visible） */
+    &:focus-visible {
+      --outline-size: max(2px, 0.15em);
+      outline: var(--outline-width, var(--outline-size))
+        var(--outline-style, solid) var(--outline-color, currentColor);
+      outline-offset: var(--outline-offset, var(--outline-size));
+    }
 
-.btn.primary:hover {
-  filter: brightness(1.1);
-}
+    /* アイコンが含まれる場合（:has()） */
+    :where(:has(.icon)) {
+      gap: var(--spacing-xs);
+      /* アイコン付きボタン用の調整が必要ならここに追記 */
+    }
 
-.btn.secondary {
-  background-color: var(--background);
-  color: var(--text-primary);
-}
+    /* ボタンが無効化された場合 */
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
 
-.btn.danger {
-  background-color: #ef4444;
-  color: white;
-}
+    /* バリアント: primary */
+    &.primary {
+      background-color: var(--color-surface-primary);
+      color: var(--color-text-on-primary);
 
-.btn.danger:hover {
-  filter: brightness(1.1);
-}
+      &:hover {
+        background-color: var(--color-state-hover);
+      }
+    }
 
-.btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
+    /* バリアント: secondary */
+    &.secondary {
+      background-color: var(--color-background-base);
+      color: var(--color-text-primary);
+    }
 
-/* アクションボタングループ */
-.btn-group {
-  display: flex;
-  gap: var(--spacing-sm);
-}
+    /* バリアント: danger */
+    &.danger {
+      background-color: var(--color-error);
+      color: var(--color-text-on-accent);
 
-.icon-btn {
-  padding: var(--spacing-sm);
-  border-radius: var(--border-radius-sm);
-  background: transparent;
-  color: var(--text-secondary);
-  border: none;
-  cursor: pointer;
-  transition: all var(--duration-fast);
-}
+      &:hover {
+        filter: brightness(1.1);
+      }
+    }
+  }
 
-.icon-btn:hover {
-  background: var(--background);
-  color: var(--text-primary);
+  /* アクションボタングループ */
+  .btn-group {
+    display: flex;
+    gap: var(--spacing-sm);
+  }
+
+  /* アイコンボタン（単独アイコン用途） */
+  .icon-btn {
+    padding: var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
+    background: transparent;
+    color: var(--color-text-secondary);
+    border: none;
+    cursor: pointer;
+    transition: background var(--duration-fast);
+
+    &:hover {
+      background: var(--color-background-surface);
+      color: var(--color-text-primary);
+    }
+
+    &:focus-visible {
+      --outline-size: max(2px, 0.15em);
+      outline: var(--outline-width, var(--outline-size))
+        var(--outline-style, solid) var(--outline-color, currentColor);
+      outline-offset: var(--outline-offset, var(--outline-size));
+    }
+  }
 }
