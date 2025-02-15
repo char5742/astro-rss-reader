@@ -8,10 +8,6 @@ form {
   transition: all var(--duration-fast) var(--ease-in-out);
   box-shadow: var(--shadow-sm);
 
-  &:hover {
-    box-shadow: var(--shadow-md);
-  }
-
   label {
     font-size: var(--font-size-sm);
     color: var(--color-text-primary);
