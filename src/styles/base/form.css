@@ -3,56 +3,59 @@ form {
   flex-direction: column;
   gap: var(--spacing-md);
   padding: var(--spacing-md);
-  background-color: var(--background);
-  border-radius: var(--border-radius-sm);
-  transition: border-color var(--duration-fast);
-  box-shadow: var(--elevation-2);
+  background-color: var(--color-background-surface);
+  border-radius: var(--border-radius-md);
+  transition: all var(--duration-fast) var(--ease-in-out);
+  box-shadow: var(--shadow-sm);
 
   &:hover {
-    border-color: var(--primary);
+    box-shadow: var(--shadow-md);
   }
 
   label {
     font-size: var(--font-size-sm);
-    color: var(--text-primary);
+    color: var(--color-text-primary);
     font-weight: var(--font-weight-bold);
   }
 
-  /* テキスト・セレクト・テキストエリア用 */
   input[type="text"],
   input[type="email"],
   input[type="password"],
   select,
   textarea {
     padding: var(--spacing-sm) var(--spacing-md);
-    border: none;
-    border-radius: var(--border-radius-sm);
-    background-color: var(--background);
-    color: var(--text-primary);
-    font-size: var(--font-size-md);
-    box-shadow: var(--elevation-1);
-    transition: box-shadow var(--duration-fast);
-    box-sizing: border-box;
+    border: var(--border-width-thin) solid var(--color-border-muted);
+    border-radius: var(--border-radius-md);
+    background-color: var(--color-background-base);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-base);
+    transition: all var(--duration-fast) var(--ease-in-out);
 
     &:focus {
       outline: none;
-      box-shadow: 0 0 0 2px var(--primary);
+      border-color: var(--color-surface-primary);
+      box-shadow: var(--shadow-focus);
+    }
+
+    &:disabled {
+      background-color: var(--color-background-muted);
+      color: var(--color-text-disabled);
     }
   }
 
-  /* カスタムチェックボックス */
   input[type="checkbox"] {
     appearance: none;
     width: 1.2rem;
     height: 1.2rem;
-    border: var(--border-width-sm) solid var(--neutral);
+    border: var(--border-width-thin) solid var(--color-border-default);
     border-radius: var(--border-radius-sm);
     cursor: pointer;
-    transition: background-color var(--duration-fast);
-    position: relative; /* 擬似要素を絶対配置したいので相対配置 */
+    transition: all var(--duration-fast) var(--ease-in-out);
+    position: relative;
 
     &:checked {
-      background-color: var(--primary);
+      background-color: var(--color-surface-primary);
+      border-color: var(--color-surface-primary);
 
       &::after {
         content: "";
@@ -61,17 +64,17 @@ form {
         left: 50%;
         width: 0.4rem;
         height: 0.7rem;
-        border-right: var(--border-width-sm) solid var(--on-primary);
-        border-bottom: var(--border-width-sm) solid var(--on-primary);
-
-        /* 見やすいようにチェックマークを中心に配置 */
+        border-right: var(--border-width-thin) solid
+          var(--color-text-on-primary);
+        border-bottom: var(--border-width-thin) solid
+          var(--color-text-on-primary);
         transform: translate(-50%, -50%) rotate(45deg);
       }
     }
 
     &:focus {
       outline: none;
-      box-shadow: 0 0 0 2px var(--primary);
+      box-shadow: var(--shadow-focus);
     }
   }
 
@@ -79,19 +82,29 @@ form {
     align-self: flex-end;
     padding: var(--spacing-sm) var(--spacing-md);
     border: none;
-    border-radius: var(--border-radius-sm);
-    background-color: var(--primary);
-    color: var(--on-primary);
-    font-size: var(--font-size-md);
+    border-radius: var(--border-radius-md);
+    background-color: var(--color-surface-primary);
+    color: var(--color-text-on-primary);
+    font-size: var(--font-size-base);
     cursor: pointer;
-    transition: filter var(--duration-fast);
+    transition: all var(--duration-fast) var(--ease-in-out);
 
     &:hover {
-      filter: brightness(1.05);
+      background-color: var(--color-state-hover);
+    }
+
+    &:active {
+      background-color: var(--color-state-active);
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: var(--shadow-focus);
     }
 
     &:disabled {
-      opacity: 0.5;
+      background-color: var(--color-surface-disabled);
+      color: var(--color-text-disabled);
       cursor: not-allowed;
     }
   }
