@@ -38,6 +38,19 @@
     from var(--color-brand-primary) calc(l - 0.05) c h
   );
   --color-state-focus: oklch(from var(--color-brand-primary) l calc(c * 1.1) h);
+
+  /* コンテキストカラー */
+  --color-background-base: oklch(0.98 0 0);
+  --color-background-surface: oklch(0.95 0 0);
+  --color-background-muted: oklch(0.92 0 0);
+
+  --color-border-default: oklch(0.8 0 0);
+  --color-border-muted: oklch(0.85 0 0);
+
+  --color-error: oklch(0.65 0.25 25);
+  --color-warning: oklch(0.75 0.2 85);
+  --color-success: oklch(0.65 0.2 145);
+  --color-info: oklch(0.65 0.2 255);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -83,5 +96,18 @@
     --color-state-focus: oklch(
       from var(--color-brand-primary) l calc(c * 1.1) h
     );
+
+    /* コンテキストカラー */
+    --color-background-base: oklch(0.2 0 0);
+    --color-background-surface: oklch(0.25 0 0);
+    --color-background-muted: oklch(0.3 0 0);
+
+    --color-border-default: oklch(0.35 0 0);
+    --color-border-muted: oklch(0.3 0 0);
+
+    --color-error: oklch(0.65 0.25 25);
+    --color-warning: oklch(0.75 0.2 85);
+    --color-success: oklch(0.65 0.2 145);
+    --color-info: oklch(0.65 0.2 255);
   }
 }
