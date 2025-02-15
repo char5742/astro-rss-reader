@@ -24,7 +24,7 @@ html:has(dialog[open]) {
 }
 
 main {
-  margin: 3em;
+  margin: 1em;
   padding: 3em 1em;
   border-radius: var(--border-radius-3xl);
   background-color: var(--color-background-surface);
