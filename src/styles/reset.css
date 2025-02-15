@@ -135,3 +135,25 @@ select {
   -webkit-appearance: none;
   -moz-appearance: none;
 }
+
+/* デフォルトリンクのスタイル調整 */
+a:not([class]) {
+  text-decoration-thickness: max(0.08em, 1px);
+  text-underline-offset: 0.15em;
+}
+
+/* :focus-visible によるフォーカスリングの統一 */
+:focus-visible {
+  --outline-size: max(2px, 0.15em);
+  outline: var(--outline-width, var(--outline-size)) var(--outline-style, solid)
+    var(--outline-color, currentColor);
+  outline-offset: var(--outline-offset, var(--outline-size));
+}
+
+/* アンカーリンク（:target）やフォーカス時のスクロール位置調整 */
+:target {
+  scroll-padding-block-start: 2rem;
+}
+:focus {
+  scroll-padding-block-end: 8vh;
+}
