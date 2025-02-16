@@ -1,4 +1,5 @@
 ---
+import { ClientRouter } from "astro:transitions";
 type Props = {
   title?: string;
 
@@ -34,4 +35,7 @@ const { title, site, base } = Astro.props;
   <!-- アクセシビリティ関連のメタタグ -->
   <meta name="color-scheme" content="light dark" />
   <meta name="format-detection" content="telephone=no,address=no,email=no" />
+
+  <!-- view transitions -->
+  <ClientRouter />
 </head>
