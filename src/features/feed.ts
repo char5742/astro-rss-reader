@@ -1,12 +1,12 @@
 export interface FeedMetadata {
-  title: string;
+  title?: string;
   description?: string;
   imageUrl?: string;
 }
 
 export class FeedError extends Error {
-  constructor(message: string) {
-    super(message);
+  constructor(message: string, error?: unknown) {
+    super(message + (error ? `: ${error}` : ""));
     this.name = "FeedError";
   }
 }
@@ -30,29 +30,17 @@ export async function validateFeedUrl(url: string): Promise<boolean> {
   }
 }
 
-export async function getFeedMetadata(url: string): Promise<FeedMetadata> {
+import { XMLParser } from "fast-xml-parser";
+
+export async function getFeedMetadata(text: string): Promise<FeedMetadata> {
   try {
-    const response = await fetch(`/api/proxy?url=${encodeURIComponent(url)}`);
-    const text = await response.text();
-    const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(text, "text/xml");
+    const parser = new XMLParser();
+    const jObj = parser.parse(text);
 
     // RSS 2.0とAtomの両方に対応
-    const title = xmlDoc.querySelector(
-      "channel > title, feed > title",
-    )?.textContent;
-
-    if (!title) {
-      throw new FeedError("フィードのタイトルが取得できません");
-    }
-
-    const description = xmlDoc.querySelector(
-      "channel > description, feed > subtitle",
-    )?.textContent;
-
-    const imageUrl = xmlDoc.querySelector(
-      "channel > image > url, feed > logo",
-    )?.textContent;
+    const title = jObj.rss?.channel?.title || jObj.feed?.title;
+    const description = jObj.rss?.channel?.description || jObj.feed?.subtitle;
+    const imageUrl = jObj.rss?.channel?.image?.url || jObj.feed?.logo;
 
     return {
       title,
@@ -60,6 +48,6 @@ export async function getFeedMetadata(url: string): Promise<FeedMetadata> {
       imageUrl: imageUrl || undefined,
     };
   } catch (error) {
-    throw new FeedError("フィードの解析に失敗しました");
+    throw new FeedError("フィードの解析に失敗しました", error);
   }
 }

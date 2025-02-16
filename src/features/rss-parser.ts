@@ -1,3 +1,4 @@
+import { XMLParser } from "fast-xml-parser";
 // feedParser.ts
 export interface FeedItem {
   title: string;
@@ -18,36 +19,34 @@ export interface Feed {
  * @param xmlString XML形式の文字列
  * @returns Feedオブジェクト
  */
-export function parseFeed(xmlString: string): Feed {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(xmlString, "application/xml");
-
+export function parseFeed(xmlString: string): Feed | undefined {
+  const parser = new XMLParser();
+  const jObj = parser.parse(xmlString);
   // RSSかAtomか判別
-  if (doc.documentElement.nodeName === "rss") {
-    return parseRss(doc);
+  if (jObj.rss) {
+    return parseRss(jObj.rss);
   }
-  if (doc.documentElement.nodeName === "feed") {
-    return parseAtom(doc);
+  if (jObj.feed) {
+    return parseAtom(jObj.feed);
   }
-  throw new Error("RSS/Atom形式ではないか、解析に失敗しました。");
+  return undefined;
 }
 
 /**
  * RSS 2.0のパース
  */
-function parseRss(doc: Document): Feed {
-  const channel = doc.querySelector("channel");
-  if (!channel) throw new Error("RSSフォーマットが不正です");
+function parseRss(rss: any): Feed {
+  const channel = rss.channel;
 
   return {
-    title: getText(channel, "title"),
-    link: getText(channel, "link"),
-    description: getText(channel, "description"),
-    items: Array.from(channel.querySelectorAll("item")).map((item) => ({
-      title: getText(item, "title"),
-      link: getText(item, "link"),
-      content: getText(item, "description"),
-      pubDate: getText(item, "pubDate"),
+    title: channel.title,
+    link: channel.link,
+    description: channel.description,
+    items: Array.from(channel.item || []).map((item: any) => ({
+      title: item.title,
+      link: item.link,
+      content: item.description || "",
+      pubDate: item.pubDate,
     })),
   };
 }
@@ -55,36 +54,16 @@ function parseRss(doc: Document): Feed {
 /**
  * Atomのパース
  */
-function parseAtom(doc: Document): Feed {
-  const feed = doc.documentElement;
-
+function parseAtom(feed: any): Feed {
   return {
-    title: getText(feed, "title"),
-    link: getAtomLink(feed),
-    description: getText(feed, "subtitle"),
-    items: Array.from(feed.querySelectorAll("entry")).map((entry) => ({
-      title: getText(entry, "title"),
-      link: getAtomLink(entry),
-      content: getText(entry, "content") || getText(entry, "summary"),
-      pubDate: getText(entry, "updated") || getText(entry, "published"),
+    title: feed.title,
+    link: feed.link,
+    description: feed.subtitle,
+    items: Array.from(feed.entry || []).map((entry: any) => ({
+      title: entry.title,
+      link: Array.isArray(entry.link) ? entry.link[0] : entry.link,
+      content: entry.content || entry.summary || "",
+      pubDate: entry.updated || entry.published,
     })),
   };
-}
-
-/**
- * XMLノードから指定したタグのテキストを取得
- */
-function getText(parent: Element, tagName: string): string {
-  const element = parent.querySelector(tagName);
-  return element ? element.textContent?.trim() || "" : "";
-}
-
-/**
- * Atomのlink要素を取得
- */
-function getAtomLink(parent: Element): string {
-  const link =
-    parent.querySelector('link[rel="alternate"]') ||
-    parent.querySelector("link");
-  return link ? link.getAttribute("href") || "" : "";
 }
