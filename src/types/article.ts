@@ -1,4 +1,5 @@
-import type { FeedId } from "./feed";
+import { z } from "zod";
+import { FeedIdSchema } from "./feed";
 
 export enum ArticleStatus {
   UNREAD = "unread",
@@ -7,22 +8,38 @@ export enum ArticleStatus {
 }
 
 const ArticleIdBrand = Symbol();
-export type ArticleId = string & { [ArticleIdBrand]: undefined };
+export const ArticleIdSchema = z.string().brand(ArticleIdBrand);
+export type ArticleId = z.infer<typeof ArticleIdSchema>;
 
-export type Article = Readonly<{
-  id: ArticleId;
-  feedId: FeedId;
-  title: string;
-  url: string;
-  content: string;
-  summary?: string;
-  author?: string;
-  publishedAt: Date;
-  status: ArticleStatus;
-  isFavorite: boolean;
-  imageUrl?: string;
-  categories: ArticleCategory[];
-}>;
+const ArticleCategoryIdBrand = Symbol();
+export const ArticleCategoryIdSchema = z.string().brand(ArticleCategoryIdBrand);
+export type ArticleCategoryId = z.infer<typeof ArticleCategoryIdSchema>;
+
+export const ArticleCategorySchema = z
+  .object({
+    id: ArticleCategoryIdSchema,
+    name: z.string(),
+  })
+  .readonly();
+export type ArticleCategory = z.infer<typeof ArticleCategorySchema>;
+
+export const ArticleSchema = z
+  .object({
+    id: ArticleIdSchema,
+    feedId: FeedIdSchema,
+    title: z.string(),
+    url: z.string().url(),
+    content: z.string(),
+    summary: z.string().optional(),
+    author: z.string().optional(),
+    publishedAt: z.date(),
+    status: z.nativeEnum(ArticleStatus),
+    isFavorite: z.boolean(),
+    imageUrl: z.string().url().optional(),
+    categories: z.array(ArticleCategorySchema),
+  })
+  .readonly();
+export type Article = z.infer<typeof ArticleSchema>;
 
 export function NewArticle({
   id,
@@ -54,34 +71,40 @@ export function NewArticle({
   };
 }
 
-export type ArticleFilter = Readonly<{
-  status?: ArticleStatus;
-  isFavorite?: boolean;
-  categoryIds?: ArticleCategoryId[];
-  feedIds?: FeedId[];
-  searchQuery?: string;
-}>;
+export const ArticleFilterSchema = z
+  .object({
+    status: z.nativeEnum(ArticleStatus).optional(),
+    isFavorite: z.boolean().optional(),
+    categoryIds: z.array(ArticleCategoryIdSchema).optional(),
+    feedIds: z.array(FeedIdSchema).optional(),
+    searchQuery: z.string().optional(),
+  })
+  .readonly();
+export type ArticleFilter = z.infer<typeof ArticleFilterSchema>;
 
-export type ArticleHistory = Readonly<{
-  articleId: ArticleId;
-  previousStatus: ArticleStatus;
-  newStatus: ArticleStatus;
-  updatedAt: Date;
-}>;
+export const ArticleHistorySchema = z
+  .object({
+    articleId: ArticleIdSchema,
+    previousStatus: z.nativeEnum(ArticleStatus),
+    newStatus: z.nativeEnum(ArticleStatus),
+    updatedAt: z.date(),
+  })
+  .readonly();
+export type ArticleHistory = z.infer<typeof ArticleHistorySchema>;
 
-export type Tag = Readonly<{
-  id: string;
-  name: string;
-  color?: string;
-}>;
+export const TagSchema = z
+  .object({
+    id: z.string(),
+    name: z.string(),
+    color: z.string().optional(),
+  })
+  .readonly();
+export type Tag = z.infer<typeof TagSchema>;
 
-export type ArticleWithTags = Article & Readonly<{ tags: Tag[] }>;
-
-const ArticleCategoryIdBrand = Symbol();
-export type ArticleCategoryId = string & {
-  [ArticleCategoryIdBrand]: undefined;
-};
-export type ArticleCategory = Readonly<{
-  id: ArticleCategoryId;
-  name: string;
-}>;
+export const ArticleWithTagsSchema = z
+  .object({
+    article: ArticleSchema,
+    tags: z.array(TagSchema),
+  })
+  .readonly();
+export type ArticleWithTags = z.infer<typeof ArticleWithTagsSchema>;

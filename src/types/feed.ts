@@ -1,33 +1,39 @@
+import { z } from "zod";
+
 const FeedIdBrand = Symbol();
-
-export type FeedId = string & { [FeedIdBrand]: undefined };
-
-export type Feed = Readonly<{
-  id: FeedId;
-  title: string;
-  url: string;
-  categoryIds: FeedCategoryId[];
-  description?: string;
-  lastUpdated?: Date;
-  imageUrl?: string;
-}>;
+export const FeedIdSchema = z.string().brand(FeedIdBrand);
+export type FeedId = z.infer<typeof FeedIdSchema>;
 
 const FeedCategoryIdBrand = Symbol();
+export const FeedCategoryIdSchema = z.string().brand(FeedCategoryIdBrand);
+export type FeedCategoryId = z.infer<typeof FeedCategoryIdSchema>;
 
-export type FeedCategoryId = string & { [FeedCategoryIdBrand]: undefined };
+export const FeedSchema = z
+  .object({
+    id: FeedIdSchema,
+    title: z.string(),
+    url: z.string().url(),
+    categoryIds: z.array(FeedCategoryIdSchema),
+    description: z.string().optional(),
+    lastUpdated: z.date().optional(),
+    imageUrl: z.string().url().optional(),
+  })
+  .readonly();
+export type Feed = z.infer<typeof FeedSchema>;
 
-export type FeedCategory = Readonly<{
-  id: FeedCategoryId;
-  name: string;
-}>;
+export const FeedCategorySchema = z
+  .object({
+    id: FeedCategoryIdSchema,
+    name: z.string(),
+  })
+  .readonly();
+export type FeedCategory = z.infer<typeof FeedCategorySchema>;
 
-export type FeedWithCategories = Feed &
-  Readonly<{
-    categories: FeedCategory[];
-  }>;
-
-export type Subscription = Readonly<{
-  feedId: FeedId;
-  subscribedAt: Date;
-  notificationsEnabled: boolean;
-}>;
+export const SubscriptionSchema = z
+  .object({
+    feedId: FeedIdSchema,
+    subscribedAt: z.date(),
+    notificationsEnabled: z.boolean(),
+  })
+  .readonly();
+export type Subscription = z.infer<typeof SubscriptionSchema>;
