@@ -1,7 +1,7 @@
 import { persistentAtom } from "@nanostores/persistent";
 import type { UserSettings } from "~/types/user";
 
-export const settings = persistentAtom<UserSettings>(
+export const $settings = persistentAtom<UserSettings>(
   "settings",
   defaultSettings(),
   {

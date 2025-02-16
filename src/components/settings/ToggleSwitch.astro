@@ -7,54 +7,6 @@ interface Props {
 const { checked = false, name } = Astro.props;
 ---
 
-<label class="toggle">
-  <input type="checkbox" checked={checked} name={name} />
-  <span class="toggle-slider"></span>
+<label>
+  <input class="toggle-switch" type="checkbox" checked={checked} name={name} />
 </label>
-
-<style>
-  .toggle {
-    position: relative;
-    display: inline-block;
-    width: 50px;
-    height: 24px;
-  }
-
-  .toggle input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-  }
-
-  .toggle-slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: var(--neutral);
-    transition: var(--duration-normal);
-    border-radius: var(--border-radius-lg);
-  }
-
-  .toggle-slider:before {
-    position: absolute;
-    content: "";
-    height: 20px;
-    width: 20px;
-    left: 2px;
-    bottom: 2px;
-    background-color: white;
-    transition: var(--duration-normal);
-    border-radius: 50%;
-  }
-
-  .toggle input:checked + .toggle-slider {
-    background-color: var(--primary);
-  }
-
-  .toggle input:checked + .toggle-slider:before {
-    transform: translateX(26px);
-  }
-</style>
