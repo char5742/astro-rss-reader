@@ -74,7 +74,7 @@ form {
     }
   }
 
-  button {
+  button:not([class]) {
     align-self: flex-end;
     padding: var(--spacing-sm) var(--spacing-md);
     border: none;
