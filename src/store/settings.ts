@@ -26,3 +26,10 @@ function defaultSettings(): UserSettings {
     },
   };
 }
+
+export function updateSettings(settings: Partial<UserSettings>): void {
+  $settings.set({
+    ...$settings.get(),
+    ...settings,
+  });
+}
