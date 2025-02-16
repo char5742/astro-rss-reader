@@ -1,6 +1,6 @@
 import { defineCollection, z } from "astro:content";
 import { feeds } from "./data/feeds";
-import { convertUrlToFeed } from "./features/feed-converter";
+import { convertUrlToFeed } from "./features/feed/feed-converter";
 import { ArticleSchema } from "./types/article";
 import { FeedSchema } from "./types/feed";
 
