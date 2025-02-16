@@ -1,5 +1,3 @@
-import { Document, Element, Window, XMLParser } from "happy-dom";
-// feedParser.ts
 export interface FeedItem {
   title: string;
   link: string;
@@ -14,47 +12,46 @@ export interface Feed {
   items: FeedItem[];
 }
 
+import { XMLParser } from "fast-xml-parser";
+
 /**
  * XMLをパースし、RSS/Atomのフィードを解析する
  * @param xmlString XML形式の文字列
  * @returns Feedオブジェクト
  */
 export function parseFeed(xmlString: string): Feed | undefined {
-  const parser = new XMLParser(new Window());
-  const doc = parser.parse(xmlString);
+  const parser = new XMLParser();
+  const jObj = parser.parse(xmlString);
   // RSSかAtomか判別
-  if (doc.querySelector("rss")) {
-    return parseRss(doc);
+  if (jObj.rss) {
+    return parseRss(jObj.rss.channel);
   }
-  if (doc.querySelector("feed")) {
-    return parseAtom(doc);
+  if (jObj.feed) {
+    return parseAtom(jObj.feed);
   }
   return undefined;
 }
 
-const parseRss = (channel: Document): Feed => ({
-  title: getText(channel, "title"),
-  link: getText(channel, "link"),
-  description: getText(channel, "description"),
-  items: Array.from(channel.querySelectorAll("item")).map((item) => ({
-    title: getText(item, "title"),
-    link: getText(item, "link"),
-    content: getText(item, "description"),
-    pubDate: getText(item, "pubDate"),
+const parseRss = (channel: any): Feed => ({
+  title: channel.title,
+  link: channel.link,
+  description: channel.description,
+  items: channel.item.map((item: any) => ({
+    title: item.title,
+    link: item.link,
+    content: item.description,
+    pubDate: item.pubDate,
   })),
 });
 
-const parseAtom = (feed: Document): Feed => ({
-  title: getText(feed, "title"),
-  link: feed.querySelector("link")?.getAttribute("href") || "",
-  description: getText(feed, "subtitle"),
-  items: Array.from(feed.querySelectorAll("entry")).map((entry) => ({
-    title: getText(entry, "title"),
-    link: entry.querySelector("link")?.getAttribute("href") || "",
-    content: getText(entry, "content") || getText(entry, "summary"),
-    pubDate: getText(entry, "updated") || getText(entry, "published"),
+const parseAtom = (feed: any): Feed => ({
+  title: feed.title,
+  link: feed.link,
+  description: feed.subtitle,
+  items: Array.from(feed.entry || []).map((entry: any) => ({
+    title: entry.title,
+    link: Array.isArray(entry.link) ? entry.link[0] : entry.link,
+    content: entry.content || entry.summary,
+    pubDate: entry.updated || entry.published,
   })),
 });
-
-const getText = (parent: Element | Document, selector: string): string =>
-  parent.querySelector(selector)?.textContent?.trim() || "";

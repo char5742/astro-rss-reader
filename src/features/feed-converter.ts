@@ -10,6 +10,7 @@ export async function convertUrlToFeed(
   // フィードの内容を取得
   const response = await fetch(url);
   const xmlText = await response.text();
+
   // フィードのメタデータを取得
   const metadata = await getFeedMetadata(xmlText);
 
@@ -36,12 +37,12 @@ export async function convertUrlToFeed(
       feedId: feed.id,
       title: item.title,
       url: item.link,
-      content: item.content,
+      content: item.content || "",
       publishedAt: item.pubDate ? new Date(item.pubDate) : new Date(),
       status: ArticleStatus.UNREAD,
       isFavorite: false,
       categories: [],
-      summary: item.content.substring(0, 200), // 最初の200文字をサマリーとして使用
+      summary: item.content?.substring(0, 200) || "", // 最初の200文字をサマリーとして使用
     });
   });
 
