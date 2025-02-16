@@ -36,14 +36,10 @@ const feedList = await getCollection("feed");
   <section>
     <h2>Latest</h2>
     <ul role="list">
-      <!-- <li><a href="#" class="hover-card">today</a></li>
-      <li>
-        <a href="#" class="hover-card">unread </a>
-      </li> -->
       <li>
         <BadgedItem
           title="Today"
-          link="/astro-rss-reader/articles/today"
+          link="/astro-rss-reader/articles?filter=today"
           unreadCount={feedList
             .flatMap((feed) => feed.data.articles)
             .filter(
@@ -57,7 +53,7 @@ const feedList = await getCollection("feed");
       <li>
         <BadgedItem
           title="Unread"
-          link="/astro-rss-reader/articles/unread"
+          link="/astro-rss-reader/articles?filter=unread"
           unreadCount={feedList
             .flatMap((feed) => feed.data.articles)
 
