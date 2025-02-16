@@ -96,8 +96,9 @@ describe("parseFeed", () => {
     expect(result).toEqual(expected);
   });
 
-  test("不正なXMLの場合はエラーをスローする", () => {
-    const invalidXml = "<invalid>XML</invalid>";
-    expect(() => parseFeed(invalidXml)).toThrow();
+  test("不正なフィードの場合はundefinedを返す", () => {
+    const invalidXml = "<invalid></invalid>";
+    const result = parseFeed(invalidXml);
+    expect(result).toBeUndefined();
   });
 });

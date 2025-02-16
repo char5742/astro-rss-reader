@@ -33,21 +33,17 @@ export async function validateFeedUrl(url: string): Promise<boolean> {
 import { XMLParser } from "fast-xml-parser";
 
 export async function getFeedMetadata(text: string): Promise<FeedMetadata> {
-  try {
-    const parser = new XMLParser();
-    const jObj = parser.parse(text);
+  const parser = new XMLParser();
+  const jObj = parser.parse(text);
 
-    // RSS 2.0とAtomの両方に対応
-    const title = jObj.rss?.channel?.title || jObj.feed?.title;
-    const description = jObj.rss?.channel?.description || jObj.feed?.subtitle;
-    const imageUrl = jObj.rss?.channel?.image?.url || jObj.feed?.logo;
+  // RSS 2.0とAtomの両方に対応
+  const title = jObj.rss?.channel?.title || jObj.feed?.title;
+  const description = jObj.rss?.channel?.description || jObj.feed?.subtitle;
+  const imageUrl = jObj.rss?.channel?.image?.url || jObj.feed?.logo;
 
-    return {
-      title,
-      description: description || undefined,
-      imageUrl: imageUrl || undefined,
-    };
-  } catch (error) {
-    throw new FeedError("フィードの解析に失敗しました", error);
-  }
+  return {
+    title,
+    description: description || undefined,
+    imageUrl: imageUrl || undefined,
+  };
 }

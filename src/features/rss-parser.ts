@@ -1,4 +1,4 @@
-import { XMLParser } from "fast-xml-parser";
+import { Document, Element, Window, XMLParser } from "happy-dom";
 // feedParser.ts
 export interface FeedItem {
   title: string;
@@ -20,50 +20,41 @@ export interface Feed {
  * @returns Feedオブジェクト
  */
 export function parseFeed(xmlString: string): Feed | undefined {
-  const parser = new XMLParser();
-  const jObj = parser.parse(xmlString);
+  const parser = new XMLParser(new Window());
+  const doc = parser.parse(xmlString);
   // RSSかAtomか判別
-  if (jObj.rss) {
-    return parseRss(jObj.rss);
+  if (doc.querySelector("rss")) {
+    return parseRss(doc);
   }
-  if (jObj.feed) {
-    return parseAtom(jObj.feed);
+  if (doc.querySelector("feed")) {
+    return parseAtom(doc);
   }
   return undefined;
 }
 
-/**
- * RSS 2.0のパース
- */
-function parseRss(rss: any): Feed {
-  const channel = rss.channel;
+const parseRss = (channel: Document): Feed => ({
+  title: getText(channel, "title"),
+  link: getText(channel, "link"),
+  description: getText(channel, "description"),
+  items: Array.from(channel.querySelectorAll("item")).map((item) => ({
+    title: getText(item, "title"),
+    link: getText(item, "link"),
+    content: getText(item, "description"),
+    pubDate: getText(item, "pubDate"),
+  })),
+});
 
-  return {
-    title: channel.title,
-    link: channel.link,
-    description: channel.description,
-    items: Array.from(channel.item || []).map((item: any) => ({
-      title: item.title,
-      link: item.link,
-      content: item.description || "",
-      pubDate: item.pubDate,
-    })),
-  };
-}
+const parseAtom = (feed: Document): Feed => ({
+  title: getText(feed, "title"),
+  link: feed.querySelector("link")?.getAttribute("href") || "",
+  description: getText(feed, "subtitle"),
+  items: Array.from(feed.querySelectorAll("entry")).map((entry) => ({
+    title: getText(entry, "title"),
+    link: entry.querySelector("link")?.getAttribute("href") || "",
+    content: getText(entry, "content") || getText(entry, "summary"),
+    pubDate: getText(entry, "updated") || getText(entry, "published"),
+  })),
+});
 
-/**
- * Atomのパース
- */
-function parseAtom(feed: any): Feed {
-  return {
-    title: feed.title,
-    link: feed.link,
-    description: feed.subtitle,
-    items: Array.from(feed.entry || []).map((entry: any) => ({
-      title: entry.title,
-      link: Array.isArray(entry.link) ? entry.link[0] : entry.link,
-      content: entry.content || entry.summary || "",
-      pubDate: entry.updated || entry.published,
-    })),
-  };
-}
+const getText = (parent: Element | Document, selector: string): string =>
+  parent.querySelector(selector)?.textContent?.trim() || "";

@@ -62,7 +62,7 @@ describe("Feed Utilities", () => {
 
       globalThis.fetch = async () => new Response(rssContent);
 
-      const metadata = await getFeedMetadata("https://example.com/feed.xml");
+      const metadata = await getFeedMetadata(rssContent);
       expect(metadata).toEqual({
         title: "Test Feed",
         description: "Test Description",
@@ -80,9 +80,7 @@ describe("Feed Utilities", () => {
         </feed>
       `;
 
-      globalThis.fetch = async () => new Response(atomContent);
-
-      const metadata = await getFeedMetadata("https://example.com/atom.xml");
+      const metadata = await getFeedMetadata(atomContent);
       expect(metadata).toEqual({
         title: "Test Atom Feed",
         description: "Test Subtitle",
@@ -90,12 +88,12 @@ describe("Feed Utilities", () => {
       });
     });
 
-    it("無効なフィードの場合はエラーを投げる", async () => {
-      globalThis.fetch = async () => new Response("invalid content");
-
-      await expect(getFeedMetadata("invalid-feed")).rejects.toThrow(
-        "フィードの解析に失敗しました",
-      );
+    it("無効なフィードの場合は空のメタデータを返す", async () => {
+      await expect(await getFeedMetadata("invalid-feed")).toEqual({
+        title: undefined,
+        description: undefined,
+        imageUrl: undefined,
+      });
     });
   });
 
