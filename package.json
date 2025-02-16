@@ -10,11 +10,13 @@
   },
   "dependencies": {
     "@astrojs/db": "^0.14.6",
+    "@nanostores/persistent": "^0.10.2",
     "astro": "^5.2.5",
     "astro-icon": "^1.1.5",
     "fast-xml-parser": "^4.5.1",
     "happy-dom": "^17.1.0",
     "lightningcss": "^1.29.1",
+    "nanostores": "^0.11.4",
     "prettier": "^3.5.0",
     "prettier-plugin-astro": "^0.14.1"
   },

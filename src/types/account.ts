@@ -1,6 +1,11 @@
+import { z } from "astro:content";
+
 const AccountIdBrand = Symbol();
-export type AccountId = string & { [AccountIdBrand]: undefined };
-export type Account = Readonly<{
-  id: AccountId;
-  email: string;
-}>;
+export const AccountIdSchema = z.string().brand(AccountIdBrand);
+export const AccountSchema = z
+  .object({
+    id: AccountIdSchema,
+    email: z.string(),
+  })
+  .readonly();
+export type Account = z.infer<typeof AccountSchema>;
