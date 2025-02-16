@@ -1,84 +1,28 @@
 ---
+export const prerender = false;
+import { getCollection } from "astro:content";
 import Layout from "~/layouts/Layout.astro";
-import {
-  type Article,
-  type ArticleCategoryId,
-  type ArticleId,
-  ArticleStatus,
-} from "~/types/article";
-import type { FeedId } from "~/types/feed";
+import { ArticleStatus } from "~/types/article";
 
-const articles = [
-  {
-    id: "1" as ArticleId,
-    feedId: "1" as FeedId,
-    title: "AI技術の最新動向：2024年の展望と課題",
-    url: "/astro-rss-reader/articles/1",
-    content: "本文の内容がここに入ります。",
-    summary:
-      "人工知能技術は2024年も急速な進化を続けています。本記事では、主要な技術トレンドと、企業が直面している実装上の課題について詳しく解説します...",
-    categories: [
-      { id: "1" as ArticleCategoryId, name: "AI" },
-      { id: "2" as ArticleCategoryId, name: "Technology" },
-    ],
-    publishedAt: new Date("2024-02-20"),
-    status: ArticleStatus.UNREAD,
-    isFavorite: false,
-  },
-  {
-    id: "2" as ArticleId,
-    feedId: "1" as FeedId,
-    title: "データサイエンスの基礎：統計学と機械学習の違い",
-    url: "/astro-rss-reader/articles/1",
-    content: "本文の内容がここに入ります。",
-    summary:
-      "データサイエンスの基礎となる統計学と機械学習は、どのように異なるのでしょうか？本記事では、両者の違いについてわかりやすく解説します...",
-    categories: [
-      { id: "1" as ArticleCategoryId, name: "Data Science" },
-      { id: "2" as ArticleCategoryId, name: "Statistics" },
-    ],
-    publishedAt: new Date("2024-02-18"),
-    status: ArticleStatus.UNREAD,
-    isFavorite: true,
-  },
-  {
-    id: "3" as ArticleId,
-    feedId: "1" as FeedId,
-    title: "量子コンピュータの基礎：量子ビットと古典ビットの違い",
-    url: "/astro-rss-reader/articles/1",
-    content: "本文の内容がここに入ります。",
-    summary:
-      "量子コンピュータは、古典コンピュータとは異なる仕組みで動作します。本記事では、量子ビットと古典ビットの違いについて詳しく解説します...",
-    categories: [
-      { id: "1" as ArticleCategoryId, name: "Quantum Computing" },
-      { id: "2" as ArticleCategoryId, name: "Technology" },
-    ],
-    publishedAt: new Date("2024-02-15"),
-    status: ArticleStatus.UNREAD,
-    isFavorite: false,
-  },
-  {
-    id: "4" as ArticleId,
-    feedId: "1" as FeedId,
-    title: "Web開発の最新技術：2024年のトレンドと注目ポイント",
-    url: "/astro-rss-reader/articles/1",
-    content: "本文の内容がここに入ります。",
-    summary:
-      "Web開発技術は2024年も進化を続けています。本記事では、最新の技術トレンドと注目ポイントについて詳しく解説します...",
-    categories: [
-      { id: "1" as ArticleCategoryId, name: "WebDevelopment" },
-      { id: "2" as ArticleCategoryId, name: "Technology" },
-    ],
-    publishedAt: new Date("2024-02-10"),
-    status: ArticleStatus.READ,
-    isFavorite: false,
-  },
-] satisfies Article[];
+const filter = Astro.url.searchParams.get("filter");
+const feeds = await getCollection("feed");
+
+const articles = feeds
+  .flatMap((feed) => feed.data.articles)
+  .sort((a, b) => (a.publishedAt < b.publishedAt ? 1 : -1))
+  .filter((article) => {
+    if (filter === "today") {
+      return article.publishedAt.toDateString() === new Date().toDateString();
+    } else if (filter === "unread") {
+      return article.status === ArticleStatus.UNREAD;
+    } else {
+      return true;
+    }
+  });
 ---
 
 <Layout title="記事一覧">
   <main>
-    <h1>記事一覧</h1>
     <div class="articles-grid">
       {
         articles.map((article) => (
