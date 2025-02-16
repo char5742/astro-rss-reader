@@ -59,32 +59,30 @@
   --color-neutral: oklch(0.5 0 0);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* ブラウザUIのダークテーマ適用 */
-    color-scheme: dark;
+html[data-theme="dark"] {
+  /* ブラウザUIのダークテーマ適用 */
+  color-scheme: dark;
 
-    /* ========== ブランドカラー定義（暗所向け） ========== */
-    --color-brand-primary: #a370f0; /* ここだけを差し替えてOK */
-    /* 以下のブランドセカンダリ等も自動再計算される */
+  /* ========== ブランドカラー定義（暗所向け） ========== */
+  --color-brand-primary: #a370f0; /* ここだけを差し替えてOK */
+  /* 以下のブランドセカンダリ等も自動再計算される */
 
-    /* テキストカラー */
-    --color-text-primary: oklch(0.98 0 0);
-    --color-text-secondary: oklch(0.88 0 0);
-    --color-text-muted: oklch(0.68 0 0);
-    --color-text-disabled: oklch(0.5 0 0 / 0.5);
-    --color-text-on-primary: oklch(0.2 0 0);
-    --color-text-on-secondary: oklch(0.2 0 0);
-    --color-text-on-accent: oklch(0.2 0 0);
+  /* テキストカラー */
+  --color-text-primary: oklch(0.98 0 0);
+  --color-text-secondary: oklch(0.88 0 0);
+  --color-text-muted: oklch(0.68 0 0);
+  --color-text-disabled: oklch(0.5 0 0 / 0.5);
+  --color-text-on-primary: oklch(0.2 0 0);
+  --color-text-on-secondary: oklch(0.2 0 0);
+  --color-text-on-accent: oklch(0.2 0 0);
 
-    /* コンテキストカラー */
-    --color-background-base: oklch(0.2 0 0);
-    --color-background-surface: oklch(0.25 0 0);
-    --color-background-muted: oklch(0.3 0 0);
+  /* コンテキストカラー */
+  --color-background-base: oklch(0.2 0 0);
+  --color-background-surface: oklch(0.25 0 0);
+  --color-background-muted: oklch(0.3 0 0);
 
-    --color-border-default: oklch(0.35 0 0);
-    --color-border-muted: oklch(0.3 0 0);
+  --color-border-default: oklch(0.35 0 0);
+  --color-border-muted: oklch(0.3 0 0);
 
-    --color-neutral: oklch(0.3 0 0);
-  }
+  --color-neutral: oklch(0.3 0 0);
 }

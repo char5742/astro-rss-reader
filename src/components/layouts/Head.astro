@@ -1,5 +1,6 @@
 ---
 import { ClientRouter } from "astro:transitions";
+import { $settings } from "~/store/settings";
 type Props = {
   title?: string;
 
@@ -8,6 +9,7 @@ type Props = {
 };
 
 const { title, site, base } = Astro.props;
+const theme = $settings.get().appearance.theme;
 ---
 
 <head>
@@ -38,4 +40,30 @@ const { title, site, base } = Astro.props;
 
   <!-- view transitions -->
   <ClientRouter />
+
+  <!-- theme -->
+  <script define:vars={{ theme }}>
+    function detectColorScheme() {
+      let detectTheme = theme; //default to light
+
+      //local storage is used to override OS theme settings
+      if (localStorage.getItem("theme")) {
+        if (localStorage.getItem("theme") == "dark") {
+          detectTheme = "dark"; // use detectTheme instead of theme
+        }
+      } else if (!window.matchMedia) {
+        //matchMedia method not supported
+        return false;
+      } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        //OS theme setting detected as dark
+        detectTheme = "dark"; // use detectTheme instead of theme
+      }
+
+      //dark theme preferred, set document with a `data-theme` attribute
+      if (theme == "dark") {
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
+    }
+    detectColorScheme();
+  </script>
 </head>
