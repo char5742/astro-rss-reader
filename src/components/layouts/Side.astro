@@ -1,6 +1,7 @@
 ---
 import { Icon } from "astro-icon/components";
 import { getCollection } from "astro:content";
+import BadgedItem from "./BadgedItem.astro";
 
 const feedList = await getCollection("feed");
 ---
@@ -32,52 +33,92 @@ const feedList = await getCollection("feed");
   </header>
   <hr />
 
-  <div class="feed-section">
-    <h2>Feeds</h2>
+  <section>
+    <h2>Latest</h2>
     <ul role="list">
-      {
-        feedList.map((feed) => (
-          <li>
-            <a href={`/astro-rss-reader/feeds/${feed.id}`} class="hover-card">
-              {feed.data.feed.title}
-            </a>
-          </li>
-        ))
-      }
+      <!-- <li><a href="#" class="hover-card">today</a></li>
+      <li>
+        <a href="#" class="hover-card">unread </a>
+      </li> -->
+      <li>
+        <BadgedItem
+          title="Today"
+          link="/astro-rss-reader/articles/today"
+          unreadCount={feedList
+            .flatMap((feed) => feed.data.articles)
+            .filter(
+              (article) =>
+                article.publishedAt.toDateString() ===
+                new Date().toDateString(),
+            )
+            .filter((article) => article.status === "unread").length}
+        />
+      </li>
+      <li>
+        <BadgedItem
+          title="Unread"
+          link="/astro-rss-reader/articles/unread"
+          unreadCount={feedList
+            .flatMap((feed) => feed.data.articles)
+
+            .filter((article) => article.status === "unread").length}
+        />
+      </li>
     </ul>
-  </div>
-</aside>
 
-<style>
-  aside {
-    background-color: var(--color-gray-100);
-    border-right: 1px solid var(--color-gray-200);
-    padding: var(--spacing-md);
-  }
+    <section class="feed-section">
+      <h2>Feeds</h2>
+      <ul role="list">
+        {
+          feedList.map((feed) => (
+            <li>
+              <BadgedItem
+                title={feed.data.feed.title}
+                link={`/astro-rss-reader/feeds/${feed.id}`}
+                unreadCount={
+                  feed.data.articles.filter(
+                    (article) => article.status === "unread",
+                  ).length
+                }
+              />
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </section>
 
-  [data-icon] {
-    font-size: var(--font-size-3xl);
-  }
-
-  h2 {
-    font-size: var(--font-size-xs);
-    margin-bottom: var(--spacing-md);
-  }
-
-  nav {
-    ul {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
+  <style>
+    aside {
+      background-color: var(--color-gray-100);
+      border-right: 1px solid var(--color-gray-200);
+      padding: var(--spacing-md);
     }
-  }
 
-  .feed-section {
-    li {
-      a {
-        display: block;
-        text-decoration: none;
+    [data-icon] {
+      font-size: var(--font-size-3xl);
+    }
+
+    h2 {
+      font-size: var(--font-size-xs);
+      margin-bottom: var(--spacing-md);
+    }
+
+    nav {
+      ul {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
       }
     }
-  }
-</style>
+
+    section {
+      li {
+        a {
+          display: block;
+          text-decoration: none;
+        }
+      }
+    }
+  </style>
+</aside>

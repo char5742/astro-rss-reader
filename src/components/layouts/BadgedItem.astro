@@ -1,0 +1,40 @@
+---
+type Props = {
+  link: string;
+  title: string;
+  unreadCount: number;
+};
+const { link, title, unreadCount } = Astro.props;
+---
+
+<a href={link} class="hover-card">
+  <span class="title">{title}</span>
+  {unreadCount > 0 && <span class="badge">{unreadCount}</span>}
+</a>
+
+<style>
+  a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .title {
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .badge {
+    background-color: var(--color-blue-500);
+    color: white;
+    border-radius: 12px;
+    padding: 0.2em 0.5em;
+    font-size: var(--font-size-xs);
+    margin-left: 0.5em;
+    flex-shrink: 0;
+  }
+</style>
