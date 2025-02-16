@@ -1,32 +1,8 @@
 ---
 import { Icon } from "astro-icon/components";
-import type { Feed, FeedCategoryId, FeedId } from "~/types/feed";
+import { getCollection } from "astro:content";
 
-// type Props = {
-//   feedList: Feed[];
-// };
-
-// const { feedList } = Astro.props as Props;
-const feedList = [
-  {
-    id: "abc123" as FeedId,
-    title: "TechCrunch",
-    url: "https://techcrunch.com/feed",
-    categoryIds: ["tech" as FeedCategoryId],
-  },
-  {
-    id: "def456" as FeedId,
-    title: "The Verge",
-    url: "https://www.theverge.com/rss/index.xml",
-    categoryIds: ["tech" as FeedCategoryId],
-  },
-  {
-    id: "ghi789" as FeedId,
-    title: "Wired",
-    url: "https://www.wired.com/feed/rss",
-    categoryIds: ["tech" as FeedCategoryId],
-  },
-] satisfies Feed[];
+const feedList = await getCollection("feed");
 ---
 
 <aside>
@@ -62,8 +38,8 @@ const feedList = [
       {
         feedList.map((feed) => (
           <li>
-            <a href={`/astro-rss-reader/articles`} class="hover-card">
-              {feed.title}
+            <a href={`/astro-rss-reader/feeds/${feed.id}`} class="hover-card">
+              {feed.data.feed.title}
             </a>
           </li>
         ))
