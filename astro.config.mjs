@@ -1,11 +1,10 @@
-import db from "@astrojs/db";
 import node from "@astrojs/node";
 import icon from "astro-icon";
 import { defineConfig } from "astro/config";
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [db(), icon()],
+  integrations: [icon()],
   experimental: {
     serializeConfig: true,
   },

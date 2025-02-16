@@ -9,7 +9,6 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/db": "^0.14.6",
     "@astrojs/node": "^9.1.0",
     "@nanostores/persistent": "^0.10.2",
     "astro": "^5.2.5",
