@@ -3,20 +3,12 @@ import { getCollection } from "astro:content";
 import Layout from "~/layouts/Layout.astro";
 import { ArticleStatus } from "~/types/article";
 
-export async function getStaticPaths() {
-  const feeds = await getCollection("feed");
-  const paths = await Promise.all(
-    feeds.map(async (feed) => ({
-      params: { id: feed.id },
-      props: {
-        ...feed.data,
-      },
-    })),
-  );
-  return paths;
+const feeds = await getCollection("feed");
+const f = feeds.find((f) => f.id === Astro.params.id);
+if (!f) {
+  return { status: 404 };
 }
-
-const { feed, articles } = Astro.props;
+const { feed, articles } = f.data;
 ---
 
 <Layout title={`記事一覧|${feed.title}`}>

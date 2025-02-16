@@ -8,6 +8,7 @@ export default defineConfig({
   experimental: {
     serializeConfig: true,
   },
+  output: "server",
   vite: {
     css: {
       transformer: "lightningcss",
