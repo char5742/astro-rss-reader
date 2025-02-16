@@ -43,27 +43,25 @@ const theme = $settings.get().appearance.theme;
 
   <!-- theme -->
   <script define:vars={{ theme }}>
-    function detectColorScheme() {
-      let detectTheme = theme; //default to light
+    document.addEventListener("astro:page-load", () => {
+      let detectTheme;
 
       //local storage is used to override OS theme settings
-      if (localStorage.getItem("theme")) {
-        if (localStorage.getItem("theme") == "dark") {
-          detectTheme = "dark"; // use detectTheme instead of theme
-        }
+      if (theme != "system") {
+        detectTheme = theme;
       } else if (!window.matchMedia) {
         //matchMedia method not supported
-        return false;
+        return;
       } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
         //OS theme setting detected as dark
         detectTheme = "dark"; // use detectTheme instead of theme
       }
-
       //dark theme preferred, set document with a `data-theme` attribute
-      if (theme == "dark") {
+      if (detectTheme == "dark") {
         document.documentElement.setAttribute("data-theme", "dark");
+      } else {
+        document.documentElement.setAttribute("data-theme", "light");
       }
-    }
-    detectColorScheme();
+    });
   </script>
 </head>
