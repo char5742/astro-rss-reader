@@ -1,14 +1,8 @@
-import { persistentAtom } from "@nanostores/persistent";
+import { atom } from "nanostores";
+import { load, save } from "~/features/persistence/persistence";
 import type { UserSettings } from "~/types/user";
 
-export const $settings = persistentAtom<UserSettings>(
-  "settings",
-  defaultSettings(),
-  {
-    encode: JSON.stringify,
-    decode: JSON.parse,
-  },
-);
+export const $settings = atom<UserSettings>(loadSettings());
 
 function defaultSettings(): UserSettings {
   return {
@@ -27,9 +21,14 @@ function defaultSettings(): UserSettings {
   };
 }
 
+function loadSettings(): UserSettings {
+  const settings = load("settings");
+  console.log("Loaded settings", settings);
+  return settings ? JSON.parse(settings) : defaultSettings();
+}
+
 export function updateSettings(settings: Partial<UserSettings>): void {
-  $settings.set({
-    ...$settings.get(),
-    ...settings,
-  });
+  $settings.set({ ...$settings.get(), ...settings });
+  console.info("Updated settings", $settings.get());
+  save("settings", JSON.stringify($settings.get()));
 }

@@ -30,10 +30,16 @@ const keywordNotificationsEnabled =
             <p>アプリのカラーテーマを選択</p>
           </header>
 
-          <select value={currentTheme} name="theme">
-            <option value="system">システム設定に従う</option>
-            <option value="light">ライトモード</option>
-            <option value="dark">ダークモード</option>
+          <select name="theme">
+            <option value="system" selected={currentTheme === "system"}
+              >システム設定に従う</option
+            >
+            <option value="light" selected={currentTheme === "light"}
+              >ライトモード</option
+            >
+            <option value="dark" selected={currentTheme === "dark"}
+              >ダークモード</option
+            >
           </select>
         </li>
 
@@ -42,10 +48,16 @@ const keywordNotificationsEnabled =
             <h3>フォントサイズ</h3>
             <p>記事の表示サイズを調整</p>
           </header>
-          <select value={currentFontSize} name="fontSize">
-            <option value="small">小</option>
-            <option value="medium">中</option>
-            <option value="large">大</option>
+          <select name="fontSize">
+            <option value="small" selected={currentFontSize === "small"}
+              >小</option
+            >
+            <option value="medium" selected={currentFontSize === "medium"}
+              >中</option
+            >
+            <option value="large" selected={currentFontSize === "large"}
+              >大</option
+            >
           </select>
         </li>
       </ul>
@@ -181,16 +193,21 @@ const keywordNotificationsEnabled =
 
 <script>
   import { actions } from "astro:actions";
+  import { navigate } from "astro:transitions/client";
 
-  const form = document.querySelector("form");
-  form?.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    const formData = new FormData(form);
-    const { error } = await actions.updateSettings(formData);
-    if (error) {
-      alert("Failed to update settings");
-    } else {
-      alert("Settings updated successfully");
-    }
+  document.addEventListener("astro:page-load", () => {
+    const form = document.querySelector("form");
+    form?.addEventListener("submit", async (event) => {
+      console.log("submit");
+      event.preventDefault();
+      const formData = new FormData(form);
+      const { error } = await actions.updateSettings(formData);
+      if (error) {
+        alert("Failed to save settings");
+      } else {
+        alert("Settings saved successfully");
+        navigate("/settings");
+      }
+    });
   });
 </script>

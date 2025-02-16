@@ -1,5 +1,6 @@
 import { defineAction } from "astro:actions";
 import { z } from "astro:schema";
+import "~/features/persistence/persistence";
 import { updateSettings } from "~/store/settings";
 import { UserSettingsSchema } from "~/types/user";
 
@@ -17,10 +18,6 @@ export const server = {
           fontSize: input.fontSize,
         },
       });
-      return {
-        status: 200,
-        message: "Settings updated successfully",
-      };
     },
   }),
 };
