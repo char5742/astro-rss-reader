@@ -1,0 +1,85 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+if (await Astro.session.has("accountId")) {
+  return Astro.redirect("/");
+}
+---
+
+<Layout title="サインアップ">
+  <main class="container">
+    <h1>サインアップ</h1>
+    <form class="auth-form">
+      <div class="form-group">
+        <label for="id">ユーザーID</label>
+        <input type="text" id="id" name="id" required />
+      </div>
+      <button type="submit" class="button primary">サインアップ</button>
+      <p class="auth-link">
+        すでにアカウントをお持ちの方は<a href="/login">ログイン</a>してください
+      </p>
+    </form>
+  </main>
+</Layout>
+
+<style>
+  .auth-form {
+    max-width: 400px;
+    margin: 2rem auto;
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    background: var(--surface-1);
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-group input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+  }
+
+  .auth-link {
+    margin-top: 1rem;
+    text-align: center;
+  }
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  h1 {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+</style>
+
+<script>
+  import { actions } from "astro:actions";
+  import { navigate } from "astro:transitions/client";
+
+  document.addEventListener("astro:page-load", () => {
+    const form = document.querySelector("form");
+    form?.addEventListener("submit", async (event) => {
+      console.log("submit");
+      event.preventDefault();
+      const formData = new FormData(form);
+      const { error } = await actions.signup(formData);
+      if (error) {
+        alert("Failed to sign up");
+      } else {
+        alert("Sign up successful");
+        navigate("/");
+      }
+    });
+  });
+</script>

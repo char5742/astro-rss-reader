@@ -58,60 +58,84 @@ const feedList = await getCollection("feed");
         />
       </li>
     </ul>
-
-    <section class="feed-section">
-      <h2>Feeds</h2>
-      <ul role="list">
-        {
-          feedList.map((feed) => (
-            <li>
-              <BadgedItem
-                title={feed.data.feed.title}
-                link={`/feeds/${feed.id}`}
-                unreadCount={
-                  feed.data.articles.filter(
-                    (article) => article.status === "unread",
-                  ).length
-                }
-              />
-            </li>
-          ))
-        }
-      </ul>
-    </section>
   </section>
-
-  <style>
-    aside {
-      background-color: var(--color-gray-100);
-      border-right: 1px solid var(--color-gray-200);
-      padding: var(--spacing-md);
-    }
-
-    [data-icon] {
-      font-size: var(--font-size-3xl);
-    }
-
-    h2 {
-      font-size: var(--font-size-xs);
-      margin-bottom: var(--spacing-md);
-    }
-
-    nav {
-      ul {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
+  <section class="feed-section">
+    <h2>Feeds</h2>
+    <ul role="list">
+      {
+        feedList.map((feed) => (
+          <li>
+            <BadgedItem
+              title={feed.data.feed.title}
+              link={`/feeds/${feed.id}`}
+              unreadCount={
+                feed.data.articles.filter(
+                  (article) => article.status === "unread",
+                ).length
+              }
+            />
+          </li>
+        ))
       }
-    }
-
-    section {
-      li {
-        a {
-          display: block;
-          text-decoration: none;
-        }
-      }
-    }
-  </style>
+    </ul>
+  </section>
+  <footer>
+    <button type="button" aria-label="logout">
+      <Icon name="logout" class="hover-card" />
+    </button>
+  </footer>
 </aside>
+
+<style>
+  aside {
+    display: grid;
+    grid-template-rows: auto auto auto 1fr auto;
+    background-color: var(--color-gray-100);
+    border-right: 1px solid var(--color-gray-200);
+    padding: var(--spacing-md);
+  }
+
+  [data-icon] {
+    font-size: var(--font-size-3xl);
+  }
+
+  h2 {
+    font-size: var(--font-size-xs);
+    margin-bottom: var(--spacing-md);
+  }
+
+  nav {
+    ul {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+  }
+
+  section {
+    li {
+      a {
+        display: block;
+        text-decoration: none;
+      }
+    }
+  }
+
+  footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-md);
+  }
+</style>
+
+<script>
+  import { actions } from "astro:actions";
+
+  document.addEventListener("astro:page-load", () => {
+    const button = document.querySelector('button[aria-label="logout"]');
+    button.addEventListener("click", () => {
+      actions.logout();
+    });
+  });
+</script>

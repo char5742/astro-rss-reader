@@ -87,7 +87,7 @@ textarea:not([rows]) {
 /* Remove default button styles */
 button {
   all: unset;
-  display: inline-block;
+  display: flex;
   cursor: pointer;
 }
 

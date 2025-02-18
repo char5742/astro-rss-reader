@@ -7,6 +7,7 @@ export default defineConfig({
   integrations: [icon()],
   experimental: {
     serializeConfig: true,
+    session: true,
   },
   output: "server",
   vite: {
