@@ -32,6 +32,7 @@
 - `docs/` - プロジェクトドキュメント
   - `page-list.md` - ページ一覧とその説明
   - `style-guide.md` - スタイリングガイドライン
+  - `css-system-guide.md` - CSSシステムガイドライン
 
 ## Development Guidelines
 
