@@ -4,15 +4,3 @@
 ───────────────────────────────────────────────────────────*/
 
 /* ユーティリティクラス */
-.sr-only {
-  @media (--sm) {
-    display: none;
-  }
-}
-
-.not-sr-only {
-  display: none;
-  @media (--sm) {
-    display: block;
-  }
-}
