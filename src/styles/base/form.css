@@ -6,7 +6,6 @@ form {
   background-color: var(--color-background-surface);
   border-radius: var(--border-radius-md);
   transition: all var(--duration-fast) var(--ease-in-out);
-  box-shadow: var(--shadow-sm);
 
   label {
     font-size: var(--font-size-sm);
