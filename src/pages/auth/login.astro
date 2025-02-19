@@ -1,0 +1,84 @@
+---
+import AuthLayout from "~/layouts/AuthLayout.astro";
+---
+
+<AuthLayout title="ログイン">
+  <main>
+    <h1>RSS Reader</h1>
+    <form>
+      <ul role="list">
+        <li>
+          <label for="id">ユーザーID</label>
+          <input type="text" id="id" name="id" required />
+        </li>
+        <li>
+          <button type="submit">ログイン</button>
+        </li>
+        <li>
+          <p class="auth-link">
+            アカウントをお持ちでない方は<a href="/auth/signup">サインアップ</a
+            >してください
+          </p>
+        </li>
+      </ul>
+    </form>
+  </main>
+</AuthLayout>
+
+<style>
+  form {
+    max-width: 400px;
+    margin: 2rem auto;
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    background: var(--surface-1);
+  }
+
+  ul {
+    display: grid;
+    gap: var(--spacing-md);
+  }
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  input {
+    width: 100%;
+  }
+
+  button {
+    width: 100%;
+  }
+
+  .auth-link {
+    margin-top: 1rem;
+    text-align: center;
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+</style>
+
+<script>
+  import { actions } from "astro:actions";
+  import { navigate } from "astro:transitions/client";
+
+  document.addEventListener("astro:page-load", () => {
+    const form = document.querySelector("form");
+    form?.addEventListener("submit", async (event) => {
+      console.log("submit");
+      event.preventDefault();
+      const formData = new FormData(form);
+      const { error } = await actions.login(formData);
+      if (error) {
+        alert("Failed to log in");
+      } else {
+        alert("Login successful");
+        navigate("/");
+      }
+    });
+  });
+</script>

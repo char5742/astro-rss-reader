@@ -1,29 +1,32 @@
 ---
-import Layout from "../layouts/Layout.astro";
-if (await Astro.session?.has("accountId")) {
-  return Astro.redirect("/");
-}
+import AuthLayout from "~/layouts/AuthLayout.astro";
 ---
 
-<Layout title="ログイン">
-  <main class="container">
-    <h1>ログイン</h1>
-    <form class="auth-form">
-      <div class="form-group">
-        <label for="id">ユーザーID</label>
-        <input type="text" id="id" name="id" required />
-      </div>
-      <button type="submit" class="button primary">ログイン</button>
-      <p class="auth-link">
-        アカウントをお持ちでない方は<a href="/signup">サインアップ</a
-        >してください
-      </p>
+<AuthLayout title="サインアップ">
+  <main>
+    <h1>RSS Reader</h1>
+    <form>
+      <ul role="list">
+        <li>
+          <label for="id">ユーザーID</label>
+          <input type="text" id="id" name="id" required />
+        </li>
+        <li>
+          <button type="submit">サインアップ</button>
+        </li>
+        <li>
+          <p class="auth-link">
+            すでにアカウントをお持ちの方は<a href="/auth/login">ログイン</a
+            >してください
+          </p>
+        </li>
+      </ul>
     </form>
   </main>
-</Layout>
+</AuthLayout>
 
 <style>
-  .auth-form {
+  form {
     max-width: 400px;
     margin: 2rem auto;
     padding: 2rem;
@@ -31,32 +34,28 @@ if (await Astro.session?.has("accountId")) {
     background: var(--surface-1);
   }
 
-  .form-group {
-    margin-bottom: 1.5rem;
+  ul {
+    display: grid;
+    gap: var(--spacing-md);
   }
 
-  .form-group label {
+  label {
     display: block;
     margin-bottom: 0.5rem;
   }
 
-  .form-group input {
+  input {
     width: 100%;
-    padding: 0.5rem;
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-sm);
+  }
+
+  button {
+    width: 100%;
   }
 
   .auth-link {
     margin-top: 1rem;
     text-align: center;
   }
-  .container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 2rem;
-  }
-
   h1 {
     text-align: center;
     margin-bottom: 2rem;
