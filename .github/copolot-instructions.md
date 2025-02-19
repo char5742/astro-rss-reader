@@ -6,63 +6,120 @@
 
 - `src/` - メインのソースコードディレクトリ
   - `actions/` - Astroのサーバーアクション
+    - `index.ts` - メインのアクションファイル
   - `components/` - 再利用可能なAstroコンポーネント
-  - `features/` - 機能別のビジネスロジック（RSS解析、永続化など）
+    - `layouts/` - レイアウト関連コンポーネント（BadgedItem, Head, Side等）
+    - `settings/` - 設定画面用コンポーネント
+  - `features/` - 機能別のビジネスロジック
+    - `feed/` - フィード処理関連（パース、変換、テスト）
+    - `persistence/` - データ永続化ロジック
   - `pages/` - Astroのページコンポーネント
-  - `store/` - 状態管理
-  - `types/` - TypeScript型定義
+    - `auth/` - 認証関連ページ（login, signup）
+    - `feeds/` - フィード関連ページ
+  - `store/` - 状態管理（accounts, settings, users）
+  - `types/` - TypeScript型定義（account, article, feed, user）
+
+### Data and Configuration
+
+- `data/` - アプリケーションデータ
+  - `feeds.ts` - フィード関連データ定義
+- `content.config.ts` - コンテンツ設定
+- `middleware.ts` - ミドルウェア設定
 
 ### Styles
 
 - `src/styles/` - スタイリングシステム
-  - `base/` - 基本スタイル
-  - `components/` - コンポーネント固有のスタイル
-  - `tokens/` - デザイントークン
+  - `base/` - 基本スタイル（base, form, line）
+  - `components/` - コンポーネント固有のスタイル（button, card, switch）
+  - `tokens/` - デザイントークン（color, spacing, typography等）
   - `utilities/` - ユーティリティクラス
-  - 詳細は `src/styles/README.md` を参照
+  - `globals.css` - グローバルスタイル
+  - `reset.css` - リセットスタイル
 
 ### Assets and Icons
 
-- `src/assets/` - 画像やSVGなどの静的アセット
-- `src/icons/` - アプリケーション全体で使用するアイコン
-- `public/` - 直接公開される静的ファイル
+- `src/assets/` - 静的アセット（astro.svg, background.svg）
+- `src/icons/` - UIアイコン（book, bookmark, settings等）
+- `public/` - 公開静的ファイル（favicon.svg, og-image.png）
+
+### Testing
+
+- テストファイルは実装と同じディレクトリに配置（\*.test.ts）
+- `happydom.ts` - DOMテスト用設定
+
+### Configuration Files
+
+- `astro.config.mjs` - Astro設定
+- `bunfig.toml` - Bun設定
+- `tsconfig.json` - TypeScript設定
+- `bun.lock` - 依存関係ロック
 
 ### Documentation
 
 - `docs/` - プロジェクトドキュメント
-  - `page-list.md` - ページ一覧とその説明
-  - `style-guide.md` - スタイリングガイドライン
-  - `css-system-guide.md` - CSSシステムガイドライン
+  - `css-system-guide.md` - CSSシステムの設計方針とスタイリングガイド
+    - デザイントークンの使用方法
+    - コンポーネントスタイルの実装規則
+    - ユーティリティクラスの活用ガイド
+  - `page-list.md` - アプリケーションのページ構成と役割
+    - 各ページの機能概要
+    - ルーティング設計
+    - ページ間の遷移フロー
+  - `style-guide.md` - コーディングスタイルガイド
+    - TypeScript/JavaScript コーディング規約
+    - Astroコンポーネントの実装規則
+    - テストコード作成ガイドライン
 
 ## Development Guidelines
 
 ### コード生成時の注意点
 
-1. ドキュメントの確認
+1. ディレクトリ構造の遵守
 
-   - 実装前に `docs/` ディレクトリ内のドキュメントを確認
-   - 特に `style-guide.md` の規約に従う
+   - 新規機能は適切なディレクトリに配置
+   - 命名規則に従う（小文字、ハイフン区切り）
 
 2. スタイリング
 
-   - スタイルの追加・修正時は `src/styles/README.md` を参照
-   - デザイントークンを活用し、一貫性のあるデザインを維持
+   - コンポーネント固有のスタイルは `styles/components/` に配置
+   - デザイントークンを優先的に使用
+   - グローバルスタイルの追加は慎重に検討
 
-3. 型の活用
+3. コンポーネント開発
 
-   - `src/types/` 配下の型定義を活用
-   - 新機能追加時は適切な型定義を作成
+   - 再利用可能なコンポーネントは細分化
+   - Props型の明示的な定義
+   - レイアウトコンポーネントは `layouts/` に配置
 
-4. フィーチャーの配置
+4. テスト
 
-   - 新機能は `src/features/` に適切なサブディレクトリを作成
-   - テストファイルは対応する実装の隣に配置
+   - 機能実装と同時にテストを作成
+   - テストファイルは実装ファイルの隣に配置
+   - `happydom.ts` を活用したDOM操作のテスト
 
-5. コンポーネント
-   - 再利用可能なコンポーネントは `src/components/` に配置
-   - レイアウト関連のコンポーネントは `components/layouts/` に配置
+5. 型の活用
+   - 新しい型は `types/` ディレクトリに定義
+   - 既存の型の再利用を推奨
+   - 型安全性を重視
 
-### テスト
+### パフォーマンスとベストプラクティス
 
-- `.test.ts` ファイルを実装ファイルと同じディレクトリに配置
-- `happydom.ts` を使用してDOMのテストを実施
+1. アセット最適化
+
+   - SVGアイコンの適切な最適化
+   - 画像の最適なフォーマットとサイズ
+
+2. コンポーネント設計
+
+   - 適切な粒度での分割
+   - Props経由のデータ受け渡し
+   - イベントハンドリングの適切な実装
+
+3. 状態管理
+
+   - store/ディレクトリでの集中管理
+   - 適切なデータフロー設計
+
+4. エラーハンドリング
+   - ユーザーフレンドリーなエラーメッセージ
+   - 適切なエラーバウンダリの実装
