@@ -1,7 +1,7 @@
 :root {
   /* フォントファミリー */
-  --font-family-base: "Yomogi", sans-serif;
-  --font-family-heading: "Yasashisa Gothic", sans-serif;
+  --font-family-base: "Noto Sans JP", serif;
+  --font-family-heading: "Noto Sans JP", serif;
 
   /* フォントサイズ - モバイルファースト */
   --font-size-xs: clamp(0.75rem, calc(0.75rem + 0.25vw), 0.875rem);
