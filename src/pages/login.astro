@@ -1,6 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
-if (await Astro.session.has("accountId")) {
+if (await Astro.session?.has("accountId")) {
   return Astro.redirect("/");
 }
 ---
