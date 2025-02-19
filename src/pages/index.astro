@@ -1,62 +1,68 @@
 ---
+import { getCollection } from "astro:content";
+import ArticleCard from "~/components/home/ArticleCard.astro";
+import FeedCard from "~/components/home/FeedCard.astro";
 import Layout from "~/layouts/Layout.astro";
+
+const feedCollection = await getCollection("feed");
+const latestArticles = feedCollection
+  .flatMap((feed) =>
+    feed.data.articles.map((article) => ({
+      ...article,
+      feedTitle: feed.data.feed.title,
+    })),
+  )
+  .sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime())
+  .slice(0, 5);
 ---
 
 <Layout title="ホーム">
-  <div class="container">
-    <header class="container-header">
+  <div class="dashboard">
+    <header>
       <h1>ダッシュボード</h1>
     </header>
 
-    <section class="feed-overview">
-      <h2>フィード一覧</h2>
-      <div class="container-grid">
-        <article class="item-container">
-          <div class="item-content">
-            <h3 class="item-title">Tech News</h3>
-            <p class="unread">12 件の未読</p>
-            <div class="container-meta">
-              <span>総記事数: 156</span>
-              <span>更新: 10分前</span>
-            </div>
-          </div>
-        </article>
-        <article class="item-container">
-          <div class="item-content">
-            <h3 class="item-title">Design Weekly</h3>
-            <p class="unread">5 件の未読</p>
-            <div class="container-meta">
-              <span>総記事数: 89</span>
-              <span>更新: 2時間前</span>
-            </div>
-          </div>
-        </article>
+    <section class="feed-overview" aria-labelledby="feed-overview-heading">
+      <h2 id="feed-overview-heading">フィード一覧</h2>
+      <div class="feed-grid">
+        {feedCollection.map((feed) => <FeedCard feed={feed} />)}
       </div>
     </section>
 
-    <section class="latest-articles">
-      <h2>最新記事</h2>
-      <div class="container-list">
-        <article class="item-container">
-          <header class="item-header">
-            <h3 class="item-title">記事タイトル</h3>
-            <time datetime="2024-02-20">2024.02.20</time>
-          </header>
-          <div class="item-content">
-            <p class="item-description">
-              記事の要約テキストがここに表示されます...
-            </p>
-          </div>
-          <footer class="item-footer">
-            <span class="article-source">Tech News</span>
-            <button class="icon-btn" aria-label="ブックマーク">
-              <span>🔖</span>
-            </button>
-          </footer>
-        </article>
+    <section class="latest-articles" aria-labelledby="latest-articles-heading">
+      <h2 id="latest-articles-heading">最新記事</h2>
+      <div class="article-list">
+        {latestArticles.map((article) => <ArticleCard article={article} />)}
       </div>
     </section>
   </div>
 </Layout>
 
-<style></style>
+<style>
+  .dashboard {
+    container: dashboard / inline-size;
+    padding: var(--space-l);
+  }
+
+  header {
+    margin-block-end: var(--space-xl);
+  }
+
+  .feed-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 30ch), 1fr));
+    gap: var(--space-m);
+  }
+
+  .article-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-m);
+  }
+
+  @container dashboard (max-width: 768px) {
+    .feed-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

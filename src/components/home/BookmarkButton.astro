@@ -1,0 +1,36 @@
+---
+type Props = {
+  id: string;
+  isFavorite: boolean;
+};
+
+const { id, isFavorite } = Astro.props;
+---
+
+<button
+  aria-label={isFavorite ? "ブックマークを解除" : "ブックマークに追加"}
+  data-favorite={isFavorite}
+  data-article-id={id}
+>
+  <span aria-hidden="true">🔖</span>
+</button>
+
+<style>
+    button {
+    background: none;
+    border: none;
+    padding: var(--space-xs);
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+
+    &:hover {
+      opacity: 1;
+    }
+
+    &[data-favorite="true"] {
+      color: var(--accent);
+    }
+  }
+</style>
+

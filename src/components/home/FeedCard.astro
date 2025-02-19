@@ -1,0 +1,87 @@
+---
+import type { CollectionEntry } from "astro:content";
+import type { ArticleStatus } from "~/types/article";
+import BadgedItem from "../layouts/BadgedItem.astro";
+
+interface Props {
+  feed: CollectionEntry<"feed">;
+}
+
+const { feed } = Astro.props;
+
+function getRelativeTimeString(date?: Date): string {
+  if (!date) return "";
+
+  const now = new Date();
+  const diffInMinutes = Math.floor(
+    (now.getTime() - date.getTime()) / (1000 * 60),
+  );
+
+  if (diffInMinutes < 1) return "数秒前";
+  if (diffInMinutes < 60) return `${diffInMinutes}分前`;
+
+  const diffInHours = Math.floor(diffInMinutes / 60);
+  if (diffInHours < 24) return `${diffInHours}時間前`;
+
+  const diffInDays = Math.floor(diffInHours / 24);
+  if (diffInDays < 7) return `${diffInDays}日前`;
+
+  return date.toLocaleDateString();
+}
+---
+
+<article>
+  <div>
+    <h3>
+      <a href={`/feeds/${feed.id}`}>
+        {feed.data.feed.title}
+      </a>
+    </h3>
+    <BadgedItem
+      title="未読"
+      link={`/feeds/${feed.id}`}
+      unreadCount={feed.data.articles.filter(
+        (a) => a.status === ("unread" as ArticleStatus),
+      ).length}
+    />
+    <div class="feed-meta">
+      <span>総記事数: {feed.data.articles.length}</span>
+      <time datetime={feed.data.articles[0]?.publishedAt.toISOString()}>
+        更新: {getRelativeTimeString(feed.data.articles[0]?.publishedAt)}
+      </time>
+    </div>
+  </div>
+</article>
+
+<style>
+  article {
+    background: var(--surface-2);
+    border-radius: var(--radius-m);
+    padding: var(--space-m);
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
+
+  h3 {
+    margin: 0;
+
+    & a {
+      color: inherit;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .feed-meta {
+    display: flex;
+    gap: var(--space-s);
+    font-size: var(--text-sm);
+    color: var(--text-2);
+  }
+</style>

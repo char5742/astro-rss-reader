@@ -1,0 +1,85 @@
+---
+import type { Article } from "~/types/article";
+import BookmarkButton from "./BookmarkButton.astro";
+
+interface Props {
+  article: Article & { feedTitle: string };
+}
+
+const { article } = Astro.props;
+---
+
+<article>
+  <header>
+    <h3>
+      <a href={article.url} target="_blank" rel="noopener">
+        {article.title}
+      </a>
+    </h3>
+    <time datetime={article.publishedAt.toISOString()}>
+      {article.publishedAt.toLocaleDateString()}
+    </time>
+  </header>
+  <div class="article-content">
+    {article.summary && <p class="article-summary">{article.summary}</p>}
+  </div>
+  <footer>
+    <span class="article-source">{article.feedTitle}</span>
+    <BookmarkButton id={article.id} isFavorite={article.isFavorite} />
+  </footer>
+
+  <style>
+    article {
+      background: var(--surface-1);
+      border-radius: var(--radius-m);
+      padding: var(--space-m);
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--space-s);
+      margin-block-end: var(--space-s);
+
+      & h3 {
+        margin: 0;
+        font-size: var(--text-lg);
+      }
+
+      & time {
+        color: var(--text-2);
+        font-size: var(--text-sm);
+      }
+    }
+
+    .article-summary {
+      margin: 0;
+      color: var(--text-2);
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-block-start: var(--space-s);
+    }
+
+    .bookmark-button {
+      background: none;
+      border: none;
+      padding: var(--space-xs);
+      cursor: pointer;
+      opacity: 0.8;
+      transition: opacity 0.2s ease;
+
+      &:hover {
+        opacity: 1;
+      }
+
+      &[data-favorite="true"] {
+        color: var(--accent);
+      }
+    }
+  </style>
+</article>
