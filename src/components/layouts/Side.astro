@@ -10,6 +10,7 @@ const feedList = await getCollection("feed");
 <aside>
   <header>
     <nav>
+      <h2><a href="/" aria-label="home">RSS Reader</a></h2>
       <ul role="list">
         <li>
           <a href="/settings" aria-label="settings">
@@ -98,12 +99,12 @@ const feedList = await getCollection("feed");
     font-size: var(--font-size-3xl);
   }
 
-  h2 {
-    font-size: var(--font-size-xs);
-    margin-bottom: var(--spacing-md);
-  }
-
   nav {
+    h2 {
+      a {
+        text-decoration: none;
+      }
+    }
     ul {
       display: flex;
       flex-direction: row;
@@ -112,6 +113,10 @@ const feedList = await getCollection("feed");
   }
 
   section {
+    h2 {
+      font-size: var(--font-size-xs);
+      margin-bottom: var(--spacing-md);
+    }
     li {
       a {
         display: block;
