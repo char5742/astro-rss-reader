@@ -1,0 +1,27 @@
+---
+import { Icon } from "astro-icon/components";
+---
+
+<button type="button" aria-label="logout">
+  <Icon name="logout" class="hover-card" />
+</button>
+
+<style>
+  [data-icon] {
+    font-size: var(--font-size-3xl);
+  }
+</style>
+
+<script>
+  import { actions } from "astro:actions";
+  import { navigate } from "astro:transitions/client";
+
+  document.addEventListener("astro:page-load", () => {
+    const button = document.querySelector('button[aria-label="logout"]');
+    button?.addEventListener("click", async () => {
+      await actions.logout();
+
+      navigate("/auth/login");
+    });
+  });
+</script>

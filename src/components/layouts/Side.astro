@@ -2,6 +2,7 @@
 import { Icon } from "astro-icon/components";
 import { getCollection } from "astro:content";
 import BadgedItem from "./BadgedItem.astro";
+import LogoutButton from "./LogoutButton.astro";
 
 const feedList = await getCollection("feed");
 ---
@@ -80,9 +81,7 @@ const feedList = await getCollection("feed");
     </ul>
   </section>
   <footer>
-    <button type="button" aria-label="logout">
-      <Icon name="logout" class="hover-card" />
-    </button>
+    <LogoutButton />
   </footer>
 </aside>
 
@@ -128,14 +127,3 @@ const feedList = await getCollection("feed");
     gap: var(--spacing-md);
   }
 </style>
-
-<script>
-  import { actions } from "astro:actions";
-
-  document.addEventListener("astro:page-load", () => {
-    const button = document.querySelector('button[aria-label="logout"]');
-    button.addEventListener("click", () => {
-      actions.logout();
-    });
-  });
-</script>
