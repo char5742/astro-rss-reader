@@ -1,0 +1,42 @@
+---
+import { base, site } from "astro:config/client";
+import Head from "~/components/layouts/Head.astro";
+import { $settings } from "~/store/settings";
+import "~/styles/globals.css";
+
+interface Props {
+  title?: string;
+}
+
+const { title } = Astro.props;
+const fontSize = $settings.get().appearance.fontSize;
+const fontSizeValue =
+  fontSize === "small" ? "14px" : fontSize === "medium" ? "16px" : "18px";
+---
+
+<!doctype html>
+<html lang="ja">
+  <Head title={title} site={site} base={base} />
+  <body>
+    <main>
+      <slot />
+    </main>
+  </body>
+</html>
+
+<style define:vars={{ fontSizeValue }}>
+  body {
+    display: flow-root;
+  }
+  main {
+    overflow-x: scroll;
+  }
+
+  main::-webkit-scrollbar {
+    display: none;
+  }
+
+  html {
+    font-size: var(--fontSizeValue);
+  }
+</style>
