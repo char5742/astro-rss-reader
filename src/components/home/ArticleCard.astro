@@ -27,59 +27,42 @@ const { article } = Astro.props;
     <span class="article-source">{article.feedTitle}</span>
     <BookmarkButton id={article.id} isFavorite={article.isFavorite} />
   </footer>
-
-  <style>
-    article {
-      background: var(--surface-1);
-      border-radius: var(--radius-m);
-      padding: var(--space-m);
-    }
-
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: var(--space-s);
-      margin-block-end: var(--space-s);
-
-      & h3 {
-        margin: 0;
-        font-size: var(--text-lg);
-      }
-
-      & time {
-        color: var(--text-2);
-        font-size: var(--text-sm);
-      }
-    }
-
-    .article-summary {
-      margin: 0;
-      color: var(--text-2);
-    }
-
-    footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-block-start: var(--space-s);
-    }
-
-    .bookmark-button {
-      background: none;
-      border: none;
-      padding: var(--space-xs);
-      cursor: pointer;
-      opacity: 0.8;
-      transition: opacity 0.2s ease;
-
-      &:hover {
-        opacity: 1;
-      }
-
-      &[data-favorite="true"] {
-        color: var(--accent);
-      }
-    }
-  </style>
 </article>
+
+<style>
+  article {
+    background: var(--surface-1);
+    border-radius: var(--radius-m);
+    padding: var(--space-m);
+  }
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-s);
+    margin-block-end: var(--space-s);
+
+    & h3 {
+      margin: 0;
+      font-size: var(--text-lg);
+    }
+
+    & time {
+      color: var(--text-2);
+      font-size: var(--text-sm);
+    }
+  }
+
+  .article-summary {
+    margin: 0;
+    color: var(--text-2);
+  }
+
+  footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-block-start: var(--space-s);
+  }
+</style>
