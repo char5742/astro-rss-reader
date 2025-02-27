@@ -1,0 +1,102 @@
+---
+import type { Article } from "~/types/article";
+import { ArticleStatus } from "~/types/article";
+import type { Feed } from "~/types/feed";
+
+interface Props {
+  feed: Feed;
+  articles: Article[];
+}
+
+const { feed, articles } = Astro.props;
+---
+
+<section class="feed-header">
+  <div class="content">
+    {feed.imageUrl && <img src={feed.imageUrl} alt={feed.title} class="image" />}
+    <div class="info">
+      <h1>{feed.title}</h1>
+      {feed.description && <p class="description">{feed.description}</p>}
+      <div class="meta">
+        <span class="stats">
+          <span class="count">{articles.length} 記事</span>
+          <span class="unread">
+            {articles.filter(a => a.status === ArticleStatus.UNREAD).length} 未読
+          </span>
+        </span>
+        {feed.lastUpdated && 
+          <span class="updated">
+            最終更新: {feed.lastUpdated.toLocaleString()}
+          </span>
+        }
+        <a href={feed.url} target="_blank" rel="noopener" class="link">
+          フィードを開く
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .feed-header {
+    margin-bottom: var(--spacing-xl);
+    padding: var(--spacing-lg);
+    background: var(--color-surface);
+    border-radius: var(--spacing-sm);
+    box-shadow: var(--elevation-1);
+    
+    .content {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-lg);
+    }
+    
+    .image {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: var(--spacing-xs);
+    }
+    
+    .info {
+      flex: 1;
+      
+      h1 {
+        margin-block-end: var(--spacing-xs);
+        font-size: var(--font-size-2xl);
+        font-weight: var(--font-weight-bold);
+        color: var(--color-text);
+      }
+    }
+    
+    .description {
+      margin-block-end: var(--spacing-sm);
+      color: var(--color-text);
+      line-height: var(--line-height-relaxed);
+    }
+    
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-md);
+      font-size: var(--font-size-sm);
+      color: var(--color-text-muted);
+    }
+    
+    .link {
+      color: var(--color-primary);
+      text-decoration: none;
+      
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .feed-header .content {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>

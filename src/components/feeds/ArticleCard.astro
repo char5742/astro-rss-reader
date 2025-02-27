@@ -1,0 +1,220 @@
+---
+import type { Article } from "~/types/article";
+import { ArticleStatus } from "~/types/article";
+
+interface Props {
+  article: Article;
+}
+
+const { article } = Astro.props;
+---
+
+<article
+  class:list={[
+    "article-card", 
+    { "unread": article.status === ArticleStatus.UNREAD }
+  ]}
+  data-status={article.status}
+  data-favorite={article.isFavorite}
+  data-id={article.id}
+  data-title={article.title.toLowerCase()}
+  data-summary={article.summary?.toLowerCase()}
+>
+  <header>
+    <h2>
+      {article.isFavorite && <span class="badge favorite">★</span>}
+      {article.status === ArticleStatus.UNREAD && <span class="badge unread">●</span>}
+      <a href={article.url} target="_blank" rel="noopener">{article.title}</a>
+    </h2>
+    <time datetime={article.publishedAt.toISOString()}>
+      {article.publishedAt.toLocaleDateString()}
+    </time>
+  </header>
+  
+  {article.imageUrl && 
+    <div class="image-container">
+      <img src={article.imageUrl} alt="" loading="lazy" />
+    </div>
+  }
+  
+  <p class="summary">{article.summary}</p>
+  
+  <footer>
+    <ul class="categories">
+      {article.categories.map((category) => (
+        <li class="category">{category.name}</li>
+      ))}
+    </ul>
+    
+    <div class="actions">
+      <button class="btn preview" data-article-id={article.id}>
+        プレビュー
+      </button>
+      <button class="btn toggle-read" data-article-id={article.id}>
+        {article.status === ArticleStatus.UNREAD ? "既読にする" : "未読に戻す"}
+      </button>
+      <button class="btn toggle-favorite" data-article-id={article.id} data-is-favorite={article.isFavorite}>
+        {article.isFavorite ? "★ お気に入り解除" : "☆ お気に入り追加"}
+      </button>
+    </div>
+  </footer>
+</article>
+
+<style>
+  .article-card {
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    height: 100%;
+    padding: var(--spacing-md);
+    border-radius: var(--spacing-sm);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--elevation-2);
+    }
+
+    &.unread {
+      border-left: 3px solid var(--color-primary);
+    }
+    
+    &:not(.unread) {
+      background: var(--color-surface-disabled);
+    }
+  }
+
+  .image-container {
+    margin-bottom: var(--spacing-sm);
+    
+    img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: var(--spacing-xs);
+    }
+  }
+
+  .summary {
+    color: var(--color-text);
+    margin-block-end: var(--spacing-md);
+    line-height: var(--line-height-relaxed);
+    flex-grow: 1;
+  }
+
+  header {
+    margin-block-end: var(--spacing-sm);
+
+    h2 {
+      font-size: var(--font-size-lg);
+      margin-block-end: var(--spacing-xs);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+
+      a {
+        color: var(--color-text);
+        text-decoration: none;
+
+        &:hover {
+          color: var(--color-primary);
+        }
+      }
+    }
+
+    time {
+      color: var(--color-text-muted);
+      font-size: var(--font-size-sm);
+      display: block;
+    }
+  }
+
+  footer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    margin-top: auto;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    
+    &.favorite {
+      color: var(--color-surface-tertiary);
+      font-size: var(--font-size-lg);
+    }
+    
+    &.unread {
+      color: var(--color-primary);
+      font-size: var(--font-size-sm);
+    }
+  }
+
+  .categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .category {
+    background: var(--color-surface-accent);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-on-accent);
+    border-radius: var(--spacing-xs);
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-xs);
+  }
+
+  .btn {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--spacing-xs);
+    font-size: var(--font-size-sm);
+    color: var(--color-text);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background: var(--color-surface-hover);
+    }
+    
+    &:active {
+      transform: scale(0.98);
+    }
+    
+    &.preview {
+      background-color: var(--color-surface-accent);
+      color: var(--color-text-on-accent);
+      
+      &:hover {
+        background-color: var(--color-surface-accent-hover);
+      }
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .actions {
+      justify-content: space-between;
+      
+      .btn {
+        flex: 1;
+        text-align: center;
+        min-width: 0;
+        padding: var(--spacing-xs) 0;
+      }
+    }
+  }
+</style>

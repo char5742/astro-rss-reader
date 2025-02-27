@@ -1,0 +1,347 @@
+---
+export interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+---
+<dialog id="article-preview-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 id="modal-title">{title}</h2>
+      <form method="dialog">
+        <button id="close-modal" class="close-button" aria-label="閉じる">&times;</button>
+      </form>
+    </div>
+    <div id="modal-body" class="modal-body">
+      <div class="loading-spinner">
+        <div class="spinner"></div>
+        <p>記事を読み込んでいます...</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a id="original-article-link" href="#" target="_blank" rel="noopener noreferrer" class="view-original-btn">
+        元の記事を開く
+      </a>
+      <div class="article-actions">
+        <button id="modal-toggle-read" class="action-btn">既読にする</button>
+        <button id="modal-toggle-favorite" class="action-btn">☆ お気に入り追加</button>
+      </div>
+    </div>
+  </div>
+</dialog>
+<style>
+  .modal {
+    --modal-width: clamp(300px, 90%, 900px);
+    --modal-height: clamp(200px, 90vh, 85vh);
+    --backdrop-color: rgba(0, 0, 0, 0.7);
+    --animation-duration: 0.3s;
+    
+    margin: auto;
+    padding: 0;
+    width: var(--modal-width);
+    max-width: 900px;
+    max-height: var(--modal-height);
+    border: none;
+    border-radius: var(--spacing-sm);
+    box-shadow: var(--elevation-4);
+    overflow: hidden;
+    
+    &::backdrop {
+      background-color: var(--backdrop-color);
+      backdrop-filter: blur(3px);
+      
+      @supports not (backdrop-filter: blur(3px)) {
+        background-color: rgba(0, 0, 0, 0.85);
+      }
+    }
+    
+    &[open] {
+      animation: fadeIn var(--animation-duration), slideIn var(--animation-duration);
+    }
+    
+    @media (prefers-reduced-motion: reduce) {
+      --animation-duration: 0.1s;
+      &[open] {
+        animation: fadeIn var(--animation-duration);
+      }
+    }
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes slideIn {
+    from { transform: translateY(30px); }
+    to { transform: translateY(0); }
+  }
+  
+  .modal-content {
+    background-color: var(--color-surface);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    height: 100%;
+  }
+  
+  .modal-header {
+    padding-block: var(--spacing-md);
+    padding-inline: var(--spacing-lg);
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    
+    h2 {
+      margin: 0;
+      font-size: var(--font-size-lg);
+      color: var(--color-text);
+      width: calc(100% - 40px);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+  
+  .close-button {
+    --button-size: 32px;
+    border: none;
+    background: none;
+    font-size: var(--font-size-2xl);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    padding: var(--spacing-xs);
+    border-radius: 50%;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--button-size);
+    height: var(--button-size);
+    transition: all 0.2s ease;
+    
+    &:hover {
+      color: var(--color-text);
+      background: var(--color-surface-hover);
+    }
+    
+    &:focus-visible {
+      outline: 3px solid var(--color-primary-light);
+      outline-offset: 2px;
+    }
+  }
+  
+  .modal-body {
+    padding: var(--spacing-lg);
+    overflow-y: auto;
+    flex: 1;
+    
+    /* スクロールバーのスタイリング（WebKit/Blink系ブラウザ） */
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: var(--color-surface-disabled);
+      border-radius: 4px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: var(--color-border);
+      border-radius: 4px;
+      
+      &:hover {
+        background: var(--color-text-muted);
+      }
+    }
+  }
+  
+  .modal-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-block: var(--spacing-md);
+    padding-inline: var(--spacing-lg);
+    border-top: 1px solid var(--color-border);
+    
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: var(--spacing-md);
+      align-items: flex-start;
+    }
+  }
+  
+  .view-original-btn {
+    color: var(--color-primary);
+    text-decoration: none;
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: var(--spacing-xs);
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background: var(--color-surface-hover);
+      text-decoration: underline;
+    }
+    
+    &:focus-visible {
+      outline: 3px solid var(--color-primary-light);
+      outline-offset: 2px;
+    }
+  }
+  
+  .article-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+    
+    @media (max-width: 768px) {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+  
+  .action-btn {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    padding-block: var(--spacing-xs);
+    padding-inline: var(--spacing-sm);
+    border-radius: var(--spacing-xs);
+    font-size: var(--font-size-sm);
+    color: var(--color-text);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background: var(--color-surface-hover);
+    }
+    
+    &:active {
+      transform: scale(0.98);
+    }
+    
+    &:focus-visible {
+      outline: 3px solid var(--color-primary-light);
+      outline-offset: 2px;
+    }
+  }
+  
+  /* ローディングスピナー */
+  .loading-spinner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-2xl);
+    color: var(--color-text-muted);
+    min-height: 200px;
+  }
+  
+  .spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top-color: var(--color-primary);
+    animation: spin 1s ease-in-out infinite;
+    margin-bottom: var(--spacing-md);
+    
+    @media (prefers-reduced-motion: reduce) {
+      animation-duration: 1.5s;
+    }
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  
+  /* 記事コンテンツのスタイル */
+  .article-content {
+    line-height: var(--line-height-relaxed);
+    color: var(--color-text);
+    
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: var(--spacing-lg);
+      margin-bottom: var(--spacing-sm);
+      color: var(--color-text);
+      scroll-margin-top: var(--spacing-lg);
+    }
+    
+    p {
+      margin-bottom: var(--spacing-md);
+    }
+    
+    img {
+      max-width: 100%;
+      height: auto;
+      border-radius: var(--spacing-xs);
+      margin-block: var(--spacing-md);
+    }
+    
+    a {
+      color: var(--color-primary);
+      text-decoration: none;
+      
+      &:hover {
+        text-decoration: underline;
+      }
+      
+      &:focus-visible {
+        outline: 3px solid var(--color-primary-light);
+        outline-offset: 2px;
+      }
+    }
+    
+    ul, ol {
+      margin-left: var(--spacing-lg);
+      margin-bottom: var(--spacing-md);
+    }
+    
+    blockquote {
+      border-left: 4px solid var(--color-border);
+      padding-left: var(--spacing-md);
+      color: var(--color-text-muted);
+      font-style: italic;
+      margin-block: var(--spacing-md);
+    }
+    
+    pre, code {
+      background: var(--color-surface-disabled);
+      padding-block: var(--spacing-xs);
+      padding-inline: var(--spacing-sm);
+      border-radius: var(--spacing-xs);
+      font-family: monospace;
+      overflow-x: auto;
+    }
+    
+    pre {
+      padding: var(--spacing-md);
+      margin-block: var(--spacing-md);
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-block: var(--spacing-md);
+      
+      th, td {
+        border: 1px solid var(--color-border);
+        padding: var(--spacing-sm);
+        text-align: left;
+      }
+      
+      th {
+        background: var(--color-surface-disabled);
+      }
+    }
+  }
+  
+  /* エラーメッセージ表示 */
+  .error-message {
+    padding: var(--spacing-lg);
+    color: var(--color-error);
+    border-left: 3px solid var(--color-error);
+    background-color: var(--color-surface-disabled);
+    margin-block: var(--spacing-lg);
+  }
+</style>

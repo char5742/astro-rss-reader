@@ -1,0 +1,76 @@
+---
+// ステータス通知コンポーネント
+---
+
+<div id="status-notification" class="notification">
+  <p id="status-message"></p>
+</div>
+
+<style>
+  .notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--color-surface);
+    border-radius: var(--spacing-xs);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    box-shadow: var(--elevation-3);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    z-index: 100;
+    border-left: 4px solid var(--color-primary);
+    pointer-events: none;
+    
+    &.show {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    
+    &.success {
+      border-left-color: var(--color-success);
+    }
+    
+    &.error {
+      border-left-color: var(--color-error);
+    }
+  }
+</style>
+
+<script>
+  class StatusNotification extends HTMLElement {
+    constructor() {
+      super();
+      this.notification = document.getElementById('status-notification');
+      this.message = document.getElementById('status-message');
+      
+      // カスタムイベントのリスナーを設定
+      document.addEventListener('shownotification', this.showNotification.bind(this));
+    }
+    
+    showNotification(event) {
+      const { message, type = 'success', duration = 3000 } = event.detail;
+      
+      this.message.textContent = message;
+      this.notification.classList.add('show', type);
+      
+      setTimeout(() => {
+        this.notification.classList.remove('show');
+        setTimeout(() => {
+          this.notification.classList.remove('success', 'error');
+        }, 300);
+      }, duration);
+    }
+  }
+  
+  // カスタム要素を定義
+  customElements.define('status-notification', StatusNotification);
+  
+  // ページ読み込み時に初期化
+  document.addEventListener('DOMContentLoaded', () => {
+    if (!document.querySelector('status-notification')) {
+      document.body.appendChild(document.createElement('status-notification'));
+    }
+  });
+</script>

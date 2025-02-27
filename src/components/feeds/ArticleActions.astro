@@ -1,0 +1,321 @@
+---
+/**
+ * ArticleActions component
+ * Handles article status updates with minimal JS and native web APIs
+ */
+---
+
+<style>
+  /* 通知のスタイリング - モダンな CSS を活用 */
+  .notification {
+    --notification-slide: 10px;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--spacing-xs);
+    box-shadow: var(--elevation-2);
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(var(--notification-slide));
+    transition: 
+      opacity 0.3s var(--ease-out-cubic),
+      transform 0.3s var(--ease-out-cubic);
+    
+    &.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    &.success {
+      background-color: var(--color-success);
+      color: var(--color-text-on-accent);
+    }
+    
+    &.error {
+      background-color: var(--color-error);
+      color: var(--color-text-on-accent);
+    }
+    
+    @media (prefers-reduced-motion: reduce) {
+      transition: opacity 0.3s ease;
+      --notification-slide: 0;
+    }
+  }
+</style>
+
+<script>
+  /**
+   * 記事のアクション管理
+   * ネイティブウェブAPIと最小限のJavaScriptを使用
+   */
+  document.addEventListener('DOMContentLoaded', () => {
+    // 型定義
+    interface NotificationOptions {
+      message: string;
+      type?: 'success' | 'error';
+      duration?: number;
+    }
+
+    interface APIResponse {
+      success: boolean;
+      message?: string;
+    }
+    
+    // DOM要素
+    const articlesGrid = document.querySelector<HTMLElement>('.articles-grid');
+    const modal = document.getElementById('article-preview-modal') as HTMLDialogElement | null;
+    const modalToggleRead = document.getElementById('modal-toggle-read') as HTMLButtonElement | null;
+    const modalToggleFavorite = document.getElementById('modal-toggle-favorite') as HTMLButtonElement | null;
+
+    // 記事の状態
+    let currentArticleId: string | null = null;
+    
+    // ユーザーへの通知を表示
+    const showNotification = ({ 
+      message, 
+      type = 'success',
+      duration = 3000
+    }: NotificationOptions): void => {
+      // 通知要素の作成
+      const notification = document.createElement('div');
+      notification.className = `notification ${type}`;
+      notification.textContent = message;
+      notification.setAttribute('role', 'alert'); // アクセシビリティ向上
+      document.body.appendChild(notification);
+      
+      // DOM更新を待つ小さなディレイでアニメーションをトリガー
+      requestAnimationFrame(() => {
+        notification.classList.add('show');
+      });
+      
+      // 指定時間後に削除
+      setTimeout(() => {
+        notification.classList.remove('show');
+        // フェードアウト後に要素を削除
+        notification.addEventListener('transitionend', () => {
+          notification.remove();
+        }, { once: true });
+      }, duration);
+    };
+
+    // 記事の既読/未読状態更新
+    const updateArticleStatus = async (articleId: string, newStatus: 'read' | 'unread'): Promise<void> => {
+      try {
+        const article = document.querySelector<HTMLElement>(`.article-card[data-id="${articleId}"]`);
+        if (!article) return;
+        
+        // API リクエスト
+        const response = await fetch(`/api/articles/${articleId}/status`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: newStatus })
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || '記事ステータスの更新に失敗しました');
+        }
+        
+        // UI 更新
+        article.setAttribute('data-status', newStatus);
+        
+        if (newStatus === 'unread') {
+          article.classList.add('unread');
+          
+          // 未読バッジがなければ追加
+          if (!article.querySelector('.badge.unread')) {
+            const h2 = article.querySelector<HTMLHeadingElement>('h2');
+            if (h2) {
+              const unreadBadge = document.createElement('span');
+              unreadBadge.className = 'badge unread';
+              unreadBadge.textContent = '●';
+              h2.prepend(unreadBadge);
+            }
+          }
+          
+          // 既読/未読ボタンのテキスト更新
+          const toggleReadBtn = article.querySelector<HTMLButtonElement>('.toggle-read');
+          if (toggleReadBtn) toggleReadBtn.textContent = '既読にする';
+          
+          // モーダル内のボタンも更新
+          if (currentArticleId === articleId && modalToggleRead) {
+            modalToggleRead.textContent = '既読にする';
+          }
+        } else {
+          article.classList.remove('unread');
+          
+          // 未読バッジを削除
+          const unreadBadge = article.querySelector('.badge.unread');
+          if (unreadBadge) unreadBadge.remove();
+          
+          // 既読/未読ボタンのテキスト更新
+          const toggleReadBtn = article.querySelector<HTMLButtonElement>('.toggle-read');
+          if (toggleReadBtn) toggleReadBtn.textContent = '未読に戻す';
+          
+          // モーダル内のボタンも更新
+          if (currentArticleId === articleId && modalToggleRead) {
+            modalToggleRead.textContent = '未読に戻す';
+          }
+        }
+        
+        showNotification({ 
+          message: `記事を${newStatus === 'unread' ? '未読' : '既読'}に設定しました` 
+        });
+      } catch (error) {
+        console.error('Error updating article status:', error);
+        showNotification({ 
+          message: (error as Error).message || '記事ステータスの更新に失敗しました',
+          type: 'error' 
+        });
+      }
+    };
+
+    // 記事のお気に入り状態更新
+    const updateFavoriteStatus = async (articleId: string, isFavorite: boolean): Promise<void> => {
+      try {
+        const article = document.querySelector<HTMLElement>(`.article-card[data-id="${articleId}"]`);
+        if (!article) return;
+        
+        // API リクエスト
+        const response = await fetch(`/api/articles/${articleId}/favorite`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ isFavorite })
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'お気に入りの更新に失敗しました');
+        }
+        
+        // UI 更新
+        article.setAttribute('data-favorite', isFavorite.toString());
+        
+        if (isFavorite) {
+          // お気に入りバッジがなければ追加
+          if (!article.querySelector('.badge.favorite')) {
+            const h2 = article.querySelector<HTMLHeadingElement>('h2');
+            if (h2) {
+              const favoriteIcon = document.createElement('span');
+              favoriteIcon.className = 'badge favorite';
+              favoriteIcon.textContent = '★';
+              favoriteIcon.setAttribute('aria-label', 'お気に入り済み');
+              h2.prepend(favoriteIcon);
+            }
+          }
+          
+          // お気に入りボタンのテキスト更新
+          const toggleFavoriteBtn = article.querySelector<HTMLButtonElement>('.toggle-favorite');
+          if (toggleFavoriteBtn) toggleFavoriteBtn.textContent = '★ お気に入り解除';
+          
+          // モーダル内のボタンも更新
+          if (currentArticleId === articleId && modalToggleFavorite) {
+            modalToggleFavorite.textContent = '★ お気に入り解除';
+          }
+        } else {
+          // お気に入りバッジを削除
+          const favoriteIcon = article.querySelector('.badge.favorite');
+          if (favoriteIcon) favoriteIcon.remove();
+          
+          // お気に入りボタンのテキスト更新
+          const toggleFavoriteBtn = article.querySelector<HTMLButtonElement>('.toggle-favorite');
+          if (toggleFavoriteBtn) toggleFavoriteBtn.textContent = '☆ お気に入り追加';
+          
+          // モーダル内のボタンも更新
+          if (currentArticleId === articleId && modalToggleFavorite) {
+            modalToggleFavorite.textContent = '☆ お気に入り追加';
+          }
+        }
+        
+        showNotification({ 
+          message: `記事を${isFavorite ? 'お気に入りに追加' : 'お気に入りから削除'}しました`
+        });
+      } catch (error) {
+        console.error('Error updating favorite status:', error);
+        showNotification({ 
+          message: (error as Error).message || 'お気に入り状態の更新に失敗しました',
+          type: 'error'
+        });
+      }
+    };
+
+    // イベント委譲で記事クリックを処理
+    articlesGrid?.addEventListener('click', (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      
+      // 既読/未読ボタンの処理
+      const readButton = target.closest<HTMLElement>('.toggle-read');
+      if (readButton) {
+        const articleId = readButton.getAttribute('data-article-id');
+        if (!articleId) return;
+        
+        const article = readButton.closest<HTMLElement>('.article-card');
+        if (!article) return;
+        
+        const currentStatus = article.getAttribute('data-status');
+        const newStatus = currentStatus === 'unread' ? 'read' : 'unread';
+        
+        updateArticleStatus(articleId, newStatus as 'read' | 'unread');
+      }
+      
+      // お気に入りボタンの処理
+      const favoriteButton = target.closest<HTMLElement>('.toggle-favorite');
+      if (favoriteButton) {
+        const articleId = favoriteButton.getAttribute('data-article-id');
+        if (!articleId) return;
+        
+        const article = favoriteButton.closest<HTMLElement>('.article-card');
+        if (!article) return;
+        
+        const currentFavorite = article.getAttribute('data-favorite') === 'true';
+        
+        updateFavoriteStatus(articleId, !currentFavorite);
+      }
+    });
+
+    // モーダルアクション処理
+    if (modal) {
+      // モーダルが開かれたときの処理
+      modal.addEventListener('open', () => {
+        // ArticlePreview.jsによって設定された記事IDを取得
+        currentArticleId = modal.dataset.articleId || null;
+      });
+
+      // モーダル内の既読/未読ボタン
+      modalToggleRead?.addEventListener('click', () => {
+        if (!currentArticleId) return;
+        
+        const article = document.querySelector<HTMLElement>(`.article-card[data-id="${currentArticleId}"]`);
+        if (!article) return;
+        
+        const currentStatus = article.getAttribute('data-status');
+        const newStatus = currentStatus === 'unread' ? 'read' : 'unread';
+        
+        updateArticleStatus(currentArticleId, newStatus as 'read' | 'unread');
+      });
+
+      // モーダル内のお気に入りボタン
+      modalToggleFavorite?.addEventListener('click', () => {
+        if (!currentArticleId) return;
+        
+        const article = document.querySelector<HTMLElement>(`.article-card[data-id="${currentArticleId}"]`);
+        if (!article) return;
+        
+        const currentFavorite = article.getAttribute('data-favorite') === 'true';
+        
+        updateFavoriteStatus(currentArticleId, !currentFavorite);
+      });
+    }
+    
+    // カスタムイベント購読 (ガベージコレクション対策でリファレンスを保持)
+    const onArticleStatusUpdate = (e: CustomEvent<{ articleId: string; status: string }>): void => {
+      const { articleId, status } = e.detail;
+      if (status === 'read' || status === 'unread') {
+        updateArticleStatus(articleId, status);
+      }
+    };
+    
+    document.addEventListener('article-status-update', onArticleStatusUpdate as EventListener);
+  });
+</script>

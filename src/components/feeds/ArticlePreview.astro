@@ -1,0 +1,139 @@
+---
+/**
+ * ArticlePreview component
+ * Handles the preview functionality using the native dialog element
+ */
+---
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // 型定義
+    interface Article {
+      id: string;
+      title: string;
+      url: string;
+      publishedAt: string;
+      author?: string;
+      imageUrl?: string;
+      content: string;
+    }
+    
+    interface ArticleResponse {
+      article: Article;
+    }
+
+    interface ArticleStatusUpdateEvent extends CustomEvent {
+      detail: {
+        articleId: string;
+        status: string;
+      };
+    }
+    
+    // DOM要素の型付き取得
+    const articlesGrid = document.querySelector<HTMLElement>('.articles-grid');
+    const modal = document.getElementById('article-preview-modal') as HTMLDialogElement | null;
+    const modalTitle = document.getElementById('modal-title') as HTMLHeadingElement | null;
+    const modalBody = document.getElementById('modal-body') as HTMLDivElement | null;
+    const originalArticleLink = document.getElementById('original-article-link') as HTMLAnchorElement | null;
+    
+    if (!modal || !modalTitle || !modalBody || !originalArticleLink) return;
+    
+    // 記事プレビューモーダルを開く
+    const openArticleModal = async (articleId: string): Promise<void> => {
+      try {
+        // 記事IDを他のコンポーネントがアクセスできるよう保存
+        modal.dataset.articleId = articleId;
+        
+        // ローディング状態の表示
+        modalBody.innerHTML = `
+          <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>記事を読み込んでいます...</p>
+          </div>
+        `;
+        
+        // ネイティブダイアログAPIを使用してモーダルを表示
+        modal.showModal();
+        
+        // 記事コンテンツの取得
+        const response = await fetch(`/api/articles/${articleId}/content`);
+        
+        if (!response.ok) {
+          throw new Error('記事の読み込みに失敗しました');
+        }
+        
+        const data: ArticleResponse = await response.json();
+        const article = data.article;
+        
+        // モーダルコンテンツの更新
+        modalTitle.textContent = article.title;
+        originalArticleLink.href = article.url;
+        
+        // 記事コンテンツの表示
+        modalBody.innerHTML = `
+          <div class="article-content">
+            <p class="article-meta">
+              <span class="article-date">${new Date(article.publishedAt).toLocaleDateString()}</span>
+              ${article.author ? `<span class="article-author">by ${article.author}</span>` : ''}
+            </p>
+            ${article.imageUrl ? `<img src="${article.imageUrl}" alt="" class="article-featured-image" loading="lazy" />` : ''}
+            <div class="article-text">
+              ${article.content}
+            </div>
+          </div>
+        `;
+        
+        // 未読なら既読にマーク
+        const articleCard = document.querySelector<HTMLElement>(`.article-card[data-id="${articleId}"]`);
+        if (articleCard && articleCard.getAttribute('data-status') === 'unread') {
+          // ArticleActionsが処理するカスタムイベントを発行
+          const updateEvent = new CustomEvent('article-status-update', {
+            detail: { articleId, status: 'read' },
+            bubbles: true
+          });
+          document.dispatchEvent(updateEvent);
+        }
+      } catch (error) {
+        console.error('Error loading article:', error);
+        modalBody.innerHTML = `
+          <div class="error-message">
+            <p>記事の読み込みに失敗しました。</p>
+            <p>エラー: ${(error as Error).message}</p>
+          </div>
+        `;
+      }
+    };
+    
+    // Escapeキーでの閉じる動作はネイティブの<dialog>で自動処理
+    
+    // プレビューボタンのクリック処理
+    articlesGrid?.addEventListener('click', (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const previewButton = target.closest<HTMLElement>('.preview');
+      
+      if (previewButton) {
+        const articleId = previewButton.getAttribute('data-article-id');
+        if (articleId) openArticleModal(articleId);
+      }
+    });
+    
+    // 他コンポーネントからのカスタムイベント購読
+    document.addEventListener('article-status-update', ((e: ArticleStatusUpdateEvent) => {
+      const { articleId, status } = e.detail;
+      const articleCard = document.querySelector<HTMLElement>(`.article-card[data-id="${articleId}"]`);
+      if (!articleCard) return;
+      
+      // 記事カードの更新
+      articleCard.setAttribute('data-status', status);
+      
+      if (status === 'read') {
+        articleCard.classList.remove('unread');
+        // 未読バッジの削除
+        const unreadBadge = articleCard.querySelector('.badge.unread');
+        if (unreadBadge) unreadBadge.remove();
+      } else {
+        articleCard.classList.add('unread');
+      }
+    }) as EventListener);
+  });
+</script>
