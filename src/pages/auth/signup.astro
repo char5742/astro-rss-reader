@@ -72,7 +72,7 @@ import AuthLayout from "~/layouts/AuthLayout.astro";
       console.log("submit");
       event.preventDefault();
       const formData = new FormData(form);
-      const { error } = await actions.login(formData);
+      const { error } = await actions.signup(formData);
       if (error) {
         alert("Failed to log in");
       } else {
