@@ -49,6 +49,9 @@
    * 記事のアクション管理
    * ネイティブウェブAPIと最小限のJavaScriptを使用
    */
+  import { actions } from 'astro:actions';
+  import { ArticleStatus } from "~/types/article";
+  
   document.addEventListener('DOMContentLoaded', () => {
     // 型定義
     interface NotificationOptions {
@@ -105,16 +108,14 @@
         const article = document.querySelector<HTMLElement>(`.article-card[data-id="${articleId}"]`);
         if (!article) return;
         
-        // API リクエスト
-        const response = await fetch(`/api/articles/${articleId}/status`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ status: newStatus })
+        // Astroアクションを使用して記事ステータスを更新
+        const { error } = await actions.articles.updateArticleStatus({
+          articleId,
+          status: newStatus === 'read' ? ArticleStatus.READ : ArticleStatus.UNREAD
         });
         
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.message || '記事ステータスの更新に失敗しました');
+        if (error) {
+          throw new Error(error.message || '記事ステータスの更新に失敗しました');
         }
         
         // UI 更新
@@ -176,17 +177,14 @@
       try {
         const article = document.querySelector<HTMLElement>(`.article-card[data-id="${articleId}"]`);
         if (!article) return;
-        
-        // API リクエスト
-        const response = await fetch(`/api/articles/${articleId}/favorite`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ isFavorite })
+        // Astroアクションを使用してお気に入り状態を更新
+        const { error } = await actions.articles.toggleFavorite({
+          articleId,
+          isFavorite
         });
         
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.message || 'お気に入りの更新に失敗しました');
+        if (error) {
+          throw new Error(error.message || 'お気に入りの更新に失敗しました');
         }
         
         // UI 更新

@@ -6,6 +6,8 @@
 ---
 
 <script>
+  import { actions } from 'astro:actions';
+  
   document.addEventListener('DOMContentLoaded', () => {
     // 型定義
     interface Article {
@@ -55,14 +57,15 @@
         // ネイティブダイアログAPIを使用してモーダルを表示
         modal.showModal();
         
-        // 記事コンテンツの取得
-        const response = await fetch(`/api/articles/${articleId}/content`);
+        // Astroアクションを使用して記事コンテンツを取得
+        const { data, error } = await actions.articles.getArticleContent({
+          articleId
+        });
         
-        if (!response.ok) {
-          throw new Error('記事の読み込みに失敗しました');
+        if (error) {
+          throw new Error(error.message || '記事の読み込みに失敗しました');
         }
         
-        const data: ArticleResponse = await response.json();
         const article = data.article;
         
         // モーダルコンテンツの更新
