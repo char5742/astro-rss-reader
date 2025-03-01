@@ -1,6 +1,7 @@
 ---
 export const prerender = false;
 import { getCollection } from "astro:content";
+import ArticleCard from "~/components/feeds/ArticleCard.astro";
 import Layout from "~/layouts/Layout.astro";
 import { ArticleStatus } from "~/types/article";
 
@@ -24,30 +25,7 @@ const articles = feeds
 <Layout title="記事一覧">
   <main>
     <div class="articles-grid">
-      {
-        articles.map((article) => (
-          <article
-            class={`border-card ${article.status === ArticleStatus.UNREAD ? "unread" : ""}`}
-          >
-            <header>
-              <h2>
-                <a href={article.url}>{article.title}</a>
-              </h2>
-              <time datetime={article.publishedAt.toISOString()}>
-                {article.publishedAt.toLocaleDateString()}
-              </time>
-            </header>
-            <p>{article.summary}</p>
-            <footer>
-              <ul class="category-list">
-                {article.categories.map((category) => (
-                  <li class="category-item rounded-card">{category.name}</li>
-                ))}
-              </ul>
-            </footer>
-          </article>
-        ))
-      }
+      {articles.map((article) => <ArticleCard article={article} />)}
     </div>
   </main>
 </Layout>
@@ -67,66 +45,5 @@ const articles = feeds
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 30ch), 1fr));
     gap: var(--spacing-xl);
-  }
-
-  article {
-    &:not(.unread) {
-      background: var(--color-surface-disabled);
-    }
-
-    p {
-      color: var(--color-text);
-      margin-block-end: var(--spacing-md);
-      line-height: var(--line-height-relaxed);
-    }
-  }
-
-  header {
-    margin-block-end: var(--spacing-sm);
-
-    h2 {
-      font-size: var(--font-size-lg);
-      margin-block-end: var(--spacing-xs);
-
-      a {
-        color: var(--color-text);
-        text-decoration: none;
-
-        &:hover {
-          color: var(--color-primary);
-        }
-      }
-    }
-
-    time {
-      color: var(--color-text-muted);
-      font-size: var(--font-size-sm);
-    }
-  }
-
-  footer {
-    display: flex;
-    justify-content: spacing-between;
-    align-items: center;
-    gap: var(--spacing-md);
-  }
-
-  .category-list {
-    display: flex;
-    gap: var(--spacing-xs);
-    list-style: none;
-    padding: 0;
-  }
-
-  .category-item {
-    background: var(--color-surface-accent);
-    padding: var(--spacing-xs) var(--spacing-sm);
-    font-size: var(--font-size-sm);
-    color: var(--color-text-on-accent);
-  }
-
-  .status-badge {
-    color: var(--color-surface-tertiary);
-    font-size: var(--font-size-lg);
   }
 </style>
