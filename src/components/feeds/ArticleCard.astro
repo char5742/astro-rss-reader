@@ -11,75 +11,66 @@ const { article } = Astro.props;
 
 <article
   class:list={[
-    "article-card", 
-    { "unread": article.status === ArticleStatus.UNREAD }
+    "hover-card",
+    { unread: article.status === ArticleStatus.UNREAD },
   ]}
   data-status={article.status}
-  data-favorite={article.isFavorite}
   data-id={article.id}
   data-title={article.title.toLowerCase()}
   data-summary={article.summary?.toLowerCase()}
 >
   <header>
     <h2>
-      {article.isFavorite && <span class="badge favorite">★</span>}
-      {article.status === ArticleStatus.UNREAD && <span class="badge unread">●</span>}
-      <a href={article.url} target="_blank" rel="noopener">{article.title}</a>
+      {
+        article.status === ArticleStatus.UNREAD && (
+          <span class="badge unread">●</span>
+        )
+      }
+      <a
+        href={article.url}
+        target="_blank"
+        rel="noopener"
+        data-article-id={article.id}>{article.title}</a
+      >
     </h2>
     <time datetime={article.publishedAt.toISOString()}>
       {article.publishedAt.toLocaleDateString()}
     </time>
   </header>
-  
-  {article.imageUrl && 
-    <div class="image-container">
-      <img src={article.imageUrl} alt="" loading="lazy" />
-    </div>
+
+  {
+    article.imageUrl && (
+      <div class="image-container">
+        <img src={article.imageUrl} alt="" loading="lazy" />
+      </div>
+    )
   }
-  
+
   <p class="summary">{article.summary}</p>
-  
+
   <footer>
     <ul class="categories">
-      {article.categories.map((category) => (
-        <li class="category">{category.name}</li>
-      ))}
+      {
+        article.categories.map((category) => (
+          <li class="category">{category.name}</li>
+        ))
+      }
     </ul>
-    
+
     <div class="actions">
-      <button class="btn preview" data-article-id={article.id}>
-        プレビュー
-      </button>
-      <button class="btn toggle-read" data-article-id={article.id}>
-        {article.status === ArticleStatus.UNREAD ? "既読にする" : "未読に戻す"}
-      </button>
-      <button class="btn toggle-favorite" data-article-id={article.id} data-is-favorite={article.isFavorite}>
-        {article.isFavorite ? "★ お気に入り解除" : "☆ お気に入り追加"}
+      <button class="btn summary-btn" data-article-id={article.id}>
+        要約
       </button>
     </div>
   </footer>
 </article>
 
 <style>
-  .article-card {
-    display: flex;
-    flex-direction: column;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    height: 100%;
-    padding: var(--spacing-md);
-    border-radius: var(--spacing-sm);
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--elevation-2);
-    }
-
+  article {
     &.unread {
       border-left: 3px solid var(--color-primary);
     }
-    
+
     &:not(.unread) {
       background: var(--color-surface-disabled);
     }
@@ -87,7 +78,7 @@ const { article } = Astro.props;
 
   .image-container {
     margin-bottom: var(--spacing-sm);
-    
+
     img {
       width: 100%;
       height: 150px;
@@ -141,12 +132,7 @@ const { article } = Astro.props;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    
-    &.favorite {
-      color: var(--color-surface-tertiary);
-      font-size: var(--font-size-lg);
-    }
-    
+
     &.unread {
       color: var(--color-primary);
       font-size: var(--font-size-sm);
@@ -186,34 +172,33 @@ const { article } = Astro.props;
     color: var(--color-text);
     cursor: pointer;
     transition: all 0.2s ease;
-    
+
     &:hover {
       background: var(--color-surface-hover);
     }
-    
+
     &:active {
       transform: scale(0.98);
     }
-    
-    &.preview {
+
+    &.summary-btn {
       background-color: var(--color-surface-accent);
       color: var(--color-text-on-accent);
-      
+
       &:hover {
         background-color: var(--color-surface-accent-hover);
       }
     }
   }
-  
+
   @media (max-width: 480px) {
     .actions {
-      justify-content: space-between;
-      
+      justify-content: center;
+
       .btn {
-        flex: 1;
         text-align: center;
-        min-width: 0;
-        padding: var(--spacing-xs) 0;
+        min-width: 120px;
+        padding: var(--spacing-xs) var(--spacing-sm);
       }
     }
   }
