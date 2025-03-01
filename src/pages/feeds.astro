@@ -1,5 +1,21 @@
 ---
+import { Icon } from "astro-icon/components";
+import AddFeedForm from "~/components/feeds/AddFeedForm.astro";
 import Layout from "~/layouts/Layout.astro";
+import { $feeds, $feedCategories } from "~/features/feed/feed-store";
+
+// フィードとカテゴリーを取得
+const feeds = $feeds.get();
+const categories = $feedCategories.get();
+
+// カテゴリー別のフィード数を計算
+const feedCountByCategory = categories.map(category => {
+  const count = feeds.filter(feed => feed.categoryIds.includes(category.id as any)).length;
+  return { ...category, count };
+});
+
+// カテゴリー名のリストを作成（AddFeedFormに渡す）
+const categoryNames = categories.map(category => category.name);
 ---
 
 <Layout title="フィード管理">
@@ -7,7 +23,7 @@ import Layout from "~/layouts/Layout.astro";
     <header class="container-header">
       <h1>フィード管理</h1>
       <div class="container-actions">
-        <button class="btn primary">新規フィード追加</button>
+        <AddFeedForm categories={categoryNames} />
         <button class="btn secondary">OPMLインポート</button>
         <button class="btn secondary">OPMLエクスポート</button>
       </div>
@@ -16,40 +32,213 @@ import Layout from "~/layouts/Layout.astro";
     <section>
       <h2>カテゴリー管理</h2>
       <div class="container-grid">
-        <article class="item-container">
-          <div class="item-header">
-            <h3>テクノロジー</h3>
-            <span class="container-meta">5フィード</span>
-          </div>
-          <div class="container-actions">
-            <button class="btn secondary">編集</button>
-            <button class="btn secondary">削除</button>
-          </div>
-        </article>
+        {feedCountByCategory.map(category => (
+          <article class="item-container">
+            <div class="item-header">
+              <h3>{category.name}</h3>
+              <span class="container-meta">{category.count}フィード</span>
+            </div>
+            <div class="container-actions">
+              <button class="btn secondary">編集</button>
+              <button class="btn secondary" data-category-id={category.id}>削除</button>
+            </div>
+          </article>
+        ))}
       </div>
     </section>
 
     <section>
       <h2>フィード一覧</h2>
-      <div class="container-list">
-        <article class="item-container">
-          <div class="item-content">
-            <h3 class="item-title">TechCrunch</h3>
-            <p class="item-description">https://techcrunch.com/feed</p>
-            <span class="tag">テクノロジー</span>
-          </div>
-          <div class="container-meta">
-            <span>200記事</span>
-            <span>最終更新: 10分前</span>
-          </div>
-          <div class="container-actions">
-            <button class="btn secondary">編集</button>
-            <button class="btn danger">削除</button>
-          </div>
-        </article>
+      <div class="container-list" id="feeds-container">
+        {feeds.map(feed => {
+          // フィードのカテゴリー名を取得
+          const feedCategories = feed.categoryIds
+            .map(id => categories.find(cat => cat.id === id)?.name)
+            .filter(Boolean);
+          
+          // 最終更新日時のフォーマット
+          const lastUpdated = feed.lastUpdated
+            ? new Date(feed.lastUpdated).toLocaleString('ja-JP', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              })
+            : '未更新';
+          
+          return (
+            <article class="item-container" data-feed-id={feed.id}>
+              <div class="item-content">
+                <h3 class="item-title">{feed.title}</h3>
+                <p class="item-description">{feed.url}</p>
+                <div class="tags">
+                  {feedCategories.map(category => (
+                    <span class="tag">{category}</span>
+                  ))}
+                </div>
+              </div>
+              <div class="container-meta">
+                <span>最終更新: {lastUpdated}</span>
+              </div>
+              <div class="container-actions">
+                <button class="btn secondary edit-feed">編集</button>
+                <button class="btn danger delete-feed">削除</button>
+              </div>
+            </article>
+          );
+        })}
       </div>
     </section>
   </div>
 </Layout>
 
-<style></style>
+<style>
+  .container-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-md);
+  }
+  
+  .container-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-md);
+  }
+  
+  .item-container {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-md);
+    box-shadow: var(--shadow-sm);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    gap: var(--spacing-sm);
+  }
+  
+  .item-header {
+    grid-column: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
+  
+  .item-content {
+    grid-column: 1;
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
+  
+  .container-meta {
+    grid-column: 1;
+    grid-row: 2;
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+  }
+  
+  .container-actions {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    justify-content: center;
+  }
+  
+  .item-title {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    margin: 0;
+  }
+  
+  .item-description {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    margin: 0;
+  }
+  
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+  }
+  
+  .tag {
+    background-color: var(--neutral);
+    color: var(--text-secondary);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-xs);
+  }
+  
+  .container-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+  }
+  
+  h1 {
+    font-size: var(--font-size-xl);
+    margin: 0;
+  }
+  
+  h2 {
+    font-size: var(--font-size-lg);
+    margin-top: var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: var(--spacing-sm);
+  }
+  
+  h3 {
+    font-size: var(--font-size-md);
+    margin: 0;
+  }
+</style>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    // フィード削除ボタンのイベントリスナー
+    const deleteButtons = document.querySelectorAll('.delete-feed');
+    deleteButtons.forEach(button => {
+      button.addEventListener('click', async (event) => {
+        const feedContainer = (event.target as HTMLElement).closest('[data-feed-id]');
+        const feedId = feedContainer?.getAttribute('data-feed-id');
+        
+        if (feedId && confirm('このフィードを削除してもよろしいですか？')) {
+          try {
+            const response = await fetch(`/api/feeds/${feedId}`, {
+              method: 'DELETE',
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+              // 成功したら要素を削除
+              feedContainer?.remove();
+            } else {
+              alert(`削除に失敗しました: ${result.message}`);
+            }
+          } catch (error) {
+            console.error('Feed deletion error:', error);
+            alert('削除中にエラーが発生しました');
+          }
+        }
+      });
+    });
+    
+    // カテゴリー削除ボタンのイベントリスナー
+    const categoryDeleteButtons = document.querySelectorAll('[data-category-id]');
+    categoryDeleteButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        alert('カテゴリー削除機能は現在実装中です');
+      });
+    });
+  });
+</script>

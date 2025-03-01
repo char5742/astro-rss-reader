@@ -100,7 +100,7 @@ const keywordNotificationsEnabled =
             <h3>通知キーワード</h3>
             <p>通知したいキーワードを入力</p>
           </header>
-          <KeywordChips keywords={["AI", "Machine Learning"]} />
+          <KeywordChips keywords={settingsData.notifications.keywords} />
         </li>
       </ul>
     </section>
@@ -113,7 +113,12 @@ const keywordNotificationsEnabled =
             <p>複数デバイス間で設定を同期</p>
           </header>
           <label>
-            <input class="toggle-switch" type="checkbox" name="sync-settings" />
+            <input
+              class="toggle-switch"
+              type="checkbox"
+              name="sync-settings"
+              checked={settingsData.account.enabledSync}
+            />
           </label>
         </li>
         <li>

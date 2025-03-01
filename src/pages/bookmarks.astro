@@ -1,5 +1,55 @@
 ---
 import Layout from "~/layouts/Layout.astro";
+import TagChip from "~/components/tags/TagChip.astro";
+import TagModal from "~/components/tags/TagModal.astro";
+import { $tags } from "~/features/tag/tag-store";
+import { getArticleIdsForTag } from "~/features/bookmark/bookmark-store";
+
+// タグデータを取得
+const tags = $tags.get();
+
+// TODO: 実際のブックマーク記事データを取得する処理を実装
+// 現在はモックデータを使用
+const mockArticles = [
+  {
+    id: "1",
+    title: "AI技術の最新動向：2024年の展望と課題",
+    description: "人工知能技術は2024年も急速な進化を続けています。本記事では、主要な技術トレンドと企業が直面している実装上の課題について詳しく解説します...",
+    source: "Tech News",
+    publishedAt: new Date("2024-02-20"),
+    tags: ["tech", "ai"],
+    isFavorite: true,
+  },
+  {
+    id: "2",
+    title: "フロントエンド開発の効率化：最新ツールとテクニック",
+    description: "モダンなフロントエンド開発では、効率的なワークフローが不可欠です。本記事では、開発者の生産性を向上させる最新ツールとテクニックを紹介します...",
+    source: "Dev Blog",
+    publishedAt: new Date("2024-02-15"),
+    tags: ["dev", "tech"],
+    isFavorite: true,
+  },
+  {
+    id: "3",
+    title: "2024年注目のプログラミング言語トップ5",
+    description: "テクノロジー業界は常に進化しています。2024年に注目すべきプログラミング言語と、それらが解決する問題について解説します...",
+    source: "Code Magazine",
+    publishedAt: new Date("2024-02-10"),
+    tags: ["dev"],
+    isFavorite: true,
+  },
+];
+
+// タグごとの記事数をカウント
+const tagCounts = tags.reduce((acc, tag) => {
+  // 実際の実装では getArticleIdsForTag(tag.id).length を使用
+  const count = mockArticles.filter(article => article.tags.includes(tag.id)).length;
+  acc[tag.id] = count;
+  return acc;
+}, {} as Record<string, number>);
+
+// 全記事数
+const totalCount = mockArticles.length;
 ---
 
 <Layout title="ブックマーク">
@@ -7,17 +57,17 @@ import Layout from "~/layouts/Layout.astro";
     <header class="container-header">
       <h1>ブックマーク</h1>
       <div class="container-actions">
-        <select class="form-control">
+        <select class="form-control tag-filter">
           <option value="all">すべてのタグ</option>
-          <option value="ai">AI</option>
-          <option value="tech">テクノロジー</option>
-          <option value="dev">開発</option>
+          {tags.map((tag) => (
+            <option value={tag.id}>{tag.name}</option>
+          ))}
         </select>
         <nav class="view-mode">
-          <button class="icon-btn active" aria-label="リスト表示">
+          <button class="icon-btn active" data-view="list" aria-label="リスト表示">
             <span>📝</span>
           </button>
-          <button class="icon-btn" aria-label="グリッド表示">
+          <button class="icon-btn" data-view="grid" aria-label="グリッド表示">
             <span>📰</span>
           </button>
         </nav>
@@ -25,56 +75,359 @@ import Layout from "~/layouts/Layout.astro";
     </header>
 
     <nav class="tag-list">
-      <button class="tag active"
-        >すべて <span class="tag-count">24</span></button
-      >
-      <button class="tag">AI <span class="tag-count">8</span></button>
-      <button class="tag">テクノロジー <span class="tag-count">12</span></button
-      >
-      <button class="tag">開発 <span class="tag-count">4</span></button>
+      <button class="tag active" data-tag-id="all">
+        すべて <span class="tag-count">{totalCount}</span>
+      </button>
+      {tags.map((tag) => (
+        <button class="tag" data-tag-id={tag.id} style={`--tag-color: ${tag.color || "#6c757d"}`}>
+          {tag.name} <span class="tag-count">{tagCounts[tag.id] || 0}</span>
+        </button>
+      ))}
     </nav>
 
-    <div class="container-list">
-      <article class="item-container">
-        <header class="item-header">
-          <div class="article-source">
-            <img
-              src="https://placehold.co/20x20"
-              alt="Tech News"
-              width="20"
-              height="20"
-            />
-            <span>Tech News</span>
+    <div class="container-list" id="articlesList">
+      {mockArticles.map((article) => (
+        <article class="item-container" data-article-id={article.id} data-tags={JSON.stringify(article.tags)}>
+          <header class="item-header">
+            <div class="article-source">
+              <img
+                src="https://placehold.co/20x20"
+                alt={article.source}
+                width="20"
+                height="20"
+              />
+              <span>{article.source}</span>
+            </div>
+            <time datetime={article.publishedAt.toISOString()}>
+              {article.publishedAt.toLocaleDateString("ja-JP", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              }).replace(/\//g, ".")}
+            </time>
+          </header>
+          <div class="item-content">
+            <h2>
+              <a href={`/articles/${article.id}`} class="item-title">
+                {article.title}
+              </a>
+            </h2>
+            <p class="item-description">
+              {article.description}
+            </p>
           </div>
-          <time datetime="2024-02-20">2024.02.20</time>
-        </header>
-        <div class="item-content">
-          <h2>
-            <a href="/articles/1" class="item-title"
-              >AI技術の最新動向：2024年の展望と課題</a
-            >
-          </h2>
-          <p class="item-description">
-            人工知能技術は2024年も急速な進化を続けています。本記事では、主要な技術トレンドと企業が直面している実装上の課題について詳しく解説します...
-          </p>
-        </div>
-        <footer class="item-footer">
-          <div class="tag-list">
-            <span class="tag">AI</span>
-            <span class="tag">Technology</span>
-          </div>
-          <div class="container-actions">
-            <button class="icon-btn" aria-label="ブックマークを解除">
-              <span>🔖</span>
-            </button>
-            <button class="icon-btn" aria-label="シェア">
-              <span>📤</span>
-            </button>
-          </div>
-        </footer>
-      </article>
+          <footer class="item-footer">
+            <div class="tag-list">
+              {article.tags.map((tagId) => {
+                const tag = tags.find(t => t.id === tagId);
+                return tag && (
+                  <TagChip id={tag.id} name={tag.name} color={tag.color} />
+                );
+              })}
+            </div>
+            <div class="container-actions">
+              <button class="icon-btn manage-tags-btn" data-article-id={article.id} aria-label="タグを管理">
+                <span>🏷️</span>
+              </button>
+              <button class="icon-btn" data-article-id={article.id} aria-label="ブックマークを解除">
+                <span>🔖</span>
+              </button>
+              <button class="icon-btn" data-article-id={article.id} aria-label="シェア">
+                <span>📤</span>
+              </button>
+            </div>
+          </footer>
+        </article>
+      ))}
     </div>
   </div>
+
+  <!-- 各記事用のタグ管理モーダル -->
+  <TagModal articleId="placeholder" />
 </Layout>
 
-<style></style>
+<script is:inline>
+  // グローバル変数の宣言
+  window.openTagModal = function() {};
+
+  document.addEventListener("DOMContentLoaded", function() {
+    // タグフィルタリング
+    const tagButtons = document.querySelectorAll(".tag-list .tag");
+    const tagFilter = document.querySelector(".tag-filter");
+    const articlesList = document.getElementById("articlesList");
+    const articles = document.querySelectorAll(".item-container");
+    
+    // タグボタンのクリックイベント
+    tagButtons.forEach(function(button) {
+      button.addEventListener("click", function() {
+        // アクティブなタグを更新
+        tagButtons.forEach(function(btn) { btn.classList.remove("active"); });
+        button.classList.add("active");
+        
+        const tagId = button.getAttribute("data-tag-id");
+        
+        // セレクトボックスの値も更新
+        if (tagFilter) {
+          tagFilter.value = tagId || "all";
+        }
+        
+        // 記事をフィルタリング
+        filterArticles(tagId);
+      });
+    });
+    
+    // セレクトボックスの変更イベント
+    if (tagFilter) {
+      tagFilter.addEventListener("change", function() {
+        const tagId = tagFilter.value;
+        
+        // タグボタンのアクティブ状態も更新
+        tagButtons.forEach(function(btn) {
+          if (btn.getAttribute("data-tag-id") === tagId) {
+            btn.classList.add("active");
+          } else {
+            btn.classList.remove("active");
+          }
+        });
+        
+        // 記事をフィルタリング
+        filterArticles(tagId);
+      });
+    }
+    
+    // 記事のフィルタリング関数
+    function filterArticles(tagId) {
+      if (!tagId || tagId === "all") {
+        // すべての記事を表示
+        articles.forEach(function(article) {
+          article.classList.remove("hidden");
+        });
+      } else {
+        // 特定のタグを持つ記事のみ表示
+        articles.forEach(function(article) {
+          const articleTags = JSON.parse(article.getAttribute("data-tags") || "[]");
+          if (articleTags.includes(tagId)) {
+            article.classList.remove("hidden");
+          } else {
+            article.classList.add("hidden");
+          }
+        });
+      }
+    }
+    
+    // 表示モードの切り替え
+    const viewButtons = document.querySelectorAll(".view-mode .icon-btn");
+    viewButtons.forEach(function(button) {
+      button.addEventListener("click", function() {
+        viewButtons.forEach(function(btn) { btn.classList.remove("active"); });
+        button.classList.add("active");
+        
+        const viewMode = button.getAttribute("data-view");
+        if (articlesList) {
+          if (viewMode === "grid") {
+            articlesList.classList.add("grid-view");
+          } else {
+            articlesList.classList.remove("grid-view");
+          }
+        }
+      });
+    });
+    
+    // タグ管理ボタンのイベント
+    const manageTagsButtons = document.querySelectorAll(".manage-tags-btn");
+    manageTagsButtons.forEach(function(button) {
+      button.addEventListener("click", function() {
+        const articleId = button.getAttribute("data-article-id");
+        if (articleId && typeof window.openTagModal === "function") {
+          // モーダル内のarticleId属性を更新
+          const modal = document.getElementById("tagModal");
+          if (modal) {
+            modal.setAttribute("data-article-id", articleId);
+          }
+          
+          // モーダルを開く
+          window.openTagModal();
+        }
+      });
+    });
+  });
+</script>
+
+<style>
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--space-md);
+  }
+  
+  .container-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-md);
+  }
+  
+  .container-actions {
+    display: flex;
+    gap: var(--space-sm);
+  }
+  
+  .form-control {
+    padding: var(--space-xs) var(--space-sm);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+  }
+  
+  .view-mode {
+    display: flex;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  .icon-btn {
+    background: none;
+    border: none;
+    padding: var(--space-xs) var(--space-sm);
+    cursor: pointer;
+    color: var(--text-color);
+    transition: all 0.2s ease;
+  }
+  
+  .icon-btn.active {
+    background-color: var(--accent);
+    color: white;
+  }
+  
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-md);
+  }
+  
+  .tag {
+    background-color: var(--bg-secondary);
+    border: none;
+    border-radius: 16px;
+    padding: var(--space-xs) var(--space-sm);
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    color: var(--text-color);
+  }
+  
+  .tag.active {
+    background-color: var(--accent);
+    color: white;
+  }
+  
+  .tag-count {
+    display: inline-block;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 0 var(--space-xs);
+    font-size: 0.8rem;
+    margin-left: var(--space-xs);
+  }
+  
+  .container-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+  
+  .container-list.grid-view {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--space-md);
+  }
+  
+  .item-container {
+    background-color: var(--bg-card);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+  }
+  
+  .item-container:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+  
+  .item-container.hidden {
+    display: none;
+  }
+  
+  .item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-sm);
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.9rem;
+  }
+  
+  .article-source {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+  
+  .item-content {
+    padding: var(--space-md);
+  }
+  
+  .item-title {
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: 1.2rem;
+    margin-bottom: var(--space-sm);
+    display: block;
+  }
+  
+  .item-description {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  
+  .item-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-sm);
+    border-top: 1px solid var(--border-color);
+  }
+  
+  .item-footer .tag-list {
+    margin-bottom: 0;
+  }
+  
+  .item-footer .container-actions {
+    gap: var(--space-xs);
+  }
+  
+  @media (max-width: 768px) {
+    .container-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-sm);
+    }
+    
+    .container-actions {
+      width: 100%;
+    }
+    
+    .form-control {
+      flex-grow: 1;
+    }
+    
+    .container-list.grid-view {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

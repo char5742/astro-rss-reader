@@ -7,25 +7,37 @@ const { keywords = [] } = Astro.props;
 ---
 
 <div class="keyword-chips">
-  {
-    keywords.map((keyword) => (
-      <span class="keyword-chip">
-        {keyword}
-        <button class="remove-keyword" aria-label="削除">
-          ×
-        </button>
-      </span>
-    ))
-  }
-  <button class="add-keyword">+ 追加</button>
+  <input type="hidden" name="keywords" id="keywords-input" value={keywords.join(',')} />
+  <div id="keyword-list">
+    {
+      keywords.map((keyword) => (
+        <span class="keyword-chip" data-keyword={keyword}>
+          {keyword}
+          <button type="button" class="remove-keyword" aria-label="削除">
+            ×
+          </button>
+        </span>
+      ))
+    }
+  </div>
+  <div class="add-keyword-container">
+    <input type="text" id="new-keyword" placeholder="新しいキーワード" class="new-keyword-input" />
+    <button type="button" class="add-keyword">追加</button>
+  </div>
 </div>
 
 <style>
   .keyword-chips {
     display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    padding-top: var(--spacing-sm);
+  }
+
+  #keyword-list {
+    display: flex;
     flex-wrap: wrap;
     gap: var(--spacing-sm);
-    padding-top: var(--spacing-sm);
   }
 
   .keyword-chip {
@@ -47,13 +59,94 @@ const { keywords = [] } = Astro.props;
     cursor: pointer;
   }
 
+  .add-keyword-container {
+    display: flex;
+    gap: var(--spacing-sm);
+  }
+
+  .new-keyword-input {
+    flex: 1;
+    padding: var(--spacing-sm);
+    border: 1px solid var(--neutral);
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-size-sm);
+  }
+
   .add-keyword {
     padding: var(--spacing-sm) var(--spacing-md);
-    border: 1px dashed var(--neutral);
+    border: none;
     border-radius: var(--border-radius-md);
-    background: none;
-    color: var(--primary);
+    background: var(--primary);
+    color: white;
     font-size: var(--font-size-sm);
     cursor: pointer;
   }
 </style>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const keywordsList = document.getElementById('keyword-list');
+    const keywordsInput = document.getElementById('keywords-input') as HTMLInputElement;
+    const newKeywordInput = document.getElementById('new-keyword') as HTMLInputElement;
+    const addButton = document.querySelector('.add-keyword');
+
+    // キーワードの配列を更新して隠しフィールドに設定する関数
+    function updateKeywordsInput() {
+      const chips = keywordsList?.querySelectorAll('.keyword-chip') || [];
+      const keywords = Array.from(chips).map(chip => chip.getAttribute('data-keyword'));
+      if (keywordsInput) {
+        keywordsInput.value = keywords.join(',');
+      }
+    }
+
+    // キーワード削除ボタンのイベントリスナー
+    keywordsList?.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      if (target.classList.contains('remove-keyword')) {
+        const chip = target.closest('.keyword-chip');
+        if (chip) {
+          chip.remove();
+          updateKeywordsInput();
+        }
+      }
+    });
+
+    // キーワード追加ボタンのイベントリスナー
+    addButton?.addEventListener('click', () => {
+      addKeyword();
+    });
+
+    // Enterキーでもキーワード追加
+    newKeywordInput?.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        addKeyword();
+      }
+    });
+
+    // キーワード追加関数
+    function addKeyword() {
+      const keyword = newKeywordInput?.value.trim();
+      if (keyword && keywordsList) {
+        // 重複チェック
+        const existingKeywords = Array.from(keywordsList.querySelectorAll('.keyword-chip'))
+          .map(chip => chip.getAttribute('data-keyword'));
+        
+        if (!existingKeywords.includes(keyword)) {
+          const chip = document.createElement('span');
+          chip.className = 'keyword-chip';
+          chip.setAttribute('data-keyword', keyword);
+          chip.innerHTML = `
+            ${keyword}
+            <button type="button" class="remove-keyword" aria-label="削除">×</button>
+          `;
+          keywordsList.appendChild(chip);
+          updateKeywordsInput();
+          if (newKeywordInput) {
+            newKeywordInput.value = '';
+          }
+        }
+      }
+    }
+  });
+</script>

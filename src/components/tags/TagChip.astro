@@ -1,0 +1,62 @@
+---
+type Props = {
+  id: string;
+  name: string;
+  color?: string;
+  removable?: boolean;
+  selected?: boolean;
+};
+
+const { id, name, color = "#6c757d", removable = false, selected = false } = Astro.props;
+---
+
+<span 
+  class="tag-chip" 
+  data-tag-id={id}
+  data-selected={selected}
+  style={`--tag-color: ${color}`}
+>
+  {name}
+  {removable && (
+    <button class="tag-remove-btn" aria-label={`${name}タグを削除`}>
+      <span aria-hidden="true">×</span>
+    </button>
+  )}
+</span>
+
+<style>
+  .tag-chip {
+    display: inline-flex;
+    align-items: center;
+    background-color: var(--tag-color);
+    color: white;
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: 16px;
+    font-size: 0.85rem;
+    margin-right: var(--space-xs);
+    margin-bottom: var(--space-xs);
+    user-select: none;
+    transition: all 0.2s ease;
+  }
+
+  .tag-chip[data-selected="true"] {
+    box-shadow: 0 0 0 2px white, 0 0 0 4px var(--tag-color);
+  }
+
+  .tag-remove-btn {
+    background: none;
+    border: none;
+    color: white;
+    margin-left: var(--space-xs);
+    padding: 0 var(--space-xs);
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+  }
+
+  .tag-remove-btn:hover {
+    opacity: 1;
+  }
+</style>

@@ -1,0 +1,244 @@
+---
+import TagChip from "./TagChip.astro";
+import { $tags } from "~/features/tag/tag-store";
+
+type Props = {
+  selectedTagIds?: string[];
+  articleId?: string;
+  allowCreate?: boolean;
+};
+
+const { selectedTagIds = [], articleId, allowCreate = true } = Astro.props;
+const tags = $tags.get();
+---
+
+<div class="tag-selector">
+  <div class="tag-list">
+    {tags.map((tag) => (
+      <TagChip
+        id={tag.id}
+        name={tag.name}
+        color={tag.color}
+        selected={selectedTagIds.includes(tag.id)}
+      />
+    ))}
+  </div>
+  
+  {allowCreate && (
+    <div class="tag-create">
+      <input
+        type="text"
+        class="tag-input"
+        placeholder="新しいタグを作成..."
+        aria-label="新しいタグを作成"
+      />
+      <div class="color-selector">
+        <button class="color-option" data-color="#3498db" style="--color: #3498db;" aria-label="青色を選択"></button>
+        <button class="color-option" data-color="#2ecc71" style="--color: #2ecc71;" aria-label="緑色を選択"></button>
+        <button class="color-option" data-color="#e74c3c" style="--color: #e74c3c;" aria-label="赤色を選択"></button>
+        <button class="color-option" data-color="#f39c12" style="--color: #f39c12;" aria-label="オレンジ色を選択"></button>
+        <button class="color-option" data-color="#9b59b6" style="--color: #9b59b6;" aria-label="紫色を選択"></button>
+        <button class="color-option" data-color="#34495e" style="--color: #34495e;" aria-label="紺色を選択"></button>
+      </div>
+      <button class="create-btn" disabled>作成</button>
+    </div>
+  )}
+</div>
+
+<script define:vars={{ articleId }}>
+  document.addEventListener("DOMContentLoaded", () => {
+    const tagSelector = document.querySelector(".tag-selector");
+    if (!tagSelector) return;
+
+    // タグ選択の処理
+    const tagChips = tagSelector.querySelectorAll(".tag-chip");
+    tagChips.forEach((chip) => {
+      chip.addEventListener("click", async () => {
+        const tagId = chip.getAttribute("data-tag-id");
+        const isSelected = chip.getAttribute("data-selected") === "true";
+        
+        if (!tagId || !articleId) return;
+        
+        try {
+          if (isSelected) {
+            // タグを削除
+            const response = await fetch(`/api/articles/${articleId}/tags`, {
+              method: "DELETE",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ tagId }),
+            });
+            
+            if (response.ok) {
+              chip.setAttribute("data-selected", "false");
+            } else {
+              console.error("Failed to remove tag");
+            }
+          } else {
+            // タグを追加
+            const response = await fetch(`/api/articles/${articleId}/tags`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ tagId }),
+            });
+            
+            if (response.ok) {
+              chip.setAttribute("data-selected", "true");
+            } else {
+              console.error("Failed to add tag");
+            }
+          }
+        } catch (error) {
+          console.error("Error updating tags:", error);
+        }
+      });
+    });
+
+    // 新しいタグ作成の処理
+    if (tagSelector.querySelector(".tag-create")) {
+      const tagInput = tagSelector.querySelector(".tag-input");
+      const createBtn = tagSelector.querySelector(".create-btn");
+      const colorOptions = tagSelector.querySelectorAll(".color-option");
+      let selectedColor = "#3498db"; // デフォルトの色
+      
+      // 色選択の処理
+      colorOptions.forEach((option) => {
+        option.addEventListener("click", () => {
+          // 以前の選択を解除
+          colorOptions.forEach((opt) => opt.classList.remove("selected"));
+          
+          // 新しい選択を設定
+          option.classList.add("selected");
+          selectedColor = option.getAttribute("data-color") || "#3498db";
+          
+          // 入力があれば作成ボタンを有効化
+          updateCreateButtonState();
+        });
+      });
+      
+      // デフォルトで最初の色を選択
+      colorOptions[0].classList.add("selected");
+      
+      // 入力チェック
+      tagInput.addEventListener("input", updateCreateButtonState);
+      
+      function updateCreateButtonState() {
+        const tagName = tagInput.value.trim();
+        createBtn.disabled = tagName.length === 0;
+      }
+      
+      // タグ作成処理
+      createBtn.addEventListener("click", async () => {
+        const tagName = tagInput.value.trim();
+        if (!tagName) return;
+        
+        try {
+          // 新しいタグを作成
+          const createResponse = await fetch("/api/tags", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ name: tagName, color: selectedColor }),
+          });
+          
+          if (createResponse.ok) {
+            const { tag } = await createResponse.json();
+            
+            // 記事にタグを追加（記事IDがある場合）
+            if (articleId) {
+              await fetch(`/api/articles/${articleId}/tags`, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ tagId: tag.id }),
+              });
+            }
+            
+            // ページをリロードして新しいタグを表示
+            window.location.reload();
+          } else {
+            console.error("Failed to create tag");
+          }
+        } catch (error) {
+          console.error("Error creating tag:", error);
+        }
+      });
+    }
+  });
+</script>
+
+<style>
+  .tag-selector {
+    margin-bottom: var(--space-md);
+  }
+  
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: var(--space-sm);
+  }
+  
+  .tag-create {
+    display: flex;
+    align-items: center;
+    margin-top: var(--space-sm);
+    flex-wrap: wrap;
+  }
+  
+  .tag-input {
+    flex: 1;
+    min-width: 150px;
+    padding: var(--space-xs) var(--space-sm);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    margin-right: var(--space-sm);
+    margin-bottom: var(--space-xs);
+  }
+  
+  .color-selector {
+    display: flex;
+    margin-right: var(--space-sm);
+    margin-bottom: var(--space-xs);
+  }
+  
+  .color-option {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: var(--color);
+    border: 2px solid transparent;
+    margin-right: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .color-option.selected {
+    border-color: var(--text-color);
+    transform: scale(1.1);
+  }
+  
+  .create-btn {
+    padding: var(--space-xs) var(--space-sm);
+    background-color: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: var(--space-xs);
+  }
+  
+  .create-btn:disabled {
+    background-color: var(--border-color);
+    cursor: not-allowed;
+  }
+  
+  .create-btn:not(:disabled):hover {
+    background-color: var(--accent-dark, var(--accent));
+  }
+</style>
