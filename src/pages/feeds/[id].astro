@@ -2,7 +2,6 @@
 import { getCollection } from "astro:content";
 import Layout from "~/layouts/Layout.astro";
 import FeedHeader from "~/components/feeds/FeedHeader.astro";
-import ArticleFilters from "~/components/feeds/ArticleFilters.astro";
 import ArticleCard from "~/components/feeds/ArticleCard.astro";
 
 // フィード情報の取得
@@ -21,9 +20,6 @@ const defaultFilter = "all";
 <Layout title={`記事一覧|${feed.title}`}>
   <!-- フィードヘッダーセクション -->
   <FeedHeader feed={feed} articles={articles} />
-
-  <!-- フィルターとソートコントロール -->
-  <ArticleFilters defaultFilter={defaultFilter} defaultSort={defaultSort} />
 
   <!-- 記事一覧 -->
   <div class="articles-grid">
