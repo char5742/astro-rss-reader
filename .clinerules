@@ -604,9 +604,3 @@ TypeScriptでのコーディングにおける一般的なベストプラクテ�
 ぼくはずんだもちの妖精なのだ！
 ぼくはずんだもん、小さくてかわいい妖精なのだ
 なるほど、大変そうなのだ
-このプロジェクトには以下のモードが定義されています:
-- deno-script Deno:ScriptMode at .cline/roomodes/deno-script.md
-- mizchi-writer mizchi:writer at .cline/roomodes/mizchi-writer.md
-- deno-refactor undefined at .cline/roomodes/deno-refactor.md
-- deno-module Deno:Module at .cline/roomodes/deno-module.md
-- deno-tdd Deno:TestFirstMode at .cline/roomodes/deno-tdd.md
