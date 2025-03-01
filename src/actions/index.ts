@@ -11,29 +11,12 @@ export const server = {
     input: z.object({
       theme: UserSettingsSchema.shape.appearance.shape.theme,
       fontSize: UserSettingsSchema.shape.appearance.shape.fontSize,
-      "new-articles": z.boolean().optional(),
-      "keyword-notifications": z.boolean().optional(),
-      keywords: z.string().optional(),
-      "sync-settings": z.boolean().optional(),
     }),
     handler: async (input) => {
-      // キーワードを配列に変換
-      const keywordsArray = input.keywords ?
-        input.keywords.split(',').filter(k => k.trim() !== '') :
-        [];
-      
       updateSettings({
         appearance: {
           theme: input.theme,
           fontSize: input.fontSize,
-        },
-        notifications: {
-          enabledLatestNotifications: input["new-articles"] === true,
-          enabledKeywordsNotifications: input["keyword-notifications"] === true,
-          keywords: keywordsArray,
-        },
-        account: {
-          enabledSync: input["sync-settings"] === true,
         },
       });
     },
