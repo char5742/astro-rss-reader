@@ -15,7 +15,6 @@ const mockFeedCollection = [
           url: "https://example.com/1",
           publishedAt: new Date("2024-02-25"),
           status: "unread",
-          isFavorite: false,
         },
         {
           id: "article-2",
@@ -23,7 +22,6 @@ const mockFeedCollection = [
           url: "https://example.com/2",
           publishedAt: new Date("2024-02-24"),
           status: "read",
-          isFavorite: true,
         },
       ],
     },

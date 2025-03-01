@@ -34,7 +34,6 @@ export const ArticleSchema = z
     author: z.string().optional(),
     publishedAt: z.date(),
     status: z.nativeEnum(ArticleStatus),
-    isFavorite: z.boolean(),
     imageUrl: z.string().url().optional(),
     categories: z.array(ArticleCategorySchema),
   })
@@ -49,7 +48,6 @@ export function NewArticle({
   content,
   publishedAt,
   status,
-  isFavorite,
   categories,
   summary,
   author,
@@ -63,7 +61,6 @@ export function NewArticle({
     content,
     publishedAt,
     status,
-    isFavorite,
     categories,
     summary,
     author,
@@ -74,7 +71,6 @@ export function NewArticle({
 export const ArticleFilterSchema = z
   .object({
     status: z.nativeEnum(ArticleStatus).optional(),
-    isFavorite: z.boolean().optional(),
     categoryIds: z.array(ArticleCategoryIdSchema).optional(),
     feedIds: z.array(FeedIdSchema).optional(),
     searchQuery: z.string().optional(),

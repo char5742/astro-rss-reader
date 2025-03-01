@@ -1,27 +1,9 @@
-import { defineAction, ActionError } from "astro:actions";
-import { z } from "astro:schema";
+import { ActionError, defineAction } from "astro:actions";
 import { getCollection } from "astro:content";
-import DOMPurify from 'isomorphic-dompurify';
+import { z } from "astro:schema";
+import DOMPurify from "isomorphic-dompurify";
+import { updateArticleStatus as updateArticleStatusStore } from "~/store/articles";
 import { ArticleIdSchema, ArticleStatus } from "~/types/article";
-
-// 記事のブックマーク状態を切り替えるアクション
-export const toggleBookmark = defineAction({
-  input: z.object({
-    articleId: ArticleIdSchema,
-  }),
-  handler: async ({ articleId }) => {
-    try {
-      // TODO: 実際のデータベース処理を実装
-      // ここではモックレスポンスを返す
-      return { success: true };
-    } catch (error) {
-      throw new ActionError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: "ブックマークの切り替えに失敗しました",
-      });
-    }
-  },
-});
 
 // 記事の内容を取得するアクション
 export const getArticleContent = defineAction({
@@ -37,11 +19,13 @@ export const getArticleContent = defineAction({
       let targetArticle = null;
 
       for (const feed of feeds) {
-        const foundArticle = feed.data.articles.find(article => article.id === articleId);
+        const foundArticle = feed.data.articles.find(
+          (article) => article.id === articleId,
+        );
         if (foundArticle) {
           targetArticle = {
             ...foundArticle,
-            feedTitle: feed.data.feed.title
+            feedTitle: feed.data.feed.title,
           };
           break;
         }
@@ -61,40 +45,13 @@ export const getArticleContent = defineAction({
         success: true,
         article: {
           ...targetArticle,
-          content: sanitizedContent
-        }
+          content: sanitizedContent,
+        },
       };
     } catch (error) {
       if (error instanceof ActionError) {
         throw error;
       }
-      console.error("エラーが発生しました:", error);
-      throw new ActionError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: "サーバーエラーが発生しました",
-      });
-    }
-  },
-});
-
-// 記事のお気に入り状態を変更するアクション
-export const toggleFavorite = defineAction({
-  input: z.object({
-    articleId: ArticleIdSchema,
-    isFavorite: z.boolean(),
-  }),
-  handler: async ({ articleId, isFavorite }) => {
-    try {
-      // ここで実際のデータを更新する処理を実装
-      // 本番では、データベースなどに保存する
-      console.log(`記事ID: ${articleId} のお気に入り状態を ${isFavorite ? "追加" : "解除"} しました`);
-
-      return {
-        success: true,
-        articleId,
-        isFavorite
-      };
-    } catch (error) {
       console.error("エラーが発生しました:", error);
       throw new ActionError({
         code: "INTERNAL_SERVER_ERROR",
@@ -112,17 +69,19 @@ export const updateArticleStatus = defineAction({
   }),
   handler: async ({ articleId, status }) => {
     try {
-      // ここで実際のデータを更新する処理を実装
-      // 本番では、データベースなどに保存する
-      console.log(`記事ID: ${articleId} のステータスを ${status} に更新しました`);
+      // 記事のステータスを更新
+      updateArticleStatusStore(articleId, status);
+      console.log(
+        `記事ID: ${articleId} のステータスを ${status} に更新しました`,
+      );
 
       return {
         success: true,
         articleId,
-        status
+        status,
       };
     } catch (error) {
-      console.error("エラーが発生しました:", error);
+      console.error("ステータス更新エラー:", error);
       throw new ActionError({
         code: "INTERNAL_SERVER_ERROR",
         message: "サーバーエラーが発生しました",

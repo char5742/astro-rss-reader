@@ -1,6 +1,5 @@
 ---
 import type { Article } from "~/types/article";
-import BookmarkButton from "./BookmarkButton.astro";
 
 interface Props {
   article: Article & { feedTitle: string };
@@ -25,7 +24,6 @@ const { article } = Astro.props;
   </div>
   <footer>
     <span class="article-source">{article.feedTitle}</span>
-    <BookmarkButton id={article.id} isFavorite={article.isFavorite} />
   </footer>
 </article>
 

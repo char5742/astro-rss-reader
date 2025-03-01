@@ -31,7 +31,6 @@ const articles = feeds
           >
             <header>
               <h2>
-                {article.isFavorite && <span class="status-badge">★</span>}
                 <a href={article.url}>{article.title}</a>
               </h2>
               <time datetime={article.publishedAt.toISOString()}>

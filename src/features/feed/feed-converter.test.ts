@@ -55,7 +55,6 @@ describe("Feed Converter", () => {
       url: "https://example.com/article1",
       content: "Test Content",
       status: ArticleStatus.UNREAD,
-      isFavorite: false,
     });
   });
 
@@ -105,7 +104,6 @@ describe("Feed Converter", () => {
       url: "https://example.com/entry1",
       content: "Test Entry Content",
       status: ArticleStatus.UNREAD,
-      isFavorite: false,
     });
   });
 

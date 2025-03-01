@@ -4,19 +4,12 @@ import "~/features/persistence/persistence";
 import { createAccount, getAccount } from "~/store/accounts";
 import { updateSettings } from "~/store/settings";
 import { UserSettingsSchema } from "~/types/user";
-import {
-  toggleBookmark,
-  getArticleContent,
-  toggleFavorite,
-  updateArticleStatus
-} from "./articles";
+import { getArticleContent, updateArticleStatus } from "./articles";
 
 export const server = {
   // 記事関連のアクション
   articles: {
-    toggleBookmark,
     getArticleContent,
-    toggleFavorite,
     updateArticleStatus,
   },
   updateSettings: defineAction({

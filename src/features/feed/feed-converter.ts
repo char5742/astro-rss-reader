@@ -40,7 +40,6 @@ export async function convertUrlToFeed(
       content: item.content || "",
       publishedAt: item.pubDate ? new Date(item.pubDate) : new Date(),
       status: ArticleStatus.UNREAD,
-      isFavorite: false,
       categories: [],
       summary: item.content?.substring(0, 200) || "", // 最初の200文字をサマリーとして使用
     });
