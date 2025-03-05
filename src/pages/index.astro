@@ -66,3 +66,12 @@ const latestArticles = feedCollection
     }
   }
 </style>
+
+<script>
+  import { $settings } from "~/store/settings";
+  document.addEventListener("DOMContentLoaded", () => {
+    console.log("$settings");
+
+    console.log($settings);
+  });
+</script>

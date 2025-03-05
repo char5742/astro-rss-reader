@@ -1,32 +1,73 @@
-import { atom } from "nanostores";
-import { load, save } from "~/features/persistence/persistence";
+/**
+ * @module store/articles
+ * @description 記事のステータスを管理するためのストアとユーティリティ関数を提供するモジュール
+ *
+ * このモジュールは、記事のステータス（既読、未読、保存済みなど）を管理するための
+ * 永続的なストアと、ステータスを更新するためのユーティリティ関数を提供します。
+ */
+import { persistentAtom } from "@nanostores/persistent";
 import type { ArticleId } from "~/types/article";
 import { ArticleStatus } from "~/types/article";
 
-// 記事のステータスを管理するストア
-export const $articleStatuses = atom<Record<string, ArticleStatus>>(
-  loadArticleStatuses(),
-);
+/**
+ * 記事のステータスを管理する永続的なストア
+ *
+ * このストアは、各記事のIDをキー、ステータスを値とするオブジェクトを保持します。
+ * 値はJSONとしてシリアライズされ、永続化エンジンによってデータベースに保存されます。
+ *
+ * @example
+ * ```typescript
+ * import { $articleStatuses } from '~/store/articles';
+ * import { ArticleStatus } from '~/types/article';
+ *
+ * // すべての記事のステータスを取得
+ * const allStatuses = $articleStatuses.get();
+ *
+ * // 特定の記事のステータスを取得
+ * const articleStatus = allStatuses['article123'] || ArticleStatus.UNREAD;
+ *
+ * // 直接ステータスを更新（通常は updateArticleStatus 関数を使用）
+ * $articleStatuses.set({
+ *   ...allStatuses,
+ *   'article123': ArticleStatus.READ
+ * });
+ * ```
+ */
+export const $articleStatuses = persistentAtom<
+  Record<ArticleId, ArticleStatus>
+>("articleStatuses", {}, { encode: JSON.stringify, decode: JSON.parse });
 
-// 記事のステータスを読み込む
-function loadArticleStatuses(): Record<string, ArticleStatus> {
-  const statuses = load("articleStatuses");
-  return statuses ? JSON.parse(statuses) : {};
-}
-
-// 記事のステータスを更新する
+/**
+ * 記事のステータスを更新する
+ *
+ * 指定された記事IDのステータスを更新し、変更をストアに反映します。
+ * この関数は、既存のステータスを保持しながら、指定された記事のステータスのみを更新します。
+ *
+ * @param {ArticleId} articleId - 更新する記事のID
+ * @param {ArticleStatus} status - 設定する新しいステータス
+ * @returns {void}
+ *
+ * @example
+ * ```typescript
+ * import { updateArticleStatus } from '~/store/articles';
+ * import { ArticleStatus } from '~/types/article';
+ *
+ * // 記事を既読に設定
+ * updateArticleStatus('article123', ArticleStatus.READ);
+ *
+ * // 記事を保存済みに設定
+ * updateArticleStatus('article456', ArticleStatus.SAVED);
+ * ```
+ */
 export function updateArticleStatus(
   articleId: ArticleId,
   status: ArticleStatus,
 ): void {
   const statuses = $articleStatuses.get();
-  const newStatuses = { ...statuses, [articleId]: status };
+  const newStatuses = {
+    ...statuses,
+    [articleId]: status,
+  };
 
   $articleStatuses.set(newStatuses);
-  save("articleStatuses", JSON.stringify(newStatuses));
-}
-
-// 記事のステータスを取得する
-export function getArticleStatus(articleId: ArticleId): ArticleStatus {
-  return $articleStatuses.get()[articleId] || ArticleStatus.UNREAD;
 }
