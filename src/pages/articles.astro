@@ -3,6 +3,7 @@ export const prerender = false;
 import { getCollection } from "astro:content";
 import ArticleCard from "~/components/feeds/ArticleCard.astro";
 import Layout from "~/layouts/Layout.astro";
+import { $articleStatusBy } from "~/store/articles";
 import { ArticleStatus } from "~/types/article";
 
 const filter = Astro.url.searchParams.get("filter");
@@ -15,7 +16,7 @@ const articles = feeds
     if (filter === "today") {
       return article.publishedAt.toDateString() === new Date().toDateString();
     } else if (filter === "unread") {
-      return article.status === ArticleStatus.UNREAD;
+      return $articleStatusBy(article.id).get() === ArticleStatus.UNREAD;
     } else {
       return true;
     }

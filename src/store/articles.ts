@@ -38,6 +38,33 @@ export const $articleStatuses = persistentAtom<
 >("articleStatuses", {}, { encode: JSON.stringify, decode: JSON.parse });
 
 /**
+ * 指定された記事IDのステータスを取得する
+ *
+ * 指定された記事IDに対応するステータスをストアから取得します。
+ * 記事IDが存在しない場合は、デフォルト値としてArticleStatus.UNREADを返します。
+ *
+ * @param {ArticleId} id - ステータスを取得する記事のID
+ * @returns {ArticleStatus} 記事のステータス（既読、未読、保存済みなど）
+ *
+ * @example
+ * ```typescript
+ * import { $articleStatusBy } from '~/store/articles';
+ * import { ArticleStatus } from '~/types/article';
+ *
+ * // 特定の記事のステータスを取得
+ * const articleStatus = $articleStatusBy('article123');
+ *
+ * // ステータスが未読の場合の処理
+ * if (articleStatus === ArticleStatus.UNREAD) {
+ *   console.log('この記事は未読です。');
+ * }
+ * ```
+ */
+export const $articleStatusBy = (id: ArticleId) => {
+  return { get: () => $articleStatuses.get()[id] ?? ArticleStatus.UNREAD };
+};
+
+/**
  * 記事のステータスを更新する
  *
  * 指定された記事IDのステータスを更新し、変更をストアに反映します。

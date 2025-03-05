@@ -33,7 +33,6 @@ export const ArticleSchema = z
     summary: z.string().optional(),
     author: z.string().optional(),
     publishedAt: z.date(),
-    status: z.nativeEnum(ArticleStatus),
     imageUrl: z.string().url().optional(),
     categories: z.array(ArticleCategorySchema),
   })
@@ -47,7 +46,6 @@ export function NewArticle({
   url,
   content,
   publishedAt,
-  status,
   categories,
   summary,
   author,
@@ -60,33 +58,12 @@ export function NewArticle({
     url,
     content,
     publishedAt,
-    status,
     categories,
     summary,
     author,
     imageUrl,
   };
 }
-
-export const ArticleFilterSchema = z
-  .object({
-    status: z.nativeEnum(ArticleStatus).optional(),
-    categoryIds: z.array(ArticleCategoryIdSchema).optional(),
-    feedIds: z.array(FeedIdSchema).optional(),
-    searchQuery: z.string().optional(),
-  })
-  .readonly();
-export type ArticleFilter = z.infer<typeof ArticleFilterSchema>;
-
-export const ArticleHistorySchema = z
-  .object({
-    articleId: ArticleIdSchema,
-    previousStatus: z.nativeEnum(ArticleStatus),
-    newStatus: z.nativeEnum(ArticleStatus),
-    updatedAt: z.date(),
-  })
-  .readonly();
-export type ArticleHistory = z.infer<typeof ArticleHistorySchema>;
 
 export const TagSchema = z
   .object({

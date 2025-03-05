@@ -1,4 +1,5 @@
 ---
+import { $articleStatusBy } from "~/store/articles";
 import type { Article } from "~/types/article";
 import { ArticleStatus } from "~/types/article";
 
@@ -7,25 +8,19 @@ interface Props {
 }
 
 const { article } = Astro.props;
+const status = $articleStatusBy(article.id).get();
 ---
 
 <article
-  class:list={[
-    "hover-card",
-    { unread: article.status === ArticleStatus.UNREAD },
-  ]}
-  data-status={article.status}
+  class:list={["hover-card", { unread: status === ArticleStatus.UNREAD }]}
+  data-status={status}
   data-id={article.id}
   data-title={article.title.toLowerCase()}
   data-summary={article.summary?.toLowerCase()}
 >
   <header>
     <h2>
-      {
-        article.status === ArticleStatus.UNREAD && (
-          <span class="badge unread">●</span>
-        )
-      }
+      <span class="badge">●</span>
       <a
         href={article.url}
         target="_blank"
@@ -74,6 +69,18 @@ const { article } = Astro.props;
     &:not(.unread) {
       background: var(--color-surface-disabled);
     }
+  }
+
+  .unread {
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  .badge {
+    display: none;
   }
 
   .image-container {
@@ -126,17 +133,6 @@ const { article } = Astro.props;
     flex-direction: column;
     gap: var(--spacing-md);
     margin-top: auto;
-  }
-
-  .badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    &.unread {
-      color: var(--color-primary);
-      font-size: var(--font-size-sm);
-    }
   }
 
   .categories {
@@ -203,3 +199,27 @@ const { article } = Astro.props;
     }
   }
 </style>
+
+<script>
+  import { actions } from "astro:actions";
+  import { navigate } from "astro:transitions/client";
+  import { ArticleStatus } from "~/types/article";
+  document.addEventListener("astro:page-load", () => {
+    // リンクが開かれたら既読にする
+    document.querySelectorAll("article a").forEach((link) => {
+      link.addEventListener("click", (e) => {
+        if (!(e.target instanceof HTMLAnchorElement)) {
+          return;
+        }
+        const articleId = e.target?.dataset.articleId;
+        if (articleId) {
+          actions.articles.updateArticleStatus({
+            articleId,
+            status: ArticleStatus.READ,
+          });
+          navigate("");
+        }
+      });
+    });
+  });
+</script>
