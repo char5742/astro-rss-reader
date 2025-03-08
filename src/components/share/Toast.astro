@@ -1,0 +1,113 @@
+---
+interface Props {
+  id?: string;
+  message?: string;
+  type?: "success" | "error" | "info";
+}
+
+const {
+  id = "toast",
+  message = "設定を保存しました",
+  type = "success",
+} = Astro.props;
+---
+
+<div class="toast">
+  <input type="checkbox" id={id} class="trigger" />
+  <label for={id} class={`${type}`}>
+    <div class="content">
+      <span class="icon"></span>
+      <span class="message">{message}</span>
+    </div>
+  </label>
+</div>
+
+<style>
+  .toast {
+    position: fixed;
+    top: 20px;
+    right: 0px;
+    z-index: 1000;
+
+    .trigger {
+      display: none;
+
+      &:checked + label {
+        transform: translateX(0);
+        animation: show-toast 3s forwards;
+      }
+    }
+
+    label {
+      display: flex;
+      padding: 12px 16px;
+      border-radius: var(--border-radius-sm);
+      color: white;
+      font-size: var(--font-size-sm);
+      max-width: 300px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      cursor: pointer;
+
+      &.success {
+        background-color: #4caf50;
+        .icon::before {
+          content: "✓";
+        }
+      }
+      &.error {
+        background-color: #f44336;
+        .icon::before {
+          content: "✗";
+        }
+      }
+      &.info {
+        background-color: #2196f3;
+        .icon::before {
+          content: "ℹ";
+        }
+      }
+
+      .content {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .icon {
+        font-size: 1.2em;
+      }
+    }
+  }
+
+  @keyframes show-toast {
+    0%,
+    80% {
+      margin-right: 16px;
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+</style>
+
+<script>
+  // トーストを自動的に閉じるためのスクリプト
+  const toast = document.querySelector(".toast");
+  const trigger = toast?.querySelector('input[type="checkbox"]');
+
+  if (!(trigger instanceof HTMLInputElement)) {
+    console.error("トーストのトリガーが見つかりません");
+    return;
+  }
+  // トーストが表示されたら、3秒後に自動的に閉じる
+  trigger.addEventListener("change", () => {
+    if (trigger.checked) {
+      setTimeout(() => {
+        trigger.checked = false;
+      }, 3000);
+    }
+  });
+</script>
