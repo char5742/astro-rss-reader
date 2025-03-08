@@ -6,7 +6,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "gen:rules": "rm -f .clinerules && touch .clinerules && for file in $(ls -1 .cline/rules/*.md | sort); do echo \"# $(basename $file .md)\" >> .clinerules && awk 'BEGIN{p=0} /^---$/{if(p==0){p=1}else{p=0;next}} p==0{print}' $file >> .clinerules && echo -e \"\n\n\" >> .clinerules; done"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
