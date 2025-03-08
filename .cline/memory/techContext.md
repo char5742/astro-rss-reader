@@ -1,37 +1,95 @@
-# Astro RSS Reader 技術コンテキスト
+# 技術コンテキスト: Astro RSS Reader
 
-## 技術スタック
+## 使用技術
 
 ### フロントエンド
-- **フレームワーク**: [Astro](https://astro.build/) v5.3.0
-- **言語**: TypeScript
-- **スタイリング**: CSS（モダンCSS機能、CSSカスタムプロパティ）
-- **状態管理**: [nanostores](https://github.com/nanostores/nanostores) v0.11.4、[@nanostores/persistent](https://github.com/nanostores/persistent) v0.10.2
+
+- **[Astro](https://astro.build/)** (v5.4.1)
+  - アイランドアーキテクチャを採用したWebフレームワーク
+  - 最小限のJavaScriptで高速なパフォーマンスを実現
+  - HTMLとCSSを中心としたコンポーネントモデル
+
+- **モダンCSS**
+  - カスタムプロパティ（CSS変数）
+  - CSSネスト
+  - コンテナクエリ
+  - グリッドレイアウト
+  - フレックスボックス
+
+- **[nanostores](https://github.com/nanostores/nanostores)** (v0.11.4)
+  - 軽量な状態管理ライブラリ
+  - リアクティブな更新
+  - TypeScriptサポート
+
+- **[nanostores/persistent](https://github.com/nanostores/persistent)** (v0.10.2)
+  - nanostoresの永続化拡張
+  - カスタム永続化エンジンをサポート
 
 ### バックエンド
-- **サーバー**: Astro SSR（@astrojs/node v9.1.0）
-- **データベース**: SQLite（ローカルストレージ）
+
+- **[Node.js](https://nodejs.org/)** (via Astro)
+  - サーバーサイドレンダリング
+  - APIエンドポイント
+
+- **[SQLite](https://www.sqlite.org/)** (via node:sqlite)
+  - 軽量なリレーショナルデータベース
+  - ファイルベースの保存
+  - サーバーレス
+
+### パーサー
+
+- **[fast-xml-parser](https://github.com/NaturalIntelligence/fast-xml-parser)** (v4.5.1)
+  - 高速なXMLパーサー
+  - RSSとAtomフィードの解析に使用
 
 ### ユーティリティ
-- **XML解析**: [fast-xml-parser](https://github.com/NaturalIntelligence/fast-xml-parser) v4.5.1
-- **HTML浄化**: [isomorphic-dompurify](https://github.com/kkomelin/isomorphic-dompurify) v2.22.0
-- **アイコン**: [astro-icon](https://github.com/natemoo-re/astro-icon) v1.1.5
+
+- **[TypeScript](https://www.typescriptlang.org/)** (v5.8.2)
+  - 静的型付け
+  - コード補完
+  - リファクタリングサポート
+
+- **[Zod](https://github.com/colinhacks/zod)**
+  - スキーマ検証ライブラリ
+  - TypeScriptと統合された型安全性
+  - ランタイムバリデーション
+
+- **[DOMPurify](https://github.com/cure53/DOMPurify)** (via isomorphic-dompurify v2.22.0)
+  - HTMLサニタイズライブラリ
+  - XSS攻撃からの保護
 
 ### 開発ツール
-- **パッケージマネージャー**: [Bun](https://bun.sh/)
-- **テスト**: Bun Test
-- **リンター**: [Biome](https://biomejs.dev/) v1.9.4
-- **スタイルリンター**: [Stylelint](https://stylelint.io/) v16.14.1
-- **フォーマッター**: [Prettier](https://prettier.io/) v3.5.0
-- **テスト環境**: [happy-dom](https://github.com/capricorn86/happy-dom) v17.1.0
 
-## 開発環境セットアップ
+- **[Bun](https://bun.sh/)**
+  - 高速なJavaScriptランタイム
+  - パッケージマネージャー
+  - テストランナー
+
+- **[Biome](https://biomejs.dev/)** (v1.9.4)
+  - JavaScriptとTypeScriptのリンター
+  - フォーマッター
+
+- **[Stylelint](https://stylelint.io/)** (v16.14.1)
+  - CSSリンター
+  - スタイルの一貫性を確保
+
+- **[Prettier](https://prettier.io/)** (v3.5.0)
+  - コードフォーマッター
+  - Astroプラグイン対応
+
+- **[Happy DOM](https://github.com/capricorn86/happy-dom)** (v17.1.0)
+  - 軽量なブラウザ環境エミュレーター
+  - テスト用のDOM実装
+
+## 開発環境のセットアップ
 
 ### 前提条件
-- Node.js v18以上（推奨: v20）
-- Bun v1.0以上
+
+- Node.js (v18以上)
+- Bun (v1.0以上)
 
 ### インストール手順
+
 ```bash
 # リポジトリのクローン
 git clone <repository-url>
@@ -41,112 +99,84 @@ cd astro-rss-reader
 bun install
 
 # 開発サーバーの起動
-bun run dev
+bun dev
 ```
 
 ### 開発コマンド
-- `bun run dev`: 開発サーバーの起動（http://localhost:4321）
-- `bun run build`: プロダクションビルドの作成
-- `bun run preview`: ビルドされたサイトのプレビュー
-- `bun test`: テストの実行
 
-## プロジェクト構造
-
-```
-astro-rss-reader/
-├── public/             # 静的アセット
-├── src/
-│   ├── actions/        # Astroアクション
-│   ├── assets/         # 画像などのアセット
-│   ├── components/     # UIコンポーネント
-│   ├── data/           # 静的データ
-│   ├── features/       # 機能モジュール
-│   ├── icons/          # SVGアイコン
-│   ├── layouts/        # ページレイアウト
-│   ├── pages/          # ページとAPIエンドポイント
-│   ├── routes/         # 追加のルート
-│   ├── store/          # 状態管理
-│   ├── styles/         # グローバルスタイルとデザインシステム
-│   └── types/          # 型定義
-├── .prettierrc.mjs     # Prettier設定
-├── .stylelintrc.cjs    # Stylelint設定
-├── astro.config.mjs    # Astro設定
-├── bunfig.toml         # Bun設定
-├── happydom.ts         # Happy DOM設定
-├── package.json        # プロジェクト依存関係
-└── tsconfig.json       # TypeScript設定
-```
+- **`bun dev`**: 開発サーバーを起動（ホットリロード対応）
+- **`bun build`**: プロダクション用にビルド
+- **`bun preview`**: ビルドされたアプリをプレビュー
+- **`bun test`**: テストを実行
+- **`bun lint`**: リンターを実行
+- **`bun format`**: コードをフォーマット
 
 ## 技術的制約
 
-### パフォーマンス
-- **ターゲット**: First Contentful Paint < 1.5秒
-- **バンドルサイズ**: メインバンドル < 100KB（gzip圧縮後）
-- **メモリ使用量**: ローカルストレージの使用を最適化
-
 ### ブラウザサポート
-- モダンブラウザ（Chrome、Firefox、Safari、Edge最新版）
-- IE11はサポート対象外
 
-### アクセシビリティ
-- WCAG 2.1 AA準拠を目標
+- モダンブラウザ（Chrome、Firefox、Safari、Edge）の最新2バージョン
+- Internet Explorerはサポート対象外
+
+### パフォーマンス目標
+
+- Lighthouse Performance Score: 90+
+- First Contentful Paint: < 1.5s
+- Time to Interactive: < 3.0s
+- 初期ロードサイズ: < 100KB（gzip圧縮後）
+
+### アクセシビリティ要件
+
+- WCAG 2.1 AA準拠
+- キーボードナビゲーション対応
 - スクリーンリーダー対応
-- キーボードナビゲーション
+- 高コントラストモード対応
 
-### セキュリティ
-- コンテンツセキュリティポリシー（CSP）の実装
-- ユーザー入力の検証と浄化
-- クロスサイトスクリプティング（XSS）対策
+## 依存関係
 
-## 依存関係管理
+### 主要な依存関係
 
-### コア依存関係
-- **Astro**: ウェブサイト構築フレームワーク
-- **nanostores**: 軽量状態管理ライブラリ
-- **fast-xml-parser**: RSSフィードの解析
-- **isomorphic-dompurify**: HTML浄化（XSS対策）
+```
+astro: ^5.4.1
+@astrojs/node: ^9.1.0
+nanostores: ^0.11.4
+@nanostores/persistent: ^0.10.2
+fast-xml-parser: ^4.5.1
+isomorphic-dompurify: ^2.22.0
+```
 
 ### 開発依存関係
-- **Bun**: 高速JavaScriptランタイムとパッケージマネージャー
-- **Biome**: リンターとフォーマッター
-- **Stylelint**: CSSリンター
-- **happy-dom**: ブラウザ環境のエミュレーション（テスト用）
 
-## ビルドとデプロイ
+```
+typescript: ^5.8.2
+@biomejs/biome: 1.9.4
+stylelint: ^16.14.1
+prettier: ^3.5.0
+prettier-plugin-astro: ^0.14.1
+happy-dom: ^17.1.0
+@happy-dom/global-registrator: ^17.0.3
+```
 
-### ビルドプロセス
-1. TypeScriptのコンパイル
-2. Astroのビルド（SSRモード）
-3. CSSの最適化（lightningcss）
-4. 静的アセットの処理
+## アーキテクチャの制約
 
-### デプロイ戦略
-- **開発環境**: ローカル開発サーバー
-- **ステージング**: プルリクエストごとのプレビューデプロイ
-- **本番環境**: メインブランチへのマージ時に自動デプロイ
+1. **HTML/CSS/JSの分離**
+   - JSはインタラクティブな機能に限定して使用
+   - スタイリングはCSSファイルに集中
+   - HTMLはセマンティックなマークアップを重視
 
-## テスト戦略
+2. **CSSコンポーネントの優先**
+   - UIコンポーネントはできるだけCSSで実装
+   - JSフレームワークコンポーネントの使用を最小限に
 
-### ユニットテスト
-- 個別の機能モジュールのテスト
-- happy-domを使用したブラウザ環境のエミュレーション
+3. **データフローの一方向性**
+   - ストアからUIへの一方向データフロー
+   - イベント駆動型の状態更新
 
-### 統合テスト
-- コンポーネント間の相互作用のテスト
-- APIエンドポイントのテスト
+4. **型安全性の確保**
+   - すべてのデータモデルにZodスキーマを定義
+   - TypeScriptの厳格モードを有効化
 
-### E2Eテスト
-- ユーザーフローの検証
-- 実際のブラウザでのテスト
-
-## パフォーマンス最適化
-
-### 実装済み
-- Astroの部分的ハイドレーション
-- 画像の最適化
-- CSSの最適化（lightningcss）
-
-### 計画中
-- Service Workerによるオフラインサポート
-- コンテンツのプリフェッチ
-- レンダリングパフォーマンスの向上
+5. **パフォーマンスの最適化**
+   - 最小限のJavaScriptバンドル
+   - 画像の最適化
+   - 遅延ロード
