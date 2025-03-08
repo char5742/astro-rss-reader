@@ -1,0 +1,258 @@
+/* モダンなダイアログスタイル */
+
+/* 
+ * :modal擬似クラスと::backdrop擬似要素を使用したCSSのみのモーダルダイアログ
+ * JavaScriptを使わずにスタイリングできます
+ */
+
+/* ダイアログ要素の基本スタイル */
+dialog {
+  /* リセットとベーススタイル */
+  margin: auto;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-text-primary);
+  font-family: var(--font-family-base);
+  
+  /* サイズと位置 */
+  max-width: min(calc(100% - var(--spacing-xl) * 2), 32rem);
+  
+  /* 非表示時のスタイル */
+  &:not([open]) {
+    display: none;
+  }
+  
+  /* モーダルダイアログのスタイル（:modal擬似クラス） */
+  &:modal {
+    /* モーダルダイアログ固有のスタイル */
+    display: flex;
+    flex-direction: column;
+    max-height: 80vh;
+    
+    /* ダイアログの内部コンテナ */
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      border-radius: var(--border-radius-lg);
+      background-color: var(--color-background-surface);
+      border: var(--border-width-thin) solid var(--color-border-default);
+      box-shadow: var(--shadow-md);
+    }
+    
+    /* アニメーション */
+    animation: dialog-fade-in var(--duration-normal) var(--ease-out);
+  }
+  
+  /* ダイアログの背景オーバーレイ（::backdrop擬似要素） */
+  &::backdrop {
+    background-color: oklch(0 0 0 / 0.5);
+    animation: dialog-backdrop-fade-in var(--duration-normal) var(--ease-out);
+  }
+  
+  /* ヘッダー部分 */
+  & > header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--padding-md) var(--padding-lg);
+    border-bottom: var(--border-width-thin) solid var(--color-border-muted);
+    
+    & h2 {
+      margin: 0;
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-text-primary);
+    }
+    
+    & button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2rem;
+      height: 2rem;
+      border: none;
+      background: none;
+      border-radius: var(--border-radius-full);
+      color: var(--color-text-muted);
+      cursor: pointer;
+      transition: background-color var(--duration-fast) var(--ease-in-out),
+                  color var(--duration-fast) var(--ease-in-out);
+      
+      &:hover {
+        background-color: var(--color-background-muted);
+        color: var(--color-text-primary);
+      }
+    }
+  }
+  
+  /* メインコンテンツ部分 */
+  & > main {
+    padding: var(--padding-lg);
+    overflow-y: auto;
+    
+    & h1, 
+    & h2, 
+    & h3 {
+      margin-top: 0;
+      color: var(--color-text-primary);
+      font-weight: var(--font-weight-bold);
+    }
+    
+    & p {
+      margin-bottom: var(--spacing-md);
+      color: var(--color-text-secondary);
+    }
+    
+    /* フォーム要素 */
+    & input, 
+    & textarea, 
+    & select {
+      width: 100%;
+      padding: var(--padding-sm);
+      border: var(--border-width-thin) solid var(--color-border-default);
+      border-radius: var(--border-radius-md);
+      font-family: var(--font-family-base);
+      font-size: var(--font-size-base);
+      margin-bottom: var(--spacing-md);
+      background-color: var(--color-background-base);
+      color: var(--color-text-primary);
+      
+      &:focus {
+        outline: none;
+        border-color: var(--color-surface-primary);
+        box-shadow: var(--shadow-focus);
+      }
+    }
+  }
+  
+  /* フッター部分 */
+  & > footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--gap-sm);
+    padding: var(--padding-md) var(--padding-lg);
+    border-top: var(--border-width-thin) solid var(--color-border-muted);
+    background-color: var(--color-background-muted);
+    border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
+    
+    & button {
+      padding: var(--padding-sm) var(--padding-lg);
+      border: none;
+      border-radius: var(--border-radius-md);
+      font-family: var(--font-family-base);
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-medium);
+      cursor: pointer;
+      transition: background-color var(--duration-fast) var(--ease-in-out),
+                  transform var(--duration-fast) var(--ease-in-out);
+      
+      &:hover {
+        filter: brightness(1.1);
+      }
+      
+      &:active {
+        transform: scale(0.98);
+      }
+      
+      &.primary,
+      &[type="submit"] {
+        background-color: var(--color-surface-primary);
+        color: var(--color-text-on-primary);
+      }
+      
+      &.secondary,
+      &[type="button"] {
+        background-color: var(--color-background-muted);
+        color: var(--color-text-primary);
+      }
+    }
+  }
+  
+  /* ダイアログのバリエーション */
+  &.alert {
+    & > main {
+      text-align: center;
+    }
+    
+    & > footer {
+      justify-content: center;
+    }
+  }
+  
+  &.confirm {
+    & > footer {
+      justify-content: space-between;
+    }
+  }
+  
+  &.prompt {
+    & > main {
+      padding-bottom: var(--spacing-sm);
+    }
+  }
+}
+
+/* アニメーションキーフレーム */
+@keyframes dialog-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes dialog-backdrop-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 640px) {
+  dialog:modal {
+    width: calc(100% - var(--spacing-lg));
+    max-width: none;
+    margin: var(--margin-md);
+  }
+  
+  dialog > footer {
+    flex-direction: column;
+  }
+}
+
+/* ダークモード対応 */
+@media (prefers-color-scheme: dark) {
+  dialog::backdrop {
+    background-color: oklch(0 0 0 / 0.7);
+  }
+}
+
+/* 
+ * 使用例:
+ * 
+ * <dialog class="confirm">
+ *   <header>
+ *     <h2>確認</h2>
+ *     <button onclick="this.closest('dialog').close()">×</button>
+ *   </header>
+ *   <main>
+ *     <p>この操作を実行してもよろしいですか？</p>
+ *   </main>
+ *   <footer>
+ *     <button class="secondary" onclick="this.closest('dialog').close()">キャンセル</button>
+ *     <button class="primary" onclick="this.closest('dialog').close(true)">OK</button>
+ *   </footer>
+ * </dialog>
+ * 
+ * JavaScript:
+ * document.querySelector('dialog').showModal();
+ */
