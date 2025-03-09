@@ -56,6 +56,21 @@
   --color-success: oklch(0.65 0.2 145);
   --color-info: oklch(0.65 0.2 255);
 
+  /* ステータスカラー派生値 */
+  --color-error-shadow: oklch(from var(--color-error) l c h / 0.4);
+  --color-warning-shadow: oklch(from var(--color-warning) l c h / 0.4);
+  --color-success-shadow: oklch(from var(--color-success) l c h / 0.4);
+  --color-info-shadow: oklch(from var(--color-info) l c h / 0.4);
+
+  /* オーバーレイ/背景透過色 */
+  --color-overlay-light: oklch(0.98 0 0 / 0.95);
+  --color-overlay-dark: oklch(0.2 0 0 / 0.8);
+
+  /* シャドウカラー */
+  --color-shadow-light: oklch(0 0 0 / 0.1);
+  --color-shadow-medium: oklch(0 0 0 / 0.15);
+  --color-shadow-strong: oklch(0 0 0 / 0.25);
+
   --color-neutral: oklch(0.5 0 0);
 }
 
@@ -83,6 +98,15 @@ html[data-theme="dark"] {
 
   --color-border-default: oklch(0.35 0 0);
   --color-border-muted: oklch(0.3 0 0);
+
+  /* オーバーレイ/背景透過色 */
+  --color-overlay-light: oklch(0.3 0 0 / 0.95);
+  --color-overlay-dark: oklch(0.15 0 0 / 0.9);
+
+  /* シャドウカラー */
+  --color-shadow-light: oklch(0 0 0 / 0.2);
+  --color-shadow-medium: oklch(0 0 0 / 0.3);
+  --color-shadow-strong: oklch(0 0 0 / 0.4);
 
   --color-neutral: oklch(0.3 0 0);
 }
