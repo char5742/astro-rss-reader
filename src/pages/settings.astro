@@ -1,6 +1,6 @@
 ---
 import { Icon } from "astro-icon/components";
-import CssToast from "~/components/CssToast.astro";
+import Toast from "~/components/share/Toast.astro";
 import KeywordChips from "~/components/settings/KeywordChips.astro";
 import Layout from "~/layouts/Layout.astro";
 import { $settings } from "~/store/settings";
@@ -15,7 +15,7 @@ const keywordNotificationsEnabled =
 ---
 
 <Layout title="設定">
-  <CssToast id="settings-toast" transition:persist />
+  <Toast id="settings-toast" transition:persist />
   <form action="/settings" method="post">
     <header>
       <h1>設定</h1>
