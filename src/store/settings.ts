@@ -54,16 +54,16 @@ export const $settings = persistentAtom<UserSettings>(
 function defaultSettings(): UserSettings {
   return {
     appearance: {
-      theme: "system",  // システムのテーマに従う
-      fontSize: "medium",  // 中サイズのフォント
+      theme: "system", // システムのテーマに従う
+      fontSize: "medium", // 中サイズのフォント
     },
     notifications: {
-      enabledLatestNotifications: false,  // 最新の通知を無効
-      enabledKeywordsNotifications: false,  // キーワード通知を無効
-      keywords: [],  // 通知キーワードの空リスト
+      enabledLatestNotifications: false, // 最新の通知を無効
+      enabledKeywordsNotifications: false, // キーワード通知を無効
+      keywords: [], // 通知キーワードの空リスト
     },
     account: {
-      enabledSync: false,  // アカウント同期を無効
+      enabledSync: false, // アカウント同期を無効
     },
   };
 }

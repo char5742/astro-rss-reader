@@ -29,18 +29,18 @@
 
 各セクションで概念説明とコード例を示し、必要に応じて参考資料を挙げます。**目次:**
 
-1. [CSSネスト – ネイティブなネスト機能](#cssネスト--ネイティブなネスト機能)  
-2. [高度な擬似クラス・擬似要素の活用](#高度な擬似クラス・擬似要素の活用)  
-3. [コンポーネント設計とスタイルのスコープ管理](#コンポーネント設計とスタイルのスコープ管理)  
-4. [ユーティリティファースト vs セマンティックCSS](#ユーティリティファースト-vs-セマンティックcss)  
-5. [最新レスポンシブデザイン技法](#最新レスポンシブデザイン技法)  
-6. [アクセシビリティを高めるCSS設計](#アクセシビリティを高めるcss設計)  
-7. [CSS変数・カスタムプロパティ活用術](#css変数・カスタムプロパティ活用術)  
-8. [モダンなアニメーションとトランジション](#モダンなアニメーションとトランジション)  
-9. [進化したグリッドレイアウト](#進化したグリッドレイアウト)  
-10. [進化したフレックスボックス](#進化したフレックスボックス)  
-11. [最新カラー機能とタイポグラフィ戦略](#最新カラー機能とタイポグラフィ戦略)  
-12. [ブラウザサポートとフォールバック戦略](#ブラウザサポートとフォールバック戦略)  
+1. [CSSネスト – ネイティブなネスト機能](#cssネスト--ネイティブなネスト機能)
+2. [高度な擬似クラス・擬似要素の活用](#高度な擬似クラス・擬似要素の活用)
+3. [コンポーネント設計とスタイルのスコープ管理](#コンポーネント設計とスタイルのスコープ管理)
+4. [ユーティリティファースト vs セマンティックCSS](#ユーティリティファースト-vs-セマンティックcss)
+5. [最新レスポンシブデザイン技法](#最新レスポンシブデザイン技法)
+6. [アクセシビリティを高めるCSS設計](#アクセシビリティを高めるcss設計)
+7. [CSS変数・カスタムプロパティ活用術](#css変数・カスタムプロパティ活用術)
+8. [モダンなアニメーションとトランジション](#モダンなアニメーションとトランジション)
+9. [進化したグリッドレイアウト](#進化したグリッドレイアウト)
+10. [進化したフレックスボックス](#進化したフレックスボックス)
+11. [最新カラー機能とタイポグラフィ戦略](#最新カラー機能とタイポグラフィ戦略)
+12. [ブラウザサポートとフォールバック戦略](#ブラウザサポートとフォールバック戦略)
 
 ---
 
@@ -54,8 +54,12 @@ CSSネストでは、親ルール内に子のスタイルルールを記述で�
 
 ```css
 /* 通常の（非ネスト）記法 */
-.card { /* 親要素のスタイル */ }
-.card .title { /* 子要素のスタイル */ }
+.card {
+  /* 親要素のスタイル */
+}
+.card .title {
+  /* 子要素のスタイル */
+}
 
 /* ネスト記法を用いた場合 */
 .card {
@@ -71,7 +75,8 @@ CSSネストでは、親ルール内に子のスタイルルールを記述で�
 ```css
 .button {
   /* ボタン標準スタイル */
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     /* ホバーまたはフォーカス時 */
     background: var(--btn-hover-bg);
   }
@@ -96,7 +101,7 @@ CSS Selectors Level 4で導入・拡張された**擬似クラス**を活用す
     margin-bottom: 0;
   }
   ```
-  
+
   上記は`<h1>`の直後に`<p>`がある場合、その`<h1>`のマージンを下方向だけゼロにしています。このように`:has()`を使えば、**子要素の有無に応じて親のスタイルを変える**（例えば子を持つときだけ余白調整する等）ことができます。CSSだけで親要素を選択できるのは画期的で、従来JavaScriptに頼っていたケースもCSSのみで実現可能です。
 
   **特記事項:** `:has()`自体の**具体性**（specificity）は、引数内で最も高い具体性に合わせられます。また、`@supports`や`:is()`, `:where()`と組み合わせて書くことで、古いブラウザにおけるフォールバックも容易になります（古いブラウザは`:has()`を含むセレクタ全体を無視しますが、`:is()`/`:where()`の引数なら無視された部分だけ除外して解釈されるためです）。
@@ -119,13 +124,14 @@ CSS Selectors Level 4で導入・拡張された**擬似クラス**を活用す
     <p>内容...</p>
   </div>
   ```
+
   ```css
   .modal:scope h2 {
     /* .modal内のh2に適用（他のh2には影響しない） */
     font-size: 1.5rem;
   }
   ```
-  
+
   上記では、`.modal:scope h2`が`.modal`コンテナ内の`<h2>`だけを対象にします。`:scope`はJavaScriptのDOM API（`document.querySelector()`など）でも基準要素として使われますが、CSSセレクタ内でも限定用途に有用です。ただし、現状`:scope`は主に**スタイル指定時の補助**であり、実際にスコープを隔離するには後述の`@layer`等と組み合わせる必要があります。
 
 - **`@layer` ディレクティブ（CSSカスケードレイヤー）** – 2022年に標準化された新機能で、スタイルシート内に**レイヤー（層）**の概念を導入します。これは、従来の**スタイル競合の解決（カスケード順序）**を開発者が明示的にコントロールできる仕組みです。複数のソースから当たるCSS（例えばリセットCSS、ベーススタイル、コンポーネントスタイル、ユーティリティ等）に**優先順位のグループ分け**を与えられます。
@@ -138,21 +144,34 @@ CSS Selectors Level 4で導入・拡張された**擬似クラス**を活用す
 
   @layer reset {
     /* リセットCSS: 他のレイヤーより低優先 */
-    * { margin: 0; padding: 0; }
+    * {
+      margin: 0;
+      padding: 0;
+    }
   }
   @layer base {
     /* ベーススタイル: デフォルトのタグスタイルなど */
-    body { font-family: sans-serif; }
-    h1 { font-size: 2rem; }
+    body {
+      font-family: sans-serif;
+    }
+    h1 {
+      font-size: 2rem;
+    }
   }
   @layer components {
     /* コンポーネントスタイル: 各UI部品の基本スタイル */
-    .card { /* ... */ }
-    .modal { /* ... */ }
+    .card {
+      /* ... */
+    }
+    .modal {
+      /* ... */
+    }
   }
   @layer utilities {
     /* ユーティリティ: 便利クラスや上書き用 */
-    .text-center { text-align: center; }
+    .text-center {
+      text-align: center;
+    }
   }
   ```
 
@@ -170,13 +189,15 @@ CSS設計手法として**「ユーティリティファースト」**と**「�
 
 - **セマンティックCSS**: HTMLには内容や役割を表す**意味的なクラス名**を付与し、CSS側でそのクラスにスタイルを当てる手法です。典型的には、クラス名は要素の目的や種類を表し（例: `.navbar`, `.card`, `.button-primary`など）、デザインの見た目については含めません。こうすることで、HTML（構造・内容）とCSS（見た目）を明確に分離し、例えば同一HTMLでもスタイルシートを差し替えれば全く異なるデザインに変更できる（CSS Zen Gardenの例など）という**関心の分離**が実現します。セマンティックCSSの利点は、HTMLを見ただけでその要素の意図が分かり、スタイルの再利用性も上がる点です。
 
-  *例:*  
+  _例:_
+
   ```html
   <!-- 悪い例：ユーティリティクラスのみ -->
   <p class="text-center bold red">Hello</p>
   <!-- 良い例：意味的なクラス名 -->
   <p class="greeting">Hello</p>
   ```
+
   ```css
   .greeting {
     text-align: center;
@@ -184,20 +205,30 @@ CSS設計手法として**「ユーティリティファースト」**と**「�
     color: red;
   }
   ```
+
   上記では、後者の方がクラス名で内容の意味（挨拶文）を表しており、スタイルはCSSで定義しています。このようにセマンティックな命名により、**HTMLがスタイルから独立**し保守性が高まります。
 
 - **ユーティリティファーストCSS**: 一方、ユーティリティファーストでは、**1プロパティ=1クラス**のような**小さな汎用クラス**を大量に用意し、HTML側で組み合わせてスタイルを適用します。例えば`.text-center`（中央寄せ）や`.mt-4`（マージン上4）等、Tailwind CSSに代表されるようなスタイルです。これにより、CSSファイル側に個々のコンポーネント用スタイルを書かなくても、HTMLのクラス指定だけで見た目を調整できます。利点は、デザインごとに新たなクラスを定義せず**既存のユーティリティを組み合わせて使い回せる**点や、逐一CSSを書かないので**開発スピードが上がる**点です。
 
-  *例:*  
+  _例:_
+
   ```html
   <!-- ユーティリティクラスのみで構成 -->
   <p class="text-center fw-bold text-red">Hello</p>
   ```
+
   ```css
-  .text-center { text-align: center; }
-  .fw-bold { font-weight: bold; }
-  .text-red { color: red; }
+  .text-center {
+    text-align: center;
+  }
+  .fw-bold {
+    font-weight: bold;
+  }
+  .text-red {
+    color: red;
+  }
   ```
+
   このようにHTMLに直接「どう表示するか」の情報（中央寄せや赤色）が入るため、一見すると関心の分離に反するように思えます。しかしユーティリティ派の主張としては、**クラス名＝スタイル**と割り切ることで命名の悩みが減り、スタイル定義もDRY（Don't Repeat Yourself）になるという点があります。また、「HTMLに直接スタイルを書く」のではなく「CSSで定義済みのクラスをHTMLで付与する」だけなので、かろうじて分離は保たれているとも言えます。
 
 **どちらを採用すべきか？**  
@@ -205,7 +236,7 @@ CSS設計手法として**「ユーティリティファースト」**と**「�
 
 最新CSSでは、カスタムプロパティによるデザイントークン管理や`@layer`によるユーティリティレイヤー分離など、**両アプローチの利点を取り入れる環境**が整っています。例えば、ユーティリティクラス群を専用のCascade Layerに置きつつ、コンポーネント固有スタイルは別レイヤーにすることで、容易にユーティリティ＞コンポーネントの優先度を制御できます。また、セマンティッククラス名でも冗長になりがちな部分は`:is()`でまとめる等、モダンCSSの力で効率化できます。
 
-要するに、**「どちらが正解」というよりプロジェクトに応じ使い分ける」**というスタンスが2025年現在のベストプラクティスです。CSS自体の機能強化により、スタイル設計の自由度は増しています。  
+要するに、**「どちらが正解」というよりプロジェクトに応じ使い分ける」**というスタンスが2025年現在のベストプラクティスです。CSS自体の機能強化により、スタイル設計の自由度は増しています。
 
 ## 最新レスポンシブデザイン技法
 
@@ -264,7 +295,7 @@ CSS Values Level 4で導入された数学関数`min()`, `max()`, `clamp()`は�
 
 これらの関数は**すべてモダンブラウザでサポート済み**（2020年前後から対応）で、レスポンシブ実装の定番になりつつあります。従来はメディアクエリを複数書いて実現していた「小画面ではX、大画面ではY、中間は逓増」という効果も、今では`clamp()`一発です。
 
-**使用例:**  
+**使用例:**
 
 ```css
 /* 横幅が親の100%だが、広すぎないよう最大1200pxに制限 */
@@ -302,14 +333,14 @@ h1 {
 アクセシビリティ（a11y）はフロントエンド開発に不可欠です。CSSにおいても、**ユーザーの状況や好みに応じた表示**を心掛ける必要があります。以下、CSSで考慮すべき主なアクセシビリティ項目をまとめます。
 
 - **フォーカス表示の確保**: キーボードユーザーのために、インタラクティブ要素（リンク、ボタン等）にフォーカスが当たった際は**視覚的なアウトライン**を表示することが重要です。デフォルトではブラウザがアウトラインを描画しますが、カスタムスタイルする場合でも`:focus-visible`擬似クラスを用いて**キーボードフォーカス時のみ**はっきり表示することを推奨します。例:
-  
+
   ```css
   button:focus-visible {
     outline: 3px solid #00f;
     outline-offset: 2px;
   }
   ```
-  
+
   逆に、マウスクリックでフォーカスが当たった場合にはアウトラインを表示しない（ブラウザデフォルト挙動）ので、ユーザー体験を損ないません。**決してアウトラインを完全に無効化しない**ことが鉄則です。
 
 - **カラコントラスト**: 前景色と背景色のコントラスト比は十分高く保ち、WCAG基準（通常テキストで4.5:1以上）を満たすようにします。CSS自体でコントラストチェックはできませんが、デザイン段階で配慮し、必要に応じて`color-mix()`等で適切な色合いに調整します（`color-mix()`については後述）。最近のブラウザはDevToolsでコントラスト比を警告してくれるので活用しましょう。
@@ -317,13 +348,15 @@ h1 {
 - **レスポンシブなタイポグラフィ**: 高齢者や弱視の方などはブラウザのデフォルトフォントサイズを拡大していることがあります。そのためフォントサイズは相対単位（`rem`や`em`）で指定し、ユーザーの設定に追従するようにします。`min()`や`clamp()`でサイズ調整するときも、絶対値pxではなく`rem`基準にすると良いでしょう。
 
 - **アニメーションの抑制 (`prefers-reduced-motion`)**: 激しい動きやパララックス効果は一部ユーザーに不快感やめまいを生じます。CSSでは`@media (prefers-reduced-motion: reduce)`を用いて、ユーザーが「動きを減らす」設定を有効にしている場合にはアニメーションを停止または簡素化します。例えば：
-  
+
   ```css
   @media (prefers-reduced-motion: reduce) {
-    .carousel img { animation: none; } /* アニメーション停止 */
+    .carousel img {
+      animation: none;
+    } /* アニメーション停止 */
   }
   ```
-  
+
   逆に、特に指定がない場合のみ動きを付けるには`(prefers-reduced-motion: no-preference)`条件を使います。
 
 - **ダークモード対応**: 前述の`prefers-color-scheme`を活用し、ライトモードとダークモードで十分なコントラストが得られる配色を提供します。例えばダークモード時には背景を暗色、テキストを淡色に切り替えるCSSを記述します。併せて、`<meta name="color-scheme" content="light dark">`を指定し、ブラウザやOSのUI要素も適切な色になるようにします。
@@ -344,8 +377,8 @@ CSSカスタムプロパティ（通称CSS変数）は、モダンCSS設計に�
 
 ```css
 :root {
-  --primary-color: #4A90E2;
-  --secondary-color: #D0021B;
+  --primary-color: #4a90e2;
+  --secondary-color: #d0021b;
 }
 
 .button {
@@ -407,14 +440,20 @@ CSSによるアニメーションは、ユーザー体験を豊かにする一�
 
   ```css
   @keyframes slideFadeIn {
-    0%   { opacity: 0; transform: translateY(20px); }
-    100% { opacity: 1; transform: translateY(0); }
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
   .modal {
     animation: slideFadeIn 0.5s ease-out;
   }
   ```
-  
+
   こうすると`.modal`が表示された際に下からせり上がってくるような効果になります。キーフレームは`from`/`to`で書くこともできます。**インタラクションのフィードバック**（ボタンを押したとき少し縮む等）や**注意喚起**（エラー時に揺れる等）のアニメーションに有用ですが、多用しすぎると前述のアクセシビリティ観点で問題になるので節度が必要です。
 
 ### スクロール連動アニメーション (Scroll-driven Animations)
@@ -423,9 +462,9 @@ CSSによるアニメーションは、ユーザー体験を豊かにする一�
 
 **Scroll vs View Timeline:** スクロール連動タイムラインには2種類あります:
 
-- *スクロール進捗タイムライン*（Scroll Progress Timeline）: 特定のスクロールコンテナ全体のスクロール量（トップからボトムまで）に対して0%～100%を割り当て、その割合でアニメーションを進行させます。ページ全体のスクロールや特定の要素のスクロール領域に基づいて動くアニメーションです。
+- _スクロール進捗タイムライン_（Scroll Progress Timeline）: 特定のスクロールコンテナ全体のスクロール量（トップからボトムまで）に対して0%～100%を割り当て、その割合でアニメーションを進行させます。ページ全体のスクロールや特定の要素のスクロール領域に基づいて動くアニメーションです。
 
-- *ビュー進捗タイムライン*（View Progress Timeline）: ある要素（「被写体 (subject)」と呼ばれる）の**視認性**に応じて0%～100%を進行させます。被写体要素がスクロールコンテナ内で見え始めた瞬間を0%、完全に通過して見えなくなる所を100%とし、その露出度合いに応じてアニメーションを進めます。要素がビューポート内に入ってくるタイミングでアニメーション開始・終了したい場合に適しています。
+- _ビュー進捗タイムライン_（View Progress Timeline）: ある要素（「被写体 (subject)」と呼ばれる）の**視認性**に応じて0%～100%を進行させます。被写体要素がスクロールコンテナ内で見え始めた瞬間を0%、完全に通過して見えなくなる所を100%とし、その露出度合いに応じてアニメーションを進めます。要素がビューポート内に入ってくるタイミングでアニメーション開始・終了したい場合に適しています。
 
 2025年現在、このScroll-driven Animationsは一部ブラウザで実装が進んでいる状況です（Chrome系は試験的対応あり）。使用例を簡単に紹介します。
 
@@ -434,18 +473,22 @@ CSSによるアニメーションは、ユーザー体験を豊かにする一�
 ```css
 /* スクロールタイムラインの定義: ページ全体(scroll-container)のY軸スクロール */
 @scroll-timeline scroll-page {
-  source: auto;           /* 自動で親スクロール（ページ全体）をソースに */
-  orientation: block;     /* 縦方向をタイムラインに使用 */
+  source: auto; /* 自動で親スクロール（ページ全体）をソースに */
+  orientation: block; /* 縦方向をタイムラインに使用 */
 }
 
 /* アニメーションの定義 */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 .element {
-  animation: fadeIn 1s linear 1;            /* 1秒のフェードインアニメーション */
-  animation-timeline: scroll-page;         /* 上で定義したタイムラインで進行 */
+  animation: fadeIn 1s linear 1; /* 1秒のフェードインアニメーション */
+  animation-timeline: scroll-page; /* 上で定義したタイムラインで進行 */
   animation-duration: 1; /* 注意: 時間ではなくタイムライン進行の割合(100%)を指す */
 }
 ```
@@ -459,7 +502,14 @@ CSSによるアニメーションは、ユーザー体験を豊かにする一�
   view-timeline-name: section-progress;
   /* この要素がビューポートに入ったらprogress計測開始 */
 }
-@keyframes grow { from { scale: 0; } to { scale: 1; } }
+@keyframes grow {
+  from {
+    scale: 0;
+  }
+  to {
+    scale: 1;
+  }
+}
 .child {
   animation: grow 1 1 ease both;
   animation-timeline: section-progress;
@@ -486,7 +536,7 @@ CSS Grid Layoutは2次元レイアウトを劇的に簡素化しましたが、�
 <div class="grid">
   <div class="item">
     <h3 class="title">タイトル</h3>
-    <img class="thumb" src="..." alt="">
+    <img class="thumb" src="..." alt="" />
     <p class="desc">説明文</p>
   </div>
   <!-- ...同様の .item が並ぶ -->
@@ -503,18 +553,18 @@ CSS Grid Layoutは2次元レイアウトを劇的に簡素化しましたが、�
 .item {
   display: grid;
   grid-template-columns: subgrid; /* 親と同じ3列構成を継承 */
-  grid-template-rows: subgrid;    /* 親と同じ2行構成を継承 */
+  grid-template-rows: subgrid; /* 親と同じ2行構成を継承 */
 }
 .title {
   grid-column: 1 / span 3; /* タイトルは親グリッドの3列全体にまたがる */
 }
 .thumb {
   grid-column: 1 / 2; /* 左列に配置 */
-  grid-row: 2;        /* 2行目（親基準で2行目なのでdescと揃う） */
+  grid-row: 2; /* 2行目（親基準で2行目なのでdescと揃う） */
 }
 .desc {
   grid-column: 2 / 4; /* 残り2列にまたがる */
-  grid-row: 2;        /* 2行目に配置（thumbと同じ行） */
+  grid-row: 2; /* 2行目に配置（thumbと同じ行） */
 }
 ```
 
@@ -548,10 +598,22 @@ CSS Grid Layoutは2次元レイアウトを劇的に簡素化しましたが、�
     "ft  ft";
   gap: 1rem;
 }
-.hd { grid-area: hd; background: #ccc; }
-.sb { grid-area: sb; background: #eef; }
-.mn { grid-area: mn; background: #eef; }
-.ft { grid-area: ft; background: #ccc; }
+.hd {
+  grid-area: hd;
+  background: #ccc;
+}
+.sb {
+  grid-area: sb;
+  background: #eef;
+}
+.mn {
+  grid-area: mn;
+  background: #eef;
+}
+.ft {
+  grid-area: ft;
+  background: #ccc;
+}
 ```
 
 `grid-template-areas`では、**引用符で囲んだ文字列**を行として記述します。上記では3行2列のグリッドを指定し、1行目は`"hd  hd"`（ヘッダーが2列分跨ぐ）、2行目は`"sb  mn"`（左にサイドバー、右にメイン）、3行目は`"ft  ft"`（フッターが2列跨ぐ）としています。各要素には対応する`grid-area`名を割り当て（要素のCSSで`grid-area: hd;`など）、それぞれがテンプレート上の名前付きエリアに収まるようにしました。視覚的にレイアウトがイメージしやすく、HTMLやCSSを読む他の開発者にも優しい書き方です。
@@ -586,7 +648,8 @@ Flexbox（CSS Flexible Box Layout Module）は登場以来、1次元レイアウ
 
 CSS Color Level 5で追加された`color-mix()`関数は、**2つの色を指定割合で混合**した色を得ることができます。デザイナーが行っていた色合成をCSSで動的に実現でき、テーマの明暗バリエーション生成などに有用です。
 
-**`color-mix()`の使い方:**  
+**`color-mix()`の使い方:**
+
 ```css
 .element {
   /* 青と緑を半々で混ぜた色を背景に適用 */
@@ -608,8 +671,8 @@ CSS Color Level 5で追加された`color-mix()`関数は、**2つの色を指�
 
 ```css
 @font-face {
-  font-family: 'MyFont';
-  src: url('/fonts/MyFont.woff2') format('woff2');
+  font-family: "MyFont";
+  src: url("/fonts/MyFont.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -641,10 +704,14 @@ CSSには`@supports`という**Feature Query（機能問い合わせ）**ルー�
 
 ```css
 @supports (--bg: transparent) {
-  .card { background: var(--bg); }
+  .card {
+    background: var(--bg);
+  }
 }
 @supports not (--bg: transparent) {
-  .card { background: transparent; /* 代替の処理 */ }
+  .card {
+    background: transparent; /* 代替の処理 */
+  }
 }
 ```
 
@@ -672,6 +739,5 @@ CSSには`@supports`という**Feature Query（機能問い合わせ）**ルー�
 
 **参考資料:**
 
-- MDN Web Docs – *CSS Nesting* ([Using CSS nesting - CSS: Cascading Style Sheets | MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_nesting/Using_CSS_nesting#:~:text=The%20CSS%20nesting%20module%20allows,size%20can%20also%20be%20reduced)) ([Using CSS nesting - CSS: Cascading Style Sheets | MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_nesting/Using_CSS_nesting#:~:text=There%20are%20certain%20instances%20where,can%20be%20necessary%20or%20helpful)), *:has()*, *:where()*, *Cascade Layers*, *Container Queries*, *min()/max()/clamp()*, *prefers-reduced-motion*, *CSS Custom Properties*, *CSS Properties and Values API (registerProperty)*, *Scroll-driven Animations*, *Subgrid*, *grid-template-areas*, *Flexbox aligning*, *gap in flexbox*, *color-mix()*, *font-display*, *Feature Queries*.  
+- MDN Web Docs – _CSS Nesting_ ([Using CSS nesting - CSS: Cascading Style Sheets | MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_nesting/Using_CSS_nesting#:~:text=The%20CSS%20nesting%20module%20allows,size%20can%20also%20be%20reduced)) ([Using CSS nesting - CSS: Cascading Style Sheets | MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_nesting/Using_CSS_nesting#:~:text=There%20are%20certain%20instances%20where,can%20be%20necessary%20or%20helpful)), _:has()_, _:where()_, _Cascade Layers_, _Container Queries_, _min()/max()/clamp()_, _prefers-reduced-motion_, _CSS Custom Properties_, _CSS Properties and Values API (registerProperty)_, _Scroll-driven Animations_, _Subgrid_, _grid-template-areas_, _Flexbox aligning_, _gap in flexbox_, _color-mix()_, _font-display_, _Feature Queries_.
 - その他: CSS Tricks, Smashing Magazine, web.dev などの記事や各種ブログ・仕様書ドラフト。
-

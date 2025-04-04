@@ -5,11 +5,13 @@
 ### フロントエンド
 
 - **[Astro](https://astro.build/)** (v5.4.1)
+
   - アイランドアーキテクチャを採用したWebフレームワーク
   - 最小限のJavaScriptで高速なパフォーマンスを実現
   - HTMLとCSSを中心としたコンポーネントモデル
 
 - **モダンCSS**
+
   - カスタムプロパティ（CSS変数）
   - CSSネスト
   - コンテナクエリ
@@ -17,6 +19,7 @@
   - フレックスボックス
 
 - **[nanostores](https://github.com/nanostores/nanostores)** (v0.11.4)
+
   - 軽量な状態管理ライブラリ
   - リアクティブな更新
   - TypeScriptサポート
@@ -28,6 +31,7 @@
 ### バックエンド
 
 - **[Node.js](https://nodejs.org/)** (via Astro)
+
   - サーバーサイドレンダリング
   - APIエンドポイント
 
@@ -45,11 +49,13 @@
 ### ユーティリティ
 
 - **[TypeScript](https://www.typescriptlang.org/)** (v5.8.2)
+
   - 静的型付け
   - コード補完
   - リファクタリングサポート
 
 - **[Zod](https://github.com/colinhacks/zod)**
+
   - スキーマ検証ライブラリ
   - TypeScriptと統合された型安全性
   - ランタイムバリデーション
@@ -61,19 +67,23 @@
 ### 開発ツール
 
 - **[Bun](https://bun.sh/)**
+
   - 高速なJavaScriptランタイム
   - パッケージマネージャー
   - テストランナー
 
 - **[Biome](https://biomejs.dev/)** (v1.9.4)
+
   - JavaScriptとTypeScriptのリンター
   - フォーマッター
 
 - **[Stylelint](https://stylelint.io/)** (v16.14.1)
+
   - CSSリンター
   - スタイルの一貫性を確保
 
 - **[Prettier](https://prettier.io/)** (v3.5.0)
+
   - コードフォーマッター
   - Astroプラグイン対応
 
@@ -160,19 +170,23 @@ happy-dom: ^17.1.0
 ## アーキテクチャの制約
 
 1. **HTML/CSS/JSの分離**
+
    - JSはインタラクティブな機能に限定して使用
    - スタイリングはCSSファイルに集中
    - HTMLはセマンティックなマークアップを重視
 
 2. **CSSコンポーネントの優先**
+
    - UIコンポーネントはできるだけCSSで実装
    - JSフレームワークコンポーネントの使用を最小限に
 
 3. **データフローの一方向性**
+
    - ストアからUIへの一方向データフロー
    - イベント駆動型の状態更新
 
 4. **型安全性の確保**
+
    - すべてのデータモデルにZodスキーマを定義
    - TypeScriptの厳格モードを有効化
 

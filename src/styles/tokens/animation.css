@@ -14,8 +14,11 @@
     --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
 
     /* トランジション */
-    --transition-property-common: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
-    --transition-property-colors: background-color, border-color, color, fill, stroke;
+    --transition-property-common:
+      background-color, border-color, color, fill, stroke, opacity, box-shadow,
+      transform;
+    --transition-property-colors:
+      background-color, border-color, color, fill, stroke;
     --transition-property-opacity: opacity;
     --transition-property-shadow: box-shadow;
     --transition-property-transform: transform;
@@ -49,7 +52,6 @@
   }
 
   @keyframes ping {
-
     75%,
     100% {
       transform: scale(2);
@@ -59,12 +61,11 @@
 
   @keyframes pulse {
     50% {
-      opacity: .5;
+      opacity: 0.5;
     }
   }
 
   @keyframes bounce {
-
     0%,
     100% {
       transform: translateY(-25%);
