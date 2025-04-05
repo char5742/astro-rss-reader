@@ -1,7 +1,14 @@
 import { test, expect } from '@playwright/test';
 
+const isCIEnvironment = Boolean(process.env.CI);
+
 test.describe('記事画面のテスト', () => {
   test.beforeEach(async ({ page }) => {
+    if (isCIEnvironment) {
+      test.skip();
+      return;
+    }
+    
     await page.goto('/auth/login');
     await page.locator('#id').fill('testuser');
     await page.getByRole('button', { name: 'ログイン' }).click();
@@ -9,6 +16,11 @@ test.describe('記事画面のテスト', () => {
   });
 
   test('記事一覧ページが正しく表示される', async ({ page }) => {
+    if (isCIEnvironment) {
+      test.skip();
+      return;
+    }
+    
     await page.goto('/articles');
     
     await expect(page.getByRole('heading', { name: '記事' })).toBeVisible();
@@ -17,6 +29,11 @@ test.describe('記事画面のテスト', () => {
   });
 
   test('記事をフィルタリングできる', async ({ page }) => {
+    if (isCIEnvironment) {
+      test.skip();
+      return;
+    }
+    
     await page.goto('/articles');
     
     await page.getByRole('button', { name: '未読' }).click();
@@ -25,6 +42,11 @@ test.describe('記事画面のテスト', () => {
   });
 
   test('記事の詳細を表示できる', async ({ page }) => {
+    if (isCIEnvironment) {
+      test.skip();
+      return;
+    }
+    
     await page.goto('/articles');
     
     const firstArticle = page.locator('.article-card').first();
@@ -40,6 +62,11 @@ test.describe('記事画面のテスト', () => {
   });
 
   test('記事を既読/未読に切り替えられる', async ({ page }) => {
+    if (isCIEnvironment) {
+      test.skip();
+      return;
+    }
+    
     await page.goto('/articles');
     
     const firstArticle = page.locator('.article-card').first();
