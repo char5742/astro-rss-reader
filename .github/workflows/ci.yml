@@ -31,9 +31,9 @@ jobs:
           node-version: 20
       - name: インストール
         run: bun install
-      - name: Playwrightインストール (npm使用)
-        run: npm install -D @playwright/test && npx playwright install chromium --with-deps
-      - name: e2eテスト実行 (npm使用)
+      - name: Playwrightインストール
+        run: bunx playwright install chromium --with-deps
+      - name: e2eテスト実行
         run: |
           # テスト環境変数を設定してPlaywrightを実行
-          NODE_ENV=test PLAYWRIGHT_TEST=true npx playwright test --project=chromium
+          NODE_ENV=test PLAYWRIGHT_TEST=true bunx playwright test --project=chromium
