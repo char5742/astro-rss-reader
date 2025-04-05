@@ -34,4 +34,4 @@ jobs:
         run: |
           # Playwrightの設定で既にwebServerが設定されているため、
           # 手動でサーバーを起動する必要はありません
-          bunx playwright test --project=chromium
+          bunx playwright test --project=chromium --runner=bun
