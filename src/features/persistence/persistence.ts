@@ -22,7 +22,7 @@
  * remove('user123', 'preferences');
  * ```
  */
-import { DatabaseSync } from "node:sqlite";
+import { Database } from "bun:sqlite";
 
 /**
  * SQLiteデータベースのファイル名
@@ -34,7 +34,7 @@ const dbname = "mydb.sqlite";
  * データベース初期化
  * アプリケーション起動時に実行され、必要なテーブルを作成します
  */
-const db = new DatabaseSync(dbname);
+const db = new Database(dbname);
 db.exec(`
        CREATE TABLE IF NOT EXISTS store (
         key TEXT PRIMARY KEY,
@@ -60,7 +60,7 @@ console.info("Table created successfully");
  * ```
  */
 function _save(key: string, value: string): void {
-  const db = new DatabaseSync(dbname);
+  const db = new Database(dbname);
   const statement = db.prepare(
     `insert or replace into store (key, value) values (?, ?);`,
   );
@@ -85,7 +85,7 @@ function _save(key: string, value: string): void {
  * ```
  */
 function _load(key: string): string | undefined {
-  const db = new DatabaseSync(dbname);
+  const db = new Database(dbname);
   const statement = db.prepare(`select value from store where key = ?;`);
   const result = statement.get(key) as unknown as { value: string } | undefined;
   return result?.value ?? undefined;
