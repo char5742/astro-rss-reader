@@ -1,4 +1,4 @@
-import { z } from "astro:content";
+import { z } from "zod";
 
 const AccountIdBrand = Symbol();
 export const AccountIdSchema = z.string().brand(AccountIdBrand);

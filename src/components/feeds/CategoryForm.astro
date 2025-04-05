@@ -1,0 +1,98 @@
+---
+import type { FeedCategory } from "~/types/feed";
+
+interface Props {
+  category?: FeedCategory;
+  isEdit?: boolean;
+}
+
+const { category, isEdit = false } = Astro.props;
+---
+
+<form id="categoryForm" class="form-container">
+  <input type="hidden" name="categoryId" value={category?.id || ""} />
+  
+  <div class="form-group">
+    <label for="categoryName">カテゴリー名 <span class="required">*</span></label>
+    <input 
+      type="text" 
+      id="categoryName" 
+      name="name" 
+      value={category?.name || ""} 
+      placeholder="カテゴリー名" 
+      required
+      class="form-control"
+    />
+  </div>
+  
+  <div class="form-actions">
+    <button type="button" id="cancelCategoryBtn" class="btn secondary">キャンセル</button>
+    <button type="submit" class="btn primary">{isEdit ? "更新" : "追加"}</button>
+  </div>
+</form>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('categoryForm') as HTMLFormElement;
+    const cancelBtn = document.getElementById('cancelCategoryBtn') as HTMLButtonElement;
+    
+    // キャンセルボタン
+    cancelBtn.addEventListener('click', () => {
+      // モーダルを閉じる処理
+      const modal = document.getElementById('categoryModal');
+      if (modal) {
+        modal.classList.remove('show');
+      }
+    });
+    
+    // フォーム送信
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      
+      const formData = new FormData(form);
+      const categoryData = {
+        id: formData.get('categoryId') as string,
+        name: formData.get('name') as string,
+      };
+      
+      // カスタムイベントを発行
+      const customEvent = new CustomEvent('category-form-submit', {
+        detail: categoryData
+      });
+      document.dispatchEvent(customEvent);
+    });
+  });
+</script>
+
+<style>
+  .form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .form-control {
+    padding: 0.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+  
+  .required {
+    color: var(--color-danger);
+  }
+</style>

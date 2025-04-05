@@ -1,0 +1,354 @@
+---
+import { validateFeedUrl } from "~/features/feed/feed";
+import type { Feed, FeedCategory } from "~/types/feed";
+
+interface Props {
+  feed?: Feed;
+  categories: FeedCategory[];
+  isEdit?: boolean;
+}
+
+const { feed, categories, isEdit = false } = Astro.props;
+---
+
+<form id="feedForm" class="form-container">
+  <input type="hidden" name="feedId" value={feed?.id || ""} />
+  
+  <div class="form-group">
+    <label for="feedUrl">フィードURL <span class="required">*</span></label>
+    <div class="input-with-button">
+      <input 
+        type="url" 
+        id="feedUrl" 
+        name="url" 
+        value={feed?.url || ""} 
+        placeholder="https://example.com/feed.xml" 
+        required
+        class="form-control"
+      />
+      <button type="button" id="detectFeedBtn" class="btn secondary">検出</button>
+    </div>
+    <p id="feedUrlError" class="error-message"></p>
+    <p id="feedUrlSuccess" class="success-message"></p>
+  </div>
+  
+  <div class="form-group">
+    <label for="feedTitle">タイトル <span class="required">*</span></label>
+    <input 
+      type="text" 
+      id="feedTitle" 
+      name="title" 
+      value={feed?.title || ""} 
+      placeholder="フィードのタイトル" 
+      required
+      class="form-control"
+    />
+  </div>
+  
+  <div class="form-group">
+    <label for="feedDescription">説明</label>
+    <textarea 
+      id="feedDescription" 
+      name="description" 
+      placeholder="フィードの説明（オプション）" 
+      class="form-control"
+    >{feed?.description || ""}</textarea>
+  </div>
+  
+  <div class="form-group">
+    <label>カテゴリー</label>
+    <div class="category-checkboxes">
+      {categories.map((category) => (
+        <div class="checkbox-item">
+          <input 
+            type="checkbox" 
+            id={`category-${category.id}`} 
+            name="categoryIds" 
+            value={category.id} 
+            checked={feed?.categoryIds.includes(category.id)}
+          />
+          <label for={`category-${category.id}`}>{category.name}</label>
+        </div>
+      ))}
+    </div>
+    {categories.length === 0 && (
+      <p class="info-message">カテゴリーがありません。カテゴリー管理から追加してください。</p>
+    )}
+  </div>
+  
+  <div class="form-actions">
+    <button type="button" id="cancelBtn" class="btn secondary">キャンセル</button>
+    <button type="submit" class="btn primary">{isEdit ? "更新" : "追加"}</button>
+  </div>
+</form>
+
+<script>
+  import { discoverFeeds } from "~/features/feed/feed-discovery";
+  import { getFeedMetadata, validateFeedUrl } from "~/features/feed/feed";
+  
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('feedForm') as HTMLFormElement;
+    const urlInput = document.getElementById('feedUrl') as HTMLInputElement;
+    const titleInput = document.getElementById('feedTitle') as HTMLInputElement;
+    const descriptionInput = document.getElementById('feedDescription') as HTMLTextAreaElement;
+    const detectBtn = document.getElementById('detectFeedBtn') as HTMLButtonElement;
+    const cancelBtn = document.getElementById('cancelBtn') as HTMLButtonElement;
+    const urlError = document.getElementById('feedUrlError') as HTMLParagraphElement;
+    const urlSuccess = document.getElementById('feedUrlSuccess') as HTMLParagraphElement;
+    
+    // フィードURL検出ボタン
+    detectBtn.addEventListener('click', async () => {
+      const url = urlInput.value.trim();
+      if (!url) {
+        urlError.textContent = 'URLを入力してください';
+        return;
+      }
+      
+      urlError.textContent = '';
+      urlSuccess.textContent = '';
+      detectBtn.disabled = true;
+      detectBtn.textContent = '検出中...';
+      
+      try {
+        // フィードURLの検出
+        const feeds = await discoverFeeds(url);
+        
+        if (feeds.length === 0) {
+          urlError.textContent = 'フィードが見つかりませんでした';
+        } else if (feeds.length === 1) {
+          // 単一のフィードが見つかった場合は自動的に設定
+          urlInput.value = feeds[0];
+          urlSuccess.textContent = 'フィードを検出しました';
+          
+          // フィードのメタデータを取得
+          try {
+            const response = await fetch(`/api/proxy?url=${encodeURIComponent(feeds[0])}`);
+            const text = await response.text();
+            const metadata = await getFeedMetadata(text);
+            
+            if (metadata.title) {
+              titleInput.value = metadata.title;
+            }
+            
+            if (metadata.description) {
+              descriptionInput.value = metadata.description;
+            }
+          } catch (error) {
+            console.error('メタデータ取得エラー:', error);
+          }
+        } else {
+          // 複数のフィードが見つかった場合は選択肢を表示
+          const select = document.createElement('select');
+          select.className = 'form-control';
+          select.id = 'feedSelect';
+          
+          const defaultOption = document.createElement('option');
+          defaultOption.value = '';
+          defaultOption.textContent = 'フィードを選択してください';
+          select.appendChild(defaultOption);
+          
+          feeds.forEach((feed, index) => {
+            const option = document.createElement('option');
+            option.value = feed;
+            option.textContent = feed;
+            select.appendChild(option);
+          });
+          
+          // 選択肢を表示
+          const selectContainer = document.createElement('div');
+          selectContainer.className = 'form-group';
+          selectContainer.id = 'feedSelectContainer';
+          
+          const label = document.createElement('label');
+          label.htmlFor = 'feedSelect';
+          label.textContent = '検出されたフィード:';
+          
+          selectContainer.appendChild(label);
+          selectContainer.appendChild(select);
+          
+          // 既存の選択肢があれば削除
+          const existingContainer = document.getElementById('feedSelectContainer');
+          if (existingContainer) {
+            existingContainer.remove();
+          }
+          
+          // フォームに挿入
+          urlInput.parentElement?.parentElement?.insertAdjacentElement('afterend', selectContainer);
+          
+          // 選択時の処理
+          select.addEventListener('change', async () => {
+            const selectedUrl = select.value;
+            if (selectedUrl) {
+              urlInput.value = selectedUrl;
+              urlSuccess.textContent = 'フィードを選択しました';
+              
+              // フィードのメタデータを取得
+              try {
+                const response = await fetch(`/api/proxy?url=${encodeURIComponent(selectedUrl)}`);
+                const text = await response.text();
+                const metadata = await getFeedMetadata(text);
+                
+                if (metadata.title) {
+                  titleInput.value = metadata.title;
+                }
+                
+                if (metadata.description) {
+                  descriptionInput.value = metadata.description;
+                }
+              } catch (error) {
+                console.error('メタデータ取得エラー:', error);
+              }
+            }
+          });
+          
+          urlSuccess.textContent = `${feeds.length}件のフィードが見つかりました`;
+        }
+      } catch (error) {
+        console.error('フィード検出エラー:', error);
+        urlError.textContent = `エラー: ${error.message || 'フィードの検出に失敗しました'}`;
+      } finally {
+        detectBtn.disabled = false;
+        detectBtn.textContent = '検出';
+      }
+    });
+    
+    // URLの検証
+    urlInput.addEventListener('blur', async () => {
+      const url = urlInput.value.trim();
+      if (!url) return;
+      
+      try {
+        const isValid = await validateFeedUrl(url);
+        if (!isValid) {
+          urlError.textContent = '有効なフィードURLではありません';
+        } else {
+          urlError.textContent = '';
+          urlSuccess.textContent = '有効なフィードURLです';
+          
+          // フィードのメタデータを取得
+          try {
+            const response = await fetch(`/api/proxy?url=${encodeURIComponent(url)}`);
+            const text = await response.text();
+            const metadata = await getFeedMetadata(text);
+            
+            // タイトルが空の場合のみ設定
+            if (metadata.title && !titleInput.value) {
+              titleInput.value = metadata.title;
+            }
+            
+            // 説明が空の場合のみ設定
+            if (metadata.description && !descriptionInput.value) {
+              descriptionInput.value = metadata.description;
+            }
+          } catch (error) {
+            console.error('メタデータ取得エラー:', error);
+          }
+        }
+      } catch (error) {
+        console.error('URL検証エラー:', error);
+        urlError.textContent = `エラー: ${error.message || 'URLの検証に失敗しました'}`;
+      }
+    });
+    
+    // キャンセルボタン
+    cancelBtn.addEventListener('click', () => {
+      // モーダルを閉じる処理
+      const modal = document.getElementById('feedModal');
+      if (modal) {
+        modal.classList.remove('show');
+      }
+    });
+    
+    // フォーム送信
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      
+      const formData = new FormData(form);
+      const feedData = {
+        id: formData.get('feedId') as string,
+        url: formData.get('url') as string,
+        title: formData.get('title') as string,
+        description: formData.get('description') as string || undefined,
+        categoryIds: Array.from(formData.getAll('categoryIds')) as string[],
+      };
+      
+      // カスタムイベントを発行
+      const customEvent = new CustomEvent('feed-form-submit', {
+        detail: feedData
+      });
+      document.dispatchEvent(customEvent);
+    });
+  });
+</script>
+
+<style>
+  .form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .form-control {
+    padding: 0.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  
+  .input-with-button {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .input-with-button input {
+    flex: 1;
+  }
+  
+  .category-checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+  
+  .required {
+    color: var(--color-danger);
+  }
+  
+  .error-message {
+    color: var(--color-danger);
+    font-size: 0.875rem;
+    margin: 0;
+  }
+  
+  .success-message {
+    color: var(--color-success);
+    font-size: 0.875rem;
+    margin: 0;
+  }
+  
+  .info-message {
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+    margin: 0;
+  }
+</style>
