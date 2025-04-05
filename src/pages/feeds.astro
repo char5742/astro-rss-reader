@@ -3,17 +3,19 @@ import Layout from "~/layouts/Layout.astro";
 import Modal from "~/components/feeds/Modal.astro";
 import FeedForm from "~/components/feeds/FeedForm.astro";
 import CategoryForm from "~/components/feeds/CategoryForm.astro";
-import { $feeds, $feedCategories } from "~/store/feeds";
 import type { Feed, FeedCategory } from "~/types/feed";
 
-// フィードとカテゴリーを取得
-const feeds = $feeds.get();
-const categories = $feedCategories.get();
+// サーバーサイドAPIからフィードとカテゴリーを取得
+const feedsResponse = await fetch(new URL('/api/feeds', Astro.url).toString());
+const categoriesResponse = await fetch(new URL('/api/categories', Astro.url).toString());
+
+const { feeds = [] } = await feedsResponse.json();
+const { categories = [] } = await categoriesResponse.json();
 
 // カテゴリー別のフィード数を計算
 const feedCountByCategory: Record<string, number> = {};
-categories.forEach(category => {
-  feedCountByCategory[category.id] = feeds.filter(feed => 
+categories.forEach((category: FeedCategory) => {
+  feedCountByCategory[category.id] = feeds.filter((feed: Feed) => 
     feed.categoryIds.includes(category.id)
   ).length;
 });
@@ -42,7 +44,7 @@ function formatDate(date: Date): string {
 // カテゴリー名を取得する関数
 function getCategoryNames(feed: Feed): string[] {
   return feed.categoryIds.map(id => {
-    const category = categories.find(c => c.id === id);
+    const category = categories.find((c: FeedCategory) => c.id === id);
     return category ? category.name : "";
   }).filter(Boolean);
 }
@@ -143,13 +145,7 @@ function getCategoryNames(feed: Feed): string[] {
 </Layout>
 
 <script>
-  import { addFeed, updateFeed, deleteFeed, addCategory, updateCategory, deleteCategory, importFromOPML, exportToOPML } from "~/store/feeds";
-  import { $account } from "~/store/accounts";
-  
   document.addEventListener('DOMContentLoaded', () => {
-    const accountId = $account.get()?.id;
-    if (!accountId) return;
-    
     // モーダル要素
     const feedModal = document.getElementById('feedModal');
     const categoryModal = document.getElementById('categoryModal');
@@ -178,45 +174,71 @@ function getCategoryNames(feed: Feed): string[] {
         const modalTitle = feedModal?.querySelector('.modal-header h2');
         if (modalTitle) modalTitle.textContent = 'フィード編集';
         
-        // フィードデータを取得
-        const feeds = await import('~/store/feeds').then(m => m.$feeds.get());
-        const feed = feeds.find(f => f.id === feedId);
-        if (!feed) return;
-        
-        // フォームに値を設定
-        const form = document.getElementById('feedForm') as HTMLFormElement;
-        if (form) {
-          const feedIdInput = form.querySelector('[name="feedId"]') as HTMLInputElement;
-          const urlInput = form.querySelector('[name="url"]') as HTMLInputElement;
-          const titleInput = form.querySelector('[name="title"]') as HTMLInputElement;
-          const descriptionInput = form.querySelector('[name="description"]') as HTMLTextAreaElement;
+        // APIからフィードデータを取得
+        try {
+          const response = await fetch(`/api/feeds/${feedId}`);
+          if (!response.ok) {
+            throw new Error('フィードの取得に失敗しました');
+          }
           
-          if (feedIdInput) feedIdInput.value = feed.id;
-          if (urlInput) urlInput.value = feed.url;
-          if (titleInput) titleInput.value = feed.title;
-          if (descriptionInput) descriptionInput.value = feed.description || '';
+          const data = await response.json();
+          const feed = data.feed;
           
-          // カテゴリーのチェックボックスを設定
-          feed.categoryIds.forEach(categoryId => {
-            const checkbox = form.querySelector(`[name="categoryIds"][value="${categoryId}"]`) as HTMLInputElement;
-            if (checkbox) checkbox.checked = true;
-          });
+          // フォームに値を設定
+          const form = document.getElementById('feedForm') as HTMLFormElement;
+          if (form) {
+            const feedIdInput = form.querySelector('[name="feedId"]') as HTMLInputElement;
+            const urlInput = form.querySelector('[name="url"]') as HTMLInputElement;
+            const titleInput = form.querySelector('[name="title"]') as HTMLInputElement;
+            const descriptionInput = form.querySelector('[name="description"]') as HTMLTextAreaElement;
+            
+            if (feedIdInput) feedIdInput.value = feed.id;
+            if (urlInput) urlInput.value = feed.url;
+            if (titleInput) titleInput.value = feed.title;
+            if (descriptionInput) descriptionInput.value = feed.description || '';
+            
+            // カテゴリーのチェックボックスを設定
+            feed.categoryIds.forEach((categoryId: string) => {
+              const checkbox = form.querySelector(`[name="categoryIds"][value="${categoryId}"]`) as HTMLInputElement;
+              if (checkbox) checkbox.checked = true;
+            });
+          }
+          
+          // モーダルを表示
+          feedModal?.classList.add('show');
+        } catch (error) {
+          console.error('フィード取得エラー:', error);
+          alert('フィードの取得に失敗しました');
         }
-        
-        // モーダルを表示
-        feedModal?.classList.add('show');
       });
     });
     
     // フィード削除ボタン
     document.querySelectorAll('.delete-feed-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
+      btn.addEventListener('click', async (e) => {
         const feedId = (e.currentTarget as HTMLElement).dataset.id;
         if (!feedId) return;
         
         if (confirm('このフィードを削除してもよろしいですか？')) {
-          deleteFeed(accountId, feedId);
-          window.location.reload();
+          try {
+            const response = await fetch('/api/feeds', {
+              method: 'DELETE',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ id: feedId }),
+            });
+            
+            if (response.ok) {
+              window.location.reload();
+            } else {
+              const data = await response.json();
+              alert(data.error || 'フィードの削除に失敗しました');
+            }
+          } catch (error) {
+            console.error('フィード削除エラー:', error);
+            alert('フィードの削除に失敗しました');
+          }
         }
       });
     });
@@ -244,35 +266,61 @@ function getCategoryNames(feed: Feed): string[] {
         const modalTitle = categoryModal?.querySelector('.modal-header h2');
         if (modalTitle) modalTitle.textContent = 'カテゴリー編集';
         
-        // カテゴリーデータを取得
-        const categories = await import('~/store/feeds').then(m => m.$feedCategories.get());
-        const category = categories.find(c => c.id === categoryId);
-        if (!category) return;
-        
-        // フォームに値を設定
-        const form = document.getElementById('categoryForm') as HTMLFormElement;
-        if (form) {
-          const categoryIdInput = form.querySelector('[name="categoryId"]') as HTMLInputElement;
-          const nameInput = form.querySelector('[name="name"]') as HTMLInputElement;
+        // APIからカテゴリーデータを取得
+        try {
+          const response = await fetch(`/api/categories/${categoryId}`);
+          if (!response.ok) {
+            throw new Error('カテゴリーの取得に失敗しました');
+          }
           
-          if (categoryIdInput) categoryIdInput.value = category.id;
-          if (nameInput) nameInput.value = category.name;
+          const data = await response.json();
+          const category = data.category;
+          
+          // フォームに値を設定
+          const form = document.getElementById('categoryForm') as HTMLFormElement;
+          if (form) {
+            const idInput = form.querySelector('[name="id"]') as HTMLInputElement;
+            const nameInput = form.querySelector('[name="name"]') as HTMLInputElement;
+            
+            if (idInput) idInput.value = category.id;
+            if (nameInput) nameInput.value = category.name;
+          }
+          
+          // モーダルを表示
+          categoryModal?.classList.add('show');
+        } catch (error) {
+          console.error('カテゴリー取得エラー:', error);
+          alert('カテゴリーの取得に失敗しました');
         }
-        
-        // モーダルを表示
-        categoryModal?.classList.add('show');
       });
     });
     
     // カテゴリー削除ボタン
     document.querySelectorAll('.delete-category-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
+      btn.addEventListener('click', async (e) => {
         const categoryId = (e.currentTarget as HTMLElement).dataset.id;
         if (!categoryId) return;
         
         if (confirm('このカテゴリーを削除してもよろしいですか？このカテゴリーに属するフィードからカテゴリーが削除されます。')) {
-          deleteCategory(accountId, categoryId);
-          window.location.reload();
+          try {
+            const response = await fetch('/api/categories', {
+              method: 'DELETE',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ id: categoryId }),
+            });
+            
+            if (response.ok) {
+              window.location.reload();
+            } else {
+              const data = await response.json();
+              alert(data.error || 'カテゴリーの削除に失敗しました');
+            }
+          } catch (error) {
+            console.error('カテゴリー削除エラー:', error);
+            alert('カテゴリーの削除に失敗しました');
+          }
         }
       });
     });
@@ -285,19 +333,29 @@ function getCategoryNames(feed: Feed): string[] {
     
     // OPMLエクスポートボタン
     const exportOpmlBtn = document.getElementById('exportOpmlBtn');
-    exportOpmlBtn?.addEventListener('click', () => {
-      const opml = exportToOPML(accountId);
-      
-      // ダウンロードリンクを作成
-      const blob = new Blob([opml], { type: 'application/xml' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'feeds.opml';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+    exportOpmlBtn?.addEventListener('click', async () => {
+      try {
+        const response = await fetch('/api/feeds/export');
+        if (!response.ok) {
+          throw new Error('OPMLのエクスポートに失敗しました');
+        }
+        
+        const opml = await response.text();
+        
+        // ダウンロードリンクを作成
+        const blob = new Blob([opml], { type: 'application/xml' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'feeds.opml';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      } catch (error) {
+        console.error('OPMLエクスポートエラー:', error);
+        alert('OPMLのエクスポートに失敗しました');
+      }
     });
     
     // インポート実行ボタン
@@ -308,13 +366,31 @@ function getCategoryNames(feed: Feed): string[] {
       
       if (file) {
         const reader = new FileReader();
-        reader.onload = (e) => {
+        reader.onload = async (e) => {
           const content = e.target?.result as string;
           if (content) {
-            const count = importFromOPML(accountId, content);
-            alert(`${count}件のフィードをインポートしました。`);
-            importModal?.classList.remove('show');
-            window.location.reload();
+            try {
+              const response = await fetch('/api/feeds/import', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/xml',
+                },
+                body: content,
+              });
+              
+              if (response.ok) {
+                const data = await response.json();
+                alert(`${data.count}件のフィードをインポートしました。`);
+                importModal?.classList.remove('show');
+                window.location.reload();
+              } else {
+                const data = await response.json();
+                alert(data.error || 'OPMLのインポートに失敗しました');
+              }
+            } catch (error) {
+              console.error('OPMLインポートエラー:', error);
+              alert('OPMLのインポートに失敗しました');
+            }
           }
         };
         reader.readAsText(file);
@@ -327,50 +403,6 @@ function getCategoryNames(feed: Feed): string[] {
     const cancelImportBtn = document.getElementById('cancelImportBtn');
     cancelImportBtn?.addEventListener('click', () => {
       importModal?.classList.remove('show');
-    });
-    
-    // フィードフォーム送信イベント
-    document.addEventListener('feed-form-submit', (e: Event) => {
-      const customEvent = e as CustomEvent;
-      const data = customEvent.detail;
-      
-      if (data.id) {
-        // 既存フィードの更新
-        updateFeed(accountId, data.id, {
-          title: data.title,
-          url: data.url,
-          description: data.description,
-          categoryIds: data.categoryIds,
-        });
-      } else {
-        // 新規フィード追加
-        addFeed(accountId, {
-          title: data.title,
-          url: data.url,
-          description: data.description,
-          categoryIds: data.categoryIds,
-        });
-      }
-      
-      feedModal?.classList.remove('show');
-      window.location.reload();
-    });
-    
-    // カテゴリーフォーム送信イベント
-    document.addEventListener('category-form-submit', (e: Event) => {
-      const customEvent = e as CustomEvent;
-      const data = customEvent.detail;
-      
-      if (data.id) {
-        // 既存カテゴリーの更新
-        updateCategory(accountId, data.id, data.name);
-      } else {
-        // 新規カテゴリー追加
-        addCategory(accountId, data.name);
-      }
-      
-      categoryModal?.classList.remove('show');
-      window.location.reload();
     });
   });
 </script>
