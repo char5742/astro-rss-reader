@@ -39,7 +39,6 @@ export async function convertUrlToFeed(
       url: item.link,
       content: item.content || "",
       publishedAt: item.pubDate ? new Date(item.pubDate) : new Date(),
-      status: ArticleStatus.UNREAD,
       categories: [],
       summary: item.content?.substring(0, 200) || "", // 最初の200文字をサマリーとして使用
     });

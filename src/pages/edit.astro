@@ -1,0 +1,371 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { Icon } from "astro-icon/components";
+import { getFeeds, getCategories } from "../actions/feeds";
+
+// アカウントIDを取得
+const accountId = Astro.locals.accountId;
+const feeds = getFeeds(accountId);
+const categories = getCategories(accountId);
+---
+
+<Layout title="フィード編集">
+  <div class="container">
+    <header class="container-header">
+      <h1>フィード編集</h1>
+      <div class="container-actions">
+        <a href="/feeds" class="btn secondary">
+          戻る
+        </a>
+      </div>
+    </header>
+
+    <section>
+      <h2>フィード追加</h2>
+      <form id="add-feed-form" class="form-container">
+        <div class="form-group">
+          <label for="feed-name">フィード名</label>
+          <input type="text" id="feed-name" name="name" required placeholder="例: TechCrunch" />
+        </div>
+        <div class="form-group">
+          <label for="feed-url">フィードURL</label>
+          <input type="url" id="feed-url" name="url" required placeholder="例: https://techcrunch.com/feed" />
+        </div>
+        <div class="form-group">
+          <label for="feed-category">カテゴリー</label>
+          <select id="feed-category" name="category">
+            <option value="">カテゴリーを選択</option>
+            {categories.map((category) => (
+              <option value={category}>{category}</option>
+            ))}
+            <option value="new-category">新しいカテゴリーを作成...</option>
+          </select>
+        </div>
+        <div class="form-group hidden" id="new-category-group">
+          <label for="new-category">新しいカテゴリー名</label>
+          <input type="text" id="new-category" name="newCategory" placeholder="例: AI" />
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn primary">追加</button>
+          <button type="reset" class="btn secondary">リセット</button>
+        </div>
+      </form>
+    </section>
+
+    <section>
+      <h2>登録済みフィード</h2>
+      <div class="container-list">
+        {feeds.map((feed) => (
+          <article class="item-container">
+            <div class="item-content">
+              <h3 class="item-title">{feed.name}</h3>
+              <p class="item-description">{feed.url}</p>
+              <div class="item-tags">
+                {feed.categories.map((category) => (
+                  <span class="tag">{category}</span>
+                ))}
+              </div>
+            </div>
+            <div class="container-actions">
+              <button class="btn secondary edit-feed" data-feed-id={feed.url}>編集</button>
+              <button class="btn danger delete-feed" data-feed-id={feed.url}>削除</button>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  </div>
+</Layout>
+
+<script>
+  // カテゴリー選択の処理
+  const categorySelect = document.getElementById('feed-category');
+  const newCategoryGroup = document.getElementById('new-category-group');
+
+  categorySelect?.addEventListener('change', (e) => {
+    const target = e.target as HTMLSelectElement;
+    if (target.value === 'new-category') {
+      newCategoryGroup?.classList.remove('hidden');
+    } else {
+      newCategoryGroup?.classList.add('hidden');
+    }
+  });
+
+  // フォーム送信処理
+  const addFeedForm = document.getElementById('add-feed-form');
+  addFeedForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const formData = new FormData(e.target as HTMLFormElement);
+    const feedData = {
+      name: formData.get('name') as string,
+      url: formData.get('url') as string,
+      categories: [] as string[]
+    };
+    
+    // カテゴリー処理
+    const category = formData.get('category') as string;
+    if (category === 'new-category') {
+      const newCategory = formData.get('newCategory') as string;
+      if (newCategory) {
+        feedData.categories.push(newCategory);
+      }
+    } else if (category) {
+      feedData.categories.push(category);
+    }
+    
+    try {
+      // APIを使用してフィードを追加
+      const response = await fetch('/api/feeds', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(feedData)
+      });
+      
+      const result = await response.json();
+      
+      if (response.ok) {
+        // 成功メッセージを表示
+        alert(`フィード「${feedData.name}」を追加しました。`);
+        
+        // フォームをリセット
+        (e.target as HTMLFormElement).reset();
+        newCategoryGroup?.classList.add('hidden');
+        
+        // ページをリロード
+        window.location.reload();
+      } else {
+        throw new Error(result.error || 'フィードの追加に失敗しました。');
+      }
+    } catch (error) {
+      console.error('Error adding feed:', error);
+      alert(error instanceof Error ? error.message : 'フィードの追加に失敗しました。');
+    }
+  });
+
+  // 編集ボタンの処理
+  const editButtons = document.querySelectorAll('.edit-feed');
+  const addFeedFormEl = document.getElementById('add-feed-form') as HTMLFormElement;
+  const feedNameInput = document.getElementById('feed-name') as HTMLInputElement;
+  const feedUrlInput = document.getElementById('feed-url') as HTMLInputElement;
+  const feedCategorySelect = document.getElementById('feed-category') as HTMLSelectElement;
+  
+  editButtons.forEach(button => {
+    button.addEventListener('click', (e) => {
+      const feedUrl = (e.currentTarget as HTMLButtonElement).dataset.feedId;
+      const feedItem = Array.from(feeds).find(feed => feed.url === feedUrl);
+      
+      if (feedItem) {
+        // フォームに値を設定
+        feedNameInput.value = feedItem.name;
+        feedUrlInput.value = feedItem.url;
+        feedUrlInput.setAttribute('readonly', 'true'); // URLは編集不可
+        
+        // カテゴリーを選択
+        if (feedItem.categories.length > 0) {
+          const category = feedItem.categories[0];
+          const option = Array.from(feedCategorySelect.options).find(opt => opt.value === category);
+          if (option) {
+            feedCategorySelect.value = category;
+          }
+        }
+        
+        // フォームの送信ハンドラを変更
+        addFeedFormEl.onsubmit = async (submitEvent) => {
+          submitEvent.preventDefault();
+          
+          const formData = new FormData(addFeedFormEl);
+          const updatedFeed = {
+            name: formData.get('name') as string,
+            categories: [] as string[]
+          };
+          
+          // カテゴリー処理
+          const category = formData.get('category') as string;
+          if (category === 'new-category') {
+            const newCategory = formData.get('newCategory') as string;
+            if (newCategory) {
+              updatedFeed.categories.push(newCategory);
+            }
+          } else if (category) {
+            updatedFeed.categories.push(category);
+          }
+          
+          try {
+            // APIを使用してフィードを更新
+            const response = await fetch('/api/feeds', {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ 
+                feedUrl, 
+                updatedFeed 
+              })
+            });
+            
+            const result = await response.json();
+            
+            if (response.ok) {
+              alert(`フィード「${updatedFeed.name}」を更新しました。`);
+              window.location.reload();
+            } else {
+              throw new Error(result.error || 'フィードの更新に失敗しました。');
+            }
+          } catch (error) {
+            console.error('Error updating feed:', error);
+            alert(error instanceof Error ? error.message : 'フィードの更新に失敗しました。');
+          }
+        };
+        
+        // スクロールしてフォームを表示
+        addFeedFormEl.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+
+  // 削除ボタンの処理
+  const deleteButtons = document.querySelectorAll('.delete-feed');
+  deleteButtons.forEach(button => {
+    button.addEventListener('click', async (e) => {
+      const feedUrl = (e.currentTarget as HTMLButtonElement).dataset.feedId;
+      if (confirm('このフィードを削除してもよろしいですか？')) {
+        try {
+          // APIを使用してフィードを削除
+          const response = await fetch('/api/feeds', {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ feedUrl })
+          });
+          
+          const result = await response.json();
+          
+          if (response.ok) {
+            alert('フィードを削除しました。');
+            window.location.reload();
+          } else {
+            throw new Error(result.error || 'フィードの削除に失敗しました。');
+          }
+        } catch (error) {
+          console.error('Error deleting feed:', error);
+          alert(error instanceof Error ? error.message : 'フィードの削除に失敗しました。');
+        }
+      }
+    });
+  });
+</script>
+
+<style>
+  .container {
+    padding: var(--spacing-lg);
+  }
+
+  .container-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .container-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+  }
+
+  .form-container {
+    background-color: var(--color-gray-50);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+  }
+
+  .form-group {
+    margin-bottom: var(--spacing-md);
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: var(--spacing-xs);
+    font-weight: 500;
+  }
+
+  .form-group input,
+  .form-group select {
+    width: 100%;
+    padding: var(--spacing-sm);
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-white);
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-lg);
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  .container-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .item-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-md);
+    background-color: var(--color-gray-50);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-gray-200);
+  }
+
+  .item-content {
+    flex: 1;
+  }
+
+  .item-title {
+    margin: 0;
+    font-size: var(--font-size-lg);
+  }
+
+  .item-description {
+    margin: var(--spacing-xs) 0;
+    color: var(--color-gray-600);
+    font-size: var(--font-size-sm);
+  }
+
+  .item-tags {
+    display: flex;
+    gap: var(--spacing-xs);
+    margin-top: var(--spacing-xs);
+  }
+
+  .tag {
+    display: inline-block;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background-color: var(--color-primary-100);
+    color: var(--color-primary-700);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+  }
+
+  section {
+    margin-bottom: var(--spacing-xl);
+  }
+
+  section h2 {
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-xs);
+    border-bottom: 1px solid var(--color-gray-200);
+  }
+</style>

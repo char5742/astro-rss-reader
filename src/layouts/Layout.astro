@@ -11,7 +11,8 @@ interface Props {
 }
 
 const { title } = Astro.props;
-const fontSize = $settings.get().appearance.fontSize;
+const settings = $settings.get();
+const fontSize = settings?.appearance?.fontSize || "medium";
 const fontSizeValue =
   fontSize === "small" ? "14px" : fontSize === "medium" ? "16px" : "18px";
 ---

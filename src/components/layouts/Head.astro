@@ -9,7 +9,8 @@ type Props = {
 };
 
 const { title, site, base } = Astro.props;
-const theme = $settings.get().appearance.theme;
+const settings = $settings.get();
+const theme = settings?.appearance?.theme || "system";
 ---
 
 <head>

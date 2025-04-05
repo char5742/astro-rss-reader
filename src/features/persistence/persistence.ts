@@ -22,7 +22,8 @@
  * remove('user123', 'preferences');
  * ```
  */
-import { DatabaseSync } from "node:sqlite";
+import sqlite3 from "sqlite3";
+import { open } from "sqlite";
 
 /**
  * SQLiteデータベースのファイル名
@@ -34,13 +35,23 @@ const dbname = "mydb.sqlite";
  * データベース初期化
  * アプリケーション起動時に実行され、必要なテーブルを作成します
  */
-const db = new DatabaseSync(dbname);
-db.exec(`
-       CREATE TABLE IF NOT EXISTS store (
-        key TEXT PRIMARY KEY,
-        value TEXT
-      )`);
-console.info("Table created successfully");
+let db: any;
+
+async function initDb() {
+  db = await open({
+    filename: dbname,
+    driver: sqlite3.Database
+  });
+  
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS store (
+      key TEXT PRIMARY KEY,
+      value TEXT
+    )`);
+  console.info("Table created successfully");
+}
+
+initDb().catch(err => console.error("Database initialization error:", err));
 
 /**
  * 指定されたキーと値をデータベースに直接保存する内部関数
@@ -59,12 +70,12 @@ console.info("Table created successfully");
  * _save('user123', '{"preferences":{"theme":"dark"}}');
  * ```
  */
-function _save(key: string, value: string): void {
-  const db = new DatabaseSync(dbname);
-  const statement = db.prepare(
+async function _save(key: string, value: string): Promise<void> {
+  if (!db) await initDb();
+  await db.run(
     `insert or replace into store (key, value) values (?, ?);`,
+    key, value
   );
-  statement.run(key, value);
   console.info(`Saved key: ${key} with value: ${value} to the database`);
 }
 
@@ -84,10 +95,9 @@ function _save(key: string, value: string): void {
  * const userData = _load('user123'); // '{"preferences":{"theme":"dark"}}'
  * ```
  */
-function _load(key: string): string | undefined {
-  const db = new DatabaseSync(dbname);
-  const statement = db.prepare(`select value from store where key = ?;`);
-  const result = statement.get(key) as unknown as { value: string } | undefined;
+async function _load(key: string): Promise<string | undefined> {
+  if (!db) await initDb();
+  const result = await db.get(`select value from store where key = ?;`, key) as { value: string } | undefined;
   return result?.value ?? undefined;
 }
 
@@ -112,10 +122,11 @@ function _load(key: string): string | undefined {
  * save('user123', 'articleStatuses', JSON.stringify({ 'article1': 'read' }));
  * ```
  */
-export function save(scope: string, key: string, value: string): void {
-  const currentValue = JSON.parse(_load(scope) ?? "{}");
+export async function save(scope: string, key: string, value: string): Promise<void> {
+  const loadedValue = await _load(scope);
+  const currentValue = JSON.parse(loadedValue ?? "{}");
   currentValue[key] = value;
-  _save(scope, JSON.stringify(currentValue));
+  await _save(scope, JSON.stringify(currentValue));
 }
 
 /**
@@ -139,8 +150,9 @@ export function save(scope: string, key: string, value: string): void {
  * const articleStatuses = articleStatusesJson ? JSON.parse(articleStatusesJson) : {};
  * ```
  */
-export function load(scope: string, key: string): string | undefined {
-  const currentValue = JSON.parse(_load(scope) ?? "{}");
+export async function load(scope: string, key: string): Promise<string | undefined> {
+  const loadedValue = await _load(scope);
+  const currentValue = JSON.parse(loadedValue ?? "{}");
   return currentValue[key] ?? undefined;
 }
 
@@ -163,8 +175,9 @@ export function load(scope: string, key: string): string | undefined {
  * remove('user123', 'articleStatuses');
  * ```
  */
-export function remove(scope: string, key: string): void {
-  const currentValue = JSON.parse(_load(scope) ?? "{}");
+export async function remove(scope: string, key: string): Promise<void> {
+  const loadedValue = await _load(scope);
+  const currentValue = JSON.parse(loadedValue ?? "{}");
   delete currentValue[key];
-  _save(scope, JSON.stringify(currentValue));
+  await _save(scope, JSON.stringify(currentValue));
 }

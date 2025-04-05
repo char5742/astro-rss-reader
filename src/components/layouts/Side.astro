@@ -48,7 +48,7 @@ const feedList = await getCollection("feed");
                 new Date().toDateString(),
             )
             .filter(
-              (article) => $articleStatusBy(article.id).get() === "unread",
+              (article) => $articleStatusBy(article.id)?.get?.() === "unread",
             ).length}
         />
       </li>
@@ -60,7 +60,7 @@ const feedList = await getCollection("feed");
             .flatMap((feed) => feed.data.articles)
 
             .filter(
-              (article) => $articleStatusBy(article.id).get() === "unread",
+              (article) => $articleStatusBy(article.id)?.get?.() === "unread",
             ).length}
         />
       </li>
@@ -77,7 +77,7 @@ const feedList = await getCollection("feed");
               link={`/feeds/${feed.id}`}
               unreadCount={
                 feed.data.articles.filter(
-                  (article) => $articleStatusBy(article.id).get() === "unread",
+                  (article) => $articleStatusBy(article.id)?.get?.() === "unread",
                 ).length
               }
             />
