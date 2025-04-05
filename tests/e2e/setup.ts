@@ -4,6 +4,8 @@
  */
 import { mockSQLiteForTests } from '../../src/features/persistence/test-helper';
 
-mockSQLiteForTests();
-
-console.info('e2eテスト用のセットアップが完了しました。SQLiteはモック化されています。');
+export default async function globalSetup() {
+  mockSQLiteForTests();
+  
+  console.info('e2eテスト用のセットアップが完了しました。SQLiteはモック化されています。');
+}
