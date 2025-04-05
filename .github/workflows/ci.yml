@@ -31,4 +31,10 @@ jobs:
       - name: Playwrightインストール
         run: bunx playwright install chromium --with-deps
       - name: e2eテスト実行
-        run: bunx playwright test --project=chromium
+        run: |
+          # 開発サーバーを起動し、バックグラウンドで実行
+          bun run dev &
+          # サーバーが起動するまで待機
+          sleep 10
+          # e2eテストを実行
+          bunx playwright test --project=chromium
