@@ -7,6 +7,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
+    "test": "bun test",
+    "test:e2e": "bunx playwright test",
     "gen:rules": "rm -f .clinerules && touch .clinerules && for file in $(ls -1 .cline/rules/*.md | sort); do echo \"# $(basename $file .md)\" >> .clinerules && awk 'BEGIN{p=0} /^---$/{if(p==0){p=1}else{p=0;next}} p==0{print}' $file >> .clinerules && echo -e \"\n\n\" >> .clinerules; done"
   },
   "dependencies": {
@@ -27,6 +29,7 @@
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "@happy-dom/global-registrator": "^17.0.3",
+    "@playwright/test": "^1.51.1",
     "bun-types": "^1.2.2",
     "stylelint": "^16.14.1",
     "stylelint-config-html": "^1.1.0",
