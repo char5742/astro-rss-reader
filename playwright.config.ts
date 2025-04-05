@@ -24,7 +24,7 @@ export default defineConfig({
     }
   ],
   webServer: {
-    command: 'bun run --bun dev',
+    command: 'bun --bun run dev',
     env: {
       NODE_ENV: 'test',
       PLAYWRIGHT_TEST: 'true'
