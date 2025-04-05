@@ -24,10 +24,12 @@ export default defineConfig({
       use: { ...devices['Desktop Safari'] },
     }
   ],
-  webServer: {
-    command: 'NODE_ENV=test PLAYWRIGHT_TEST=true bun --bun astro dev',
-    port: 4321,
-    reuseExistingServer: !process.env.CI,
-  },
+  ...(process.env.CI ? {} : {
+    webServer: {
+      command: 'NODE_ENV=test PLAYWRIGHT_TEST=true bun --bun astro dev',
+      port: 4321,
+      reuseExistingServer: true,
+    }
+  }),
   timeout: 30000,
 });
