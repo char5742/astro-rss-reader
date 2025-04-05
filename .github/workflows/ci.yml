@@ -17,7 +17,7 @@ jobs:
       - name: インストール
         run: bun install
       - name: ユニットテスト実行
-        run: bun test
+        run: bun test "src/**/*.test.ts"
 
   e2e-test:
     runs-on: ubuntu-latest
