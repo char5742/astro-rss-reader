@@ -174,32 +174,27 @@ import Toast from "../components/share/Toast.astro";
     margin-top: 20px;
   }
 
-  .sortable-ghost {
-    opacity: 0.5;
-    background-color: var(--color-highlight);
-  }
-
-  .sortable-handle {
-    cursor: grab;
-    padding: 0 10px;
-    color: var(--color-text-muted);
-  }
-
-  .sortable-handle:hover {
-    color: var(--color-primary);
-  }
-
   .item-container {
     position: relative;
   }
 
   .item-container.dragging {
     opacity: 0.5;
+    background-color: var(--color-highlight);
+  }
+
+  .drag-handle {
+    cursor: grab;
+    padding: 0 10px;
+    color: var(--color-text-muted);
+  }
+
+  .drag-handle:hover {
+    color: var(--color-primary);
   }
 </style>
 
 <script>
-  import Sortable from 'sortablejs';
   import { $feeds, $feedCategories, $feedOrder, setFeedStorage, addFeed, updateFeed, deleteFeed, addCategory, updateCategory, deleteCategory, updateFeedOrder, importOpml, exportOpml } from "../store/feeds";
   import { $account } from "../store/accounts";
 
@@ -330,7 +325,7 @@ import Toast from "../components/share/Toast.astro";
       }).filter(Boolean);
       
       feedElement.innerHTML = `
-        <div class="sortable-handle">
+        <div class="drag-handle">
           <i class="fas fa-grip-lines"></i>
         </div>
         <div class="item-content">
@@ -416,17 +411,71 @@ import Toast from "../components/share/Toast.astro";
   // ドラッグ&ドロップの初期化
   function initSortable() {
     if (feedsContainer) {
-      Sortable.create(feedsContainer, {
-        handle: '.sortable-handle',
-        animation: 150,
-        ghostClass: 'sortable-ghost',
-        onEnd: function(evt) {
-          const feedIds = Array.from(feedsContainer.querySelectorAll('.item-container')).map(el => el.dataset.id);
-          updateFeedOrder(feedIds);
-          showToast('フィードの順序を更新しました');
+      const feedItems = feedsContainer.querySelectorAll('.item-container');
+      
+      // ドラッグ可能な要素を設定
+      feedItems.forEach(item => {
+        item.setAttribute('draggable', 'true');
+        
+        // ドラッグ開始時のイベント
+        item.addEventListener('dragstart', (e) => {
+          e.dataTransfer.setData('text/plain', item.dataset.id);
+          item.classList.add('dragging');
+        });
+        
+        // ドラッグ終了時のイベント
+        item.addEventListener('dragend', () => {
+          item.classList.remove('dragging');
+        });
+        
+        // ドラッグ中のイベント（ドラッグ中の要素のスタイル調整）
+        item.addEventListener('drag', (e) => {
+          // 必要に応じてスタイル調整
+        });
+      });
+      
+      // ドロップ領域の設定
+      feedsContainer.addEventListener('dragover', (e) => {
+        e.preventDefault(); // デフォルトのドロップ動作を防止
+        const draggingItem = feedsContainer.querySelector('.dragging');
+        if (!draggingItem) return;
+        
+        // カーソル位置の次の要素を取得
+        const afterElement = getDragAfterElement(feedsContainer, e.clientY);
+        
+        // 要素の挿入位置を決定
+        if (afterElement) {
+          feedsContainer.insertBefore(draggingItem, afterElement);
+        } else {
+          feedsContainer.appendChild(draggingItem);
         }
       });
+      
+      // ドロップ完了時のイベント
+      feedsContainer.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const feedIds = Array.from(feedsContainer.querySelectorAll('.item-container')).map(el => el.dataset.id);
+        updateFeedOrder(feedIds);
+        showToast('フィードの順序を更新しました');
+      });
     }
+  }
+  
+  // ドラッグ中のカーソル位置に基づいて、挿入位置の要素を取得する関数
+  function getDragAfterElement(container, y) {
+    const draggableElements = [...container.querySelectorAll('.item-container:not(.dragging)')];
+    
+    return draggableElements.reduce((closest, child) => {
+      const box = child.getBoundingClientRect();
+      const offset = y - box.top - box.height / 2;
+      
+      // 負のオフセットで最も0に近い要素を探す（カーソルの真下の要素）
+      if (offset < 0 && offset > closest.offset) {
+        return { offset: offset, element: child };
+      } else {
+        return closest;
+      }
+    }, { offset: Number.NEGATIVE_INFINITY }).element;
   }
 
   // トースト表示
