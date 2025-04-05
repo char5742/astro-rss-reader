@@ -9,8 +9,8 @@ interface Props {
 const { category, isEdit = false } = Astro.props;
 ---
 
-<form id="categoryForm" class="form-container">
-  <input type="hidden" name="categoryId" value={category?.id || ""} />
+<form id="categoryForm" class="form-container" action="/api/categories" method="post">
+  <input type="hidden" name="id" value={category?.id || ""} />
   
   <div class="form-group">
     <label for="categoryName">カテゴリー名 <span class="required">*</span></label>
@@ -46,20 +46,38 @@ const { category, isEdit = false } = Astro.props;
     });
     
     // フォーム送信
-    form.addEventListener('submit', (event) => {
+    form.addEventListener('submit', async (event) => {
       event.preventDefault();
       
       const formData = new FormData(form);
       const categoryData = {
-        id: formData.get('categoryId') as string,
+        id: formData.get('id') as string,
         name: formData.get('name') as string,
       };
       
-      // カスタムイベントを発行
-      const customEvent = new CustomEvent('category-form-submit', {
-        detail: categoryData
-      });
-      document.dispatchEvent(customEvent);
+      try {
+        const response = await fetch('/api/categories', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(categoryData),
+        });
+        
+        if (response.ok) {
+          // モーダルを閉じて画面をリロード
+          const modal = document.getElementById('categoryModal');
+          if (modal) {
+            modal.classList.remove('show');
+          }
+          window.location.reload();
+        } else {
+          const data = await response.json();
+          alert(data.error || 'カテゴリーの保存に失敗しました');
+        }
+      } catch (error) {
+        alert('エラーが発生しました: ' + error);
+      }
     });
   });
 </script>

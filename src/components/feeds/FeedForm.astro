@@ -260,7 +260,7 @@ const { feed, categories, isEdit = false } = Astro.props;
     });
     
     // フォーム送信
-    form.addEventListener('submit', (event) => {
+    form.addEventListener('submit', async (event) => {
       event.preventDefault();
       
       const formData = new FormData(form);
@@ -272,11 +272,29 @@ const { feed, categories, isEdit = false } = Astro.props;
         categoryIds: Array.from(formData.getAll('categoryIds')) as string[],
       };
       
-      // カスタムイベントを発行
-      const customEvent = new CustomEvent('feed-form-submit', {
-        detail: feedData
-      });
-      document.dispatchEvent(customEvent);
+      try {
+        const response = await fetch('/api/feeds', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(feedData),
+        });
+        
+        if (response.ok) {
+          // モーダルを閉じて画面をリロード
+          const modal = document.getElementById('feedModal');
+          if (modal) {
+            modal.classList.remove('show');
+          }
+          window.location.reload();
+        } else {
+          const data = await response.json();
+          alert(data.error || 'フィードの保存に失敗しました');
+        }
+      } catch (error) {
+        alert('エラーが発生しました: ' + error);
+      }
     });
   });
 </script>
