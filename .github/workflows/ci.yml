@@ -17,7 +17,7 @@ jobs:
       - name: インストール
         run: bun install
       - name: ユニットテスト実行
-        run: bun test "src/**/*.test.ts"
+        run: NODE_ENV=test bun test "src/**/*.test.ts"
 
   e2e-test:
     runs-on: ubuntu-latest
@@ -32,6 +32,5 @@ jobs:
         run: bunx playwright install chromium --with-deps
       - name: e2eテスト実行
         run: |
-          # Playwrightの設定で既にwebServerが設定されているため、
-          # 手動でサーバーを起動する必要はありません
-          bunx playwright test --project=chromium
+          # テスト環境変数を設定してPlaywrightを実行
+          NODE_ENV=test PLAYWRIGHT_TEST=true bunx playwright test --project=chromium
