@@ -31,12 +31,28 @@ async function isDirectFeed(url: string): Promise<boolean> {
     
     if (!contentType) return false;
     
-    return (
-      contentType.includes("xml") ||
-      contentType.includes("rss") ||
-      contentType.includes("atom") ||
-      contentType.includes("json") && (await response.text()).includes("jsonfeed.org")
-    );
+    if (contentType.includes("xml") ||
+        contentType.includes("rss") ||
+        contentType.includes("atom")) {
+      return true;
+    }
+    
+    if (contentType.includes("json")) {
+      const text = await response.text();
+      try {
+        const json = JSON.parse(text);
+        return json && 
+               typeof json === 'object' && 
+               json.version && 
+               typeof json.version === 'string' && 
+               json.version.startsWith('https://jsonfeed.org/version/') && 
+               Array.isArray(json.items);
+      } catch (e) {
+        return false;
+      }
+    }
+    
+    return false;
   } catch (error) {
     return false;
   }
