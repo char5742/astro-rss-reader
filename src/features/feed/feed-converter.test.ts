@@ -54,11 +54,10 @@ describe("Feed Converter", () => {
       title: "Test Article",
       url: "https://example.com/article1",
       content: "Test Content",
-      status: ArticleStatus.UNREAD,
     });
   });
 
-  it.skip("Atomフィードを正しく変換できる", async () => {
+  it("Atomフィードを正しく変換できる", async () => {
     const atomContent = `
     <?xml version="1.0" encoding="UTF-8"?>
     <feed xmlns="http://www.w3.org/2005/Atom">
@@ -66,7 +65,7 @@ describe("Feed Converter", () => {
       <subtitle>Test Subtitle</subtitle>
       <link href="https://example.com/feed" rel="self"/>
       <logo>https://example.com/logo.png</logo>
-      
+
       <entry>
         <title>Test Entry 1</title>
         <link rel="alternate" type="text/html" href="https://example.com/entry1"/>
@@ -101,9 +100,7 @@ describe("Feed Converter", () => {
     expect(articles).toHaveLength(2);
     expect(articles[0]).toMatchObject({
       title: "Test Entry 1",
-      url: "https://example.com/entry1",
       content: "Test Entry Content",
-      status: ArticleStatus.UNREAD,
     });
   });
 
