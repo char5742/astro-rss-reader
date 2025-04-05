@@ -24,11 +24,7 @@ export default defineConfig({
     }
   ],
   webServer: {
-    command: 'bun --bun run dev',
-    env: {
-      NODE_ENV: 'test',
-      PLAYWRIGHT_TEST: 'true'
-    },
+    command: 'NODE_ENV=test PLAYWRIGHT_TEST=true bun --bun astro dev',
     port: 4321,
     reuseExistingServer: !process.env.CI,
   },
