@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test.describe('検索機能のテスト', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/auth/login');
-    await page.getByPlaceholder('ユーザーID').fill('testuser');
+    await page.locator('#id').fill('testuser');
     await page.getByRole('button', { name: 'ログイン' }).click();
     await expect(page).toHaveURL('/');
   });
