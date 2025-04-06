@@ -101,4 +101,75 @@ describe("parseFeed", () => {
     const result = parseFeed(invalidXml);
     expect(result).toBeUndefined();
   });
+
+  test("RDF (RSS 1.0) フィードをパースできる", () => {
+    const rdfXml = `
+      <?xml version="1.0" encoding="UTF-8" ?>
+      <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+               xmlns="http://purl.org/rss/1.0/">
+        <channel>
+          <title>テストRDFフィード</title>
+          <link>https://example.com</link>
+          <description>テスト用のRDFフィード</description>
+        </channel>
+        <item>
+          <title>記事1</title>
+          <link>https://example.com/article1</link>
+          <description>記事1の内容</description>
+        </item>
+      </rdf:RDF>
+    `;
+    
+    const expected: Feed = {
+      title: "テストRDFフィード",
+      link: "https://example.com",
+      description: "テスト用のRDFフィード",
+      items: [
+        {
+          title: "記事1",
+          link: "https://example.com/article1",
+          content: "記事1の内容",
+          pubDate: undefined,
+        },
+      ],
+    };
+    
+    const result = parseFeed(rdfXml);
+    expect(result).toEqual(expected);
+  });
+  
+  test("JSONフィードをパースできる", () => {
+    const jsonFeed = JSON.stringify({
+      version: "https://jsonfeed.org/version/1",
+      title: "テストJSONフィード",
+      home_page_url: "https://example.com",
+      feed_url: "https://example.com/feed.json",
+      items: [
+        {
+          id: "1",
+          title: "記事1",
+          url: "https://example.com/article1",
+          content_text: "記事1の内容",
+          date_published: "2024-01-01T00:00:00Z"
+        }
+      ]
+    });
+    
+    const expected: Feed = {
+      title: "テストJSONフィード",
+      link: "https://example.com",
+      description: "",
+      items: [
+        {
+          title: "記事1",
+          link: "https://example.com/article1",
+          content: "記事1の内容",
+          pubDate: "2024-01-01T00:00:00Z",
+        },
+      ],
+    };
+    
+    const result = parseFeed(jsonFeed);
+    expect(result).toEqual(expected);
+  });
 });

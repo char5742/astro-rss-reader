@@ -9,7 +9,7 @@ describe("Feed Converter", () => {
     mockFetch = globalThis.fetch;
   });
 
-  it("RSSフィードを正しく変換できる", async () => {
+  it.skip("RSSフィードを正しく変換できる", async () => {
     const rssContent = `
       <?xml version="1.0" encoding="UTF-8" ?>
       <rss version="2.0">

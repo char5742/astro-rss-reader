@@ -1,13 +1,13 @@
 import node from "@astrojs/node";
-import icon from "astro-icon";
 import { defineConfig } from "astro/config";
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [icon()],
+  integrations: [],
   experimental: {
     serializeConfig: true,
     session: true,
+    svg: true,
   },
   output: "server",
   vite: {

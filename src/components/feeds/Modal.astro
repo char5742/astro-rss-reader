@@ -1,0 +1,113 @@
+---
+interface Props {
+  id: string;
+  title: string;
+}
+
+const { id, title } = Astro.props;
+---
+
+<div id={id} class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>{title}</h2>
+      <button class="modal-close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <slot />
+    </div>
+  </div>
+</div>
+
+<script define:vars={{ id }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById(id);
+    const closeBtn = modal?.querySelector('.modal-close');
+    
+    // モーダルを閉じる
+    closeBtn?.addEventListener('click', () => {
+      modal?.classList.remove('show');
+    });
+    
+    // モーダル外クリックで閉じる
+    modal?.addEventListener('click', (event) => {
+      if (event.target === modal) {
+        modal.classList.remove('show');
+      }
+    });
+    
+    // ESCキーでモーダルを閉じる
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && modal?.classList.contains('show')) {
+        modal.classList.remove('show');
+      }
+    });
+  });
+</script>
+
+<style>
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    overflow: auto;
+  }
+  
+  .modal.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .modal-content {
+    background-color: var(--color-background);
+    margin: auto;
+    padding: 0;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    animation: modalopen 0.3s;
+  }
+  
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+  
+  .modal-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+  }
+  
+  .modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--color-text);
+  }
+  
+  .modal-body {
+    padding: 1rem;
+  }
+  
+  @keyframes modalopen {
+    from {
+      opacity: 0;
+      transform: translateY(-50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>

@@ -1,10 +1,11 @@
 ---
-import type { CollectionEntry } from "astro:content";
+import { $articleStatusBy, articlesByFeedId } from "~/store/articles";
 import type { ArticleStatus } from "~/types/article";
+import type { Feed } from "~/types/feed";
 import BadgedItem from "../layouts/BadgedItem.astro";
 
 interface Props {
-  feed: CollectionEntry<"feed">;
+  feed: Feed;
 }
 
 const { feed } = Astro.props;
@@ -28,26 +29,28 @@ function getRelativeTimeString(date?: Date): string {
 
   return date.toLocaleDateString();
 }
+
+const articles =await articlesByFeedId(feed.id) ?? [];
 ---
 
 <article>
   <div>
     <h3>
       <a href={`/feeds/${feed.id}`}>
-        {feed.data.feed.title}
+        {feed.title}
       </a>
     </h3>
     <BadgedItem
       title="未読"
       link={`/feeds/${feed.id}`}
-      unreadCount={feed.data.articles.filter(
-        (a) => a.status === ("unread" as ArticleStatus),
+      unreadCount={articles.filter(
+        (a) => $articleStatusBy(a.id).get() === ("unread" as ArticleStatus),
       ).length}
     />
     <div class="feed-meta">
-      <span>総記事数: {feed.data.articles.length}</span>
-      <time datetime={feed.data.articles[0]?.publishedAt.toISOString()}>
-        更新: {getRelativeTimeString(feed.data.articles[0]?.publishedAt)}
+      <span>総記事数: {articles.length}</span>
+      <time datetime={articles[0]?.publishedAt.toISOString()}>
+        更新: {getRelativeTimeString(articles[0]?.publishedAt)}
       </time>
     </div>
   </div>

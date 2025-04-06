@@ -14,22 +14,22 @@ dialog {
   background: transparent;
   color: var(--color-text-primary);
   font-family: var(--font-family-base);
-  
+
   /* サイズと位置 */
   max-width: min(calc(100% - var(--spacing-xl) * 2), 32rem);
-  
+
   /* 非表示時のスタイル */
   &:not([open]) {
     display: none;
   }
-  
+
   /* モーダルダイアログのスタイル（:modal擬似クラス） */
   &:modal {
     /* モーダルダイアログ固有のスタイル */
     display: flex;
     flex-direction: column;
     max-height: 80vh;
-    
+
     /* ダイアログの内部コンテナ */
     &::before {
       content: "";
@@ -41,17 +41,17 @@ dialog {
       border: var(--border-width-thin) solid var(--color-border-default);
       box-shadow: var(--shadow-md);
     }
-    
+
     /* アニメーション */
     animation: dialog-fade-in var(--duration-normal) var(--ease-out);
   }
-  
+
   /* ダイアログの背景オーバーレイ（::backdrop擬似要素） */
   &::backdrop {
     background-color: oklch(0 0 0 / 0.5);
     animation: dialog-backdrop-fade-in var(--duration-normal) var(--ease-out);
   }
-  
+
   /* ヘッダー部分 */
   & > header {
     display: flex;
@@ -59,14 +59,14 @@ dialog {
     justify-content: space-between;
     padding: var(--padding-md) var(--padding-lg);
     border-bottom: var(--border-width-thin) solid var(--color-border-muted);
-    
+
     & h2 {
       margin: 0;
       font-size: var(--font-size-lg);
       font-weight: var(--font-weight-bold);
       color: var(--color-text-primary);
     }
-    
+
     & button {
       display: flex;
       align-items: center;
@@ -78,37 +78,38 @@ dialog {
       border-radius: var(--border-radius-full);
       color: var(--color-text-muted);
       cursor: pointer;
-      transition: background-color var(--duration-fast) var(--ease-in-out),
-                  color var(--duration-fast) var(--ease-in-out);
-      
+      transition:
+        background-color var(--duration-fast) var(--ease-in-out),
+        color var(--duration-fast) var(--ease-in-out);
+
       &:hover {
         background-color: var(--color-background-muted);
         color: var(--color-text-primary);
       }
     }
   }
-  
+
   /* メインコンテンツ部分 */
   & > main {
     padding: var(--padding-lg);
     overflow-y: auto;
-    
-    & h1, 
-    & h2, 
+
+    & h1,
+    & h2,
     & h3 {
       margin-top: 0;
       color: var(--color-text-primary);
       font-weight: var(--font-weight-bold);
     }
-    
+
     & p {
       margin-bottom: var(--spacing-md);
       color: var(--color-text-secondary);
     }
-    
+
     /* フォーム要素 */
-    & input, 
-    & textarea, 
+    & input,
+    & textarea,
     & select {
       width: 100%;
       padding: var(--padding-sm);
@@ -119,7 +120,7 @@ dialog {
       margin-bottom: var(--spacing-md);
       background-color: var(--color-background-base);
       color: var(--color-text-primary);
-      
+
       &:focus {
         outline: none;
         border-color: var(--color-surface-primary);
@@ -127,7 +128,7 @@ dialog {
       }
     }
   }
-  
+
   /* フッター部分 */
   & > footer {
     display: flex;
@@ -137,7 +138,7 @@ dialog {
     border-top: var(--border-width-thin) solid var(--color-border-muted);
     background-color: var(--color-background-muted);
     border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
-    
+
     & button {
       padding: var(--padding-sm) var(--padding-lg);
       border: none;
@@ -146,23 +147,24 @@ dialog {
       font-size: var(--font-size-base);
       font-weight: var(--font-weight-medium);
       cursor: pointer;
-      transition: background-color var(--duration-fast) var(--ease-in-out),
-                  transform var(--duration-fast) var(--ease-in-out);
-      
+      transition:
+        background-color var(--duration-fast) var(--ease-in-out),
+        transform var(--duration-fast) var(--ease-in-out);
+
       &:hover {
         filter: brightness(1.1);
       }
-      
+
       &:active {
         transform: scale(0.98);
       }
-      
+
       &.primary,
       &[type="submit"] {
         background-color: var(--color-surface-primary);
         color: var(--color-text-on-primary);
       }
-      
+
       &.secondary,
       &[type="button"] {
         background-color: var(--color-background-muted);
@@ -170,24 +172,24 @@ dialog {
       }
     }
   }
-  
+
   /* ダイアログのバリエーション */
   &.alert {
     & > main {
       text-align: center;
     }
-    
+
     & > footer {
       justify-content: center;
     }
   }
-  
+
   &.confirm {
     & > footer {
       justify-content: space-between;
     }
   }
-  
+
   &.prompt {
     & > main {
       padding-bottom: var(--spacing-sm);
@@ -223,7 +225,7 @@ dialog {
     max-width: none;
     margin: var(--margin-md);
   }
-  
+
   dialog > footer {
     flex-direction: column;
   }

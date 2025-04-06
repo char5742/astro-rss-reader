@@ -1,16 +1,17 @@
 ---
 export const prerender = false;
-import { getCollection } from "astro:content";
 import ArticleCard from "~/components/feeds/ArticleCard.astro";
 import Layout from "~/layouts/Layout.astro";
-import { $articleStatusBy } from "~/store/articles";
+import { $articleStatusBy, articlesByFeedId } from "~/store/articles";
+import { $feeds } from "~/store/feeds";
 import { ArticleStatus } from "~/types/article";
 
 const filter = Astro.url.searchParams.get("filter");
-const feeds = await getCollection("feed");
+const feeds = await $feeds.get();
 
-const articles = feeds
-  .flatMap((feed) => feed.data.articles)
+const articles = (await Promise.all(feeds
+  .flatMap((feed) => articlesByFeedId(feed.id))))
+  .flat()
   .sort((a, b) => (a.publishedAt < b.publishedAt ? 1 : -1))
   .filter((article) => {
     if (filter === "today") {

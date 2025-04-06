@@ -1,8 +1,8 @@
 import { ActionError, defineAction } from "astro:actions";
-import { getCollection } from "astro:content";
 import { z } from "astro:schema";
 import DOMPurify from "isomorphic-dompurify";
-import { updateArticleStatus as updateArticleStatusStore } from "~/store/articles";
+import { articleById, updateArticleStatus as updateArticleStatusStore } from "~/store/articles";
+import { $feeds } from "~/store/feeds";
 import { ArticleIdSchema, ArticleStatus } from "~/types/article";
 
 // 記事の内容を取得するアクション
@@ -13,19 +13,18 @@ export const getArticleContent = defineAction({
   handler: async ({ articleId }) => {
     try {
       // フィードコレクションから全ての記事を取得
-      const feeds = await getCollection("feed");
+      const feeds = await $feeds.get();
 
       // 指定されたIDを持つ記事を検索
       let targetArticle = null;
 
       for (const feed of feeds) {
-        const foundArticle = feed.data.articles.find(
-          (article) => article.id === articleId,
-        );
+        const foundArticle =await articleById(feed.id, articleId);
+        
         if (foundArticle) {
           targetArticle = {
             ...foundArticle,
-            feedTitle: feed.data.feed.title,
+            feedTitle: feed.title,
           };
           break;
         }

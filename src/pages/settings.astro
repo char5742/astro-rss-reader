@@ -1,9 +1,9 @@
 ---
-import { Icon } from "astro-icon/components";
 import Toast from "~/components/share/Toast.astro";
 import KeywordChips from "~/components/settings/KeywordChips.astro";
 import Layout from "~/layouts/Layout.astro";
 import { $settings } from "~/store/settings";
+import SaveIcon from "~/icons/save.svg";
 
 const settingsData = $settings.get();
 const currentTheme = settingsData.appearance.theme;
@@ -20,7 +20,7 @@ const keywordNotificationsEnabled =
     <header>
       <h1>設定</h1>
       <button type="submit" class="hover-card">
-        <Icon name="save" />
+        <SaveIcon fill="currentColor"/>
       </button>
     </header>
     <section>
@@ -195,7 +195,7 @@ const keywordNotificationsEnabled =
 
 <script>
   import { actions } from "astro:actions";
-  import { navigate } from "astro:transitions/client";
+import { navigate } from "astro:transitions/client";
 
   document.addEventListener("astro:page-load", () => {
     const form = document.querySelector("form");

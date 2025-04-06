@@ -21,17 +21,17 @@
     z-index: 100;
     border-left: 4px solid var(--color-primary);
     pointer-events: none;
-    
+
     &.show {
       opacity: 1;
       transform: translateY(0);
       pointer-events: auto;
     }
-    
+
     &.success {
       border-left-color: var(--color-success);
     }
-    
+
     &.error {
       border-left-color: var(--color-error);
     }
@@ -42,35 +42,38 @@
   class StatusNotification extends HTMLElement {
     constructor() {
       super();
-      this.notification = document.getElementById('status-notification');
-      this.message = document.getElementById('status-message');
-      
+      this.notification = document.getElementById("status-notification");
+      this.message = document.getElementById("status-message");
+
       // カスタムイベントのリスナーを設定
-      document.addEventListener('shownotification', this.showNotification.bind(this));
+      document.addEventListener(
+        "shownotification",
+        this.showNotification.bind(this),
+      );
     }
-    
+
     showNotification(event) {
-      const { message, type = 'success', duration = 3000 } = event.detail;
-      
+      const { message, type = "success", duration = 3000 } = event.detail;
+
       this.message.textContent = message;
-      this.notification.classList.add('show', type);
-      
+      this.notification.classList.add("show", type);
+
       setTimeout(() => {
-        this.notification.classList.remove('show');
+        this.notification.classList.remove("show");
         setTimeout(() => {
-          this.notification.classList.remove('success', 'error');
+          this.notification.classList.remove("success", "error");
         }, 300);
       }, duration);
     }
   }
-  
+
   // カスタム要素を定義
-  customElements.define('status-notification', StatusNotification);
-  
+  customElements.define("status-notification", StatusNotification);
+
   // ページ読み込み時に初期化
-  document.addEventListener('DOMContentLoaded', () => {
-    if (!document.querySelector('status-notification')) {
-      document.body.appendChild(document.createElement('status-notification'));
+  document.addEventListener("DOMContentLoaded", () => {
+    if (!document.querySelector("status-notification")) {
+      document.body.appendChild(document.createElement("status-notification"));
     }
   });
 </script>
