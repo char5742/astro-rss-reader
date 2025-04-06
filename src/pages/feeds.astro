@@ -4,13 +4,11 @@ import Modal from "~/components/feeds/Modal.astro";
 import FeedForm from "~/components/feeds/FeedForm.astro";
 import CategoryForm from "~/components/feeds/CategoryForm.astro";
 import type { Feed, FeedCategory } from "~/types/feed";
+import { $feedCategories, $feeds } from "~/store/feeds";
 
-// サーバーサイドAPIからフィードとカテゴリーを取得
-const feedsResponse = await fetch(new URL('/api/feeds', Astro.url).toString());
-const categoriesResponse = await fetch(new URL('/api/categories', Astro.url).toString());
 
-const { feeds = [] } = await feedsResponse.json();
-const { categories = [] } = await categoriesResponse.json();
+const  feeds = await $feeds.get()
+const  categories = await $feedCategories.get()
 
 // カテゴリー別のフィード数を計算
 const feedCountByCategory: Record<string, number> = {};
@@ -60,6 +58,88 @@ function getCategoryNames(feed: Feed): string[] {
         <button id="exportOpmlBtn" class="btn secondary">OPMLエクスポート</button>
       </div>
     </header>
+
+    <!-- 新規フィード追加モーダル -->
+    <div id="add-feed-modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>新規フィード追加</h2>
+        <form id="add-feed-form">
+          <div class="form-group">
+            <label for="feed-title">タイトル</label>
+            <input type="text" id="feed-title" name="title" required>
+          </div>
+          <div class="form-group">
+            <label for="feed-url">URL</label>
+            <input type="url" id="feed-url" name="url" required>
+          </div>
+          <div class="form-group">
+            <label for="feed-category">カテゴリー</label>
+            <select id="feed-category" name="category">
+              <option value="">カテゴリーを選択</option>
+              <!-- カテゴリーはJavaScriptで動的に追加 -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="new-category">新規カテゴリー</label>
+            <input type="text" id="new-category" name="newCategory">
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn primary">追加</button>
+            <button type="button" class="btn secondary cancel-btn">キャンセル</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- カテゴリー編集モーダル -->
+    <div id="edit-category-modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>カテゴリー編集</h2>
+        <form id="edit-category-form">
+          <input type="hidden" id="category-id" name="id">
+          <div class="form-group">
+            <label for="category-name">カテゴリー名</label>
+            <input type="text" id="category-name" name="name" required>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn primary">保存</button>
+            <button type="button" class="btn secondary cancel-btn">キャンセル</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- フィード編集モーダル -->
+    <div id="edit-feed-modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>フィード編集</h2>
+        <form id="edit-feed-form">
+          <input type="hidden" id="edit-feed-id" name="id">
+          <div class="form-group">
+            <label for="edit-feed-title">タイトル</label>
+            <input type="text" id="edit-feed-title" name="title" required>
+          </div>
+          <div class="form-group">
+            <label for="edit-feed-url">URL</label>
+            <input type="url" id="edit-feed-url" name="url" required>
+          </div>
+          <div class="form-group">
+            <label for="edit-feed-category">カテゴリー</label>
+            <select id="edit-feed-category" name="category">
+              <option value="">カテゴリーを選択</option>
+              <!-- カテゴリーはJavaScriptで動的に追加 -->
+            </select>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn primary">保存</button>
+            <button type="button" class="btn secondary cancel-btn">キャンセル</button>
+          </div>
+        </form>
+      </div>
+    </div>
 
     <section>
       <div class="section-header">

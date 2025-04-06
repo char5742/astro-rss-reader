@@ -6,8 +6,11 @@
  * 永続的なストアと、ステータスを更新するためのユーティリティ関数を提供します。
  */
 import { persistentAtom } from "@nanostores/persistent";
-import type { ArticleId } from "~/types/article";
+import { convertUrlToFeed } from "~/features/feed/feed-converter"; // convertUrlToFeed をインポート
+import { $feeds } from "~/store/feeds"; // $feeds をインポート
+import type { Article, ArticleId } from "~/types/article"; // Article 型をインポート
 import { ArticleStatus } from "~/types/article";
+import type { FeedId } from "~/types/feed"; // FeedId 型をインポート
 
 /**
  * 記事のステータスを管理する永続的なストア
@@ -97,4 +100,45 @@ export function updateArticleStatus(
   };
 
   $articleStatuses.set(newStatuses);
+}
+
+/**
+ * 指定されたフィードIDに紐づく記事のリストを取得する
+ *
+ * @param {FeedId} feedId - 記事を取得するフィードのID
+ * @returns {Promise<Article[]>} 記事のリスト
+ */
+export async function articlesByFeedId(feedId: FeedId): Promise<Article[]> {
+  const feeds = $feeds.get();
+  const feed = feeds.find((f) => f.id === feedId);
+
+  if (!feed) {
+    console.warn(`Feed with ID ${feedId} not found in $feeds store.`);
+    return []; // フィードが見つからない場合は空配列を返す
+  }
+
+  try {
+    // convertUrlToFeed は外部からフィードを取得・解析するため非同期
+    const { articles } = await convertUrlToFeed(feed.url);
+    return articles;
+  } catch (error) {
+    console.error(`Error fetching or converting feed for URL ${feed.url}:`, error);
+    return []; // エラー時も空配列を返す
+  }
+}
+
+/**
+ * 指定されたフィードIDと記事IDに紐づく記事を取得する
+ *
+ * @param {FeedId} feedId - 記事が属するフィードのID
+ * @param {ArticleId} articleId - 取得する記事のID
+ * @returns {Promise<Article | null>} 記事データ、見つからない場合は null
+ */
+export async function articleById(
+  feedId: FeedId,
+  articleId: ArticleId,
+): Promise<Article | null> {
+  // articlesByFeedId が非同期なので await する
+  const articles = await articlesByFeedId(feedId);
+  return articles.find((article) => article.id === articleId) ?? null;
 }

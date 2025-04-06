@@ -1,16 +1,18 @@
 ---
-import { getCollection } from "astro:content";
 import Layout from "~/layouts/Layout.astro";
 import FeedHeader from "~/components/feeds/FeedHeader.astro";
 import ArticleCard from "~/components/feeds/ArticleCard.astro";
+import { $feeds } from "~/store/feeds";
+import { articlesByFeedId } from "~/store/articles";
 
 // フィード情報の取得
-const feeds = await getCollection("feed");
+const feeds = await $feeds.get();
 const f = feeds.find((f) => f.id === Astro.params.id);
 if (!f) {
   return { status: 404 };
 }
-const { feed, articles } = f.data;
+const feed = f;
+const articles = await articlesByFeedId(feed.id) ?? [];
 
 // ソートと絞り込みのデフォルト値
 const defaultSort = "newest";

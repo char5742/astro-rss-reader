@@ -1,11 +1,30 @@
 ---
 import { Icon } from "astro-icon/components";
-import { getCollection } from "astro:content";
-import { $articleStatusBy } from "~/store/articles";
+import { $articleStatusBy, articlesByFeedId } from "~/store/articles";
+import { $feeds } from "~/store/feeds";
 import BadgedItem from "./BadgedItem.astro";
 import LogoutButton from "./LogoutButton.astro";
 
-const feedList = await getCollection("feed");
+const feedList = $feeds.get();
+const unreadCountToday = await Promise.all(feedList
+  .flatMap((feed) => articlesByFeedId(feed.id).then(
+    (articles) => (articles ?? []).filter(
+      (article) =>
+        article.publishedAt.toDateString() === new Date().toDateString(),
+    ).filter(
+      (article) => $articleStatusBy(article.id).get() === "unread",
+    )
+  ))).then((articles) =>
+  articles.flat().length);
+
+const unreadCountAll = await Promise.all(feedList
+  .flatMap((feed) => articlesByFeedId(feed.id).then(
+    (articles) => (articles ?? []).filter(
+      (article) => $articleStatusBy(article.id).get() === "unread",
+    )
+  ))).then((articles) =>
+  articles.flat().length);
+
 ---
 
 <aside>
@@ -40,28 +59,14 @@ const feedList = await getCollection("feed");
         <BadgedItem
           title="Today"
           link="/articles?filter=today"
-          unreadCount={feedList
-            .flatMap((feed) => feed.data.articles)
-            .filter(
-              (article) =>
-                article.publishedAt.toDateString() ===
-                new Date().toDateString(),
-            )
-            .filter(
-              (article) => $articleStatusBy(article.id).get() === "unread",
-            ).length}
+          unreadCount={unreadCountToday}
         />
       </li>
       <li>
         <BadgedItem
           title="Unread"
           link="/articles?filter=unread"
-          unreadCount={feedList
-            .flatMap((feed) => feed.data.articles)
-
-            .filter(
-              (article) => $articleStatusBy(article.id).get() === "unread",
-            ).length}
+          unreadCount={unreadCountAll}
         />
       </li>
     </ul>
@@ -70,15 +75,17 @@ const feedList = await getCollection("feed");
     <h2>Feeds</h2>
     <ul role="list">
       {
-        feedList.map((feed) => (
+        feedList.map(async (feed) => (
           <li>
             <BadgedItem
-              title={feed.data.feed.title}
+              title={feed.title}
               link={`/feeds/${feed.id}`}
               unreadCount={
-                feed.data.articles.filter(
-                  (article) => $articleStatusBy(article.id).get() === "unread",
-                ).length
+                await articlesByFeedId(feed.id).then(
+                  (articles) => (articles ?? []).filter(
+                    (article) => $articleStatusBy(article.id).get() === "unread",
+                  ).length,
+                )
               }
             />
           </li>

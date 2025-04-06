@@ -1,18 +1,19 @@
 ---
-import { getCollection } from "astro:content";
 import ArticleCard from "~/components/home/ArticleCard.astro";
 import FeedCard from "~/components/home/FeedCard.astro";
 import Layout from "~/layouts/Layout.astro";
+import { articlesByFeedId } from "~/store/articles";
+import { $feeds } from "~/store/feeds";
 
-const feedCollection = await getCollection("feed");
-const latestArticles = feedCollection
-  .flatMap((feed) =>
-    feed.data.articles.map((article) => ({
+const feedCollection = $feeds.get();
+const latestArticles = (await Promise.all(feedCollection
+  .flatMap(async (feed) =>
+    (await articlesByFeedId(feed.id) ).map((article) => ({
       ...article,
-      feedTitle: feed.data.feed.title,
+      feedTitle: feed.title,
     })),
-  )
-  .sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime())
+  ).flat())).flat();
+latestArticles.sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime())
   .slice(0, 5);
 ---
 
