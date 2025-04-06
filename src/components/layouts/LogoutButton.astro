@@ -1,9 +1,9 @@
 ---
-import { Icon } from "astro-icon/components";
+import  Icon  from "~/icons/logout.svg";
 ---
 
 <button type="button" aria-label="logout">
-  <Icon name="logout" class="hover-card" />
+  <Icon class="hover-card" />
 </button>
 
 <style>
@@ -14,7 +14,7 @@ import { Icon } from "astro-icon/components";
 
 <script>
   import { actions } from "astro:actions";
-  import { navigate } from "astro:transitions/client";
+import { navigate } from "astro:transitions/client";
 
   document.addEventListener("astro:page-load", () => {
     const button = document.querySelector('button[aria-label="logout"]');

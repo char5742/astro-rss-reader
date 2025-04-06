@@ -1,5 +1,7 @@
 ---
-import { Icon } from "astro-icon/components";
+import EditIcon from "~/icons/edit.svg";
+import SearchIcon from "~/icons/search.svg";
+import SettingsIcon from "~/icons/settings.svg";
 import { $articleStatusBy, articlesByFeedId } from "~/store/articles";
 import { $feeds } from "~/store/feeds";
 import BadgedItem from "./BadgedItem.astro";
@@ -33,18 +35,18 @@ const unreadCountAll = await Promise.all(feedList
       <h2><a href="/" aria-label="home">RSS Reader</a></h2>
       <ul role="list">
         <li>
-          <a href="/settings" aria-label="settings">
-            <Icon name="settings" class="hover-card" />
+          <a href="/settings" aria-label="settings" class="hover-card">
+            <SettingsIcon  fill="currentColor"/>
           </a>
         </li>
         <li>
-          <a href="/search" aria-label="search">
-            <Icon name="search" class="hover-card" />
+          <a href="/search" aria-label="search" class="hover-card">
+            <SearchIcon fill="currentColor" />
           </a>
         </li>
         <li>
-          <a href="/feeds" aria-label="edit">
-            <Icon name="edit" class="hover-card" />
+          <a href="/feeds" aria-label="edit" class="hover-card">
+            <EditIcon fill="currentColor" />
           </a>
         </li>
       </ul>
@@ -107,10 +109,6 @@ const unreadCountAll = await Promise.all(feedList
     padding: var(--spacing-md);
   }
 
-  [data-icon] {
-    font-size: var(--font-size-3xl);
-  }
-
   nav {
     h2 {
       a {
@@ -121,6 +119,11 @@ const unreadCountAll = await Promise.all(feedList
       display: flex;
       flex-direction: row;
       justify-content: space-between;
+
+      a {
+        font-size: var(--font-size-3xl);
+        color : var(--color-text-primary);
+      }
     }
   }
 
