@@ -16,6 +16,7 @@ export const GET: APIRoute = async ({ request }) => {
     });
     
     headers.set("Access-Control-Allow-Origin", "*");
+    headers.delete("content-encoding");
     
     return new Response(await response.text(), {
       status: response.status,

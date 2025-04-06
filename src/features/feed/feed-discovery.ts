@@ -7,12 +7,13 @@ import { FeedError } from "./feed";
  */
 export async function discoverFeeds(url: string): Promise<string[]> {
   try {
+    console.log("フィード検出中:", url);
     if (await isDirectFeed(url)) {
       return [url];
     }
     
     const response = await fetch(`/api/proxy?url=${encodeURIComponent(url)}`);
-    const html = await response.text();
+    const html = await response.statusText;
     
     return extractFeedLinks(html, url);
   } catch (error) {

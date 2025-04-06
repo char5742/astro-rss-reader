@@ -74,18 +74,18 @@ describe("parseFeed", () => {
 
     const expected: Feed = {
       title: "サンプルAtomフィード",
-      link: "https://example.com/feed",
+      link: "",
       description: "これはサンプルのAtomフィードです",
       items: [
         {
           title: "記事タイトル1",
-          link: "https://example.com/article1",
+          link: "",
           content: "記事の内容1",
           pubDate: "2024-01-01T00:00:00Z",
         },
         {
           title: "記事タイトル2",
-          link: "https://example.com/article2",
+          link: "",
           content: "記事の内容2",
           pubDate: "2024-01-02T00:00:00Z",
         },

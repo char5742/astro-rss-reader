@@ -1,5 +1,5 @@
 import { createHash } from "crypto";
-import { ArticleStatus, NewArticle, type Article } from "~/types/article";
+import { NewArticle, type Article } from "~/types/article";
 import type { Feed, FeedId } from "~/types/feed";
 import { getFeedMetadata } from "./feed";
 import { parseFeed } from "./rss-parser";
@@ -37,12 +37,12 @@ export async function convertUrlToFeed(
       feedId: feed.id,
       title: item.title,
       url: item.link,
-      content: item.content || "",
-      publishedAt: item.pubDate ? new Date(item.pubDate) : new Date(),
-      status: ArticleStatus.UNREAD,
-      categories: [],
-      summary: item.content?.substring(0, 200) || "", // 最初の200文字をサマリーとして使用
-    });
+       content: item.content || "",
+       publishedAt: item.pubDate ? new Date(item.pubDate) : new Date(),
+       // status: ArticleStatus.UNREAD, // Article型にstatusは含まれないため削除
+       categories: [],
+       summary: item.content?.substring(0, 200) || "", // 最初の200文字をサマリーとして使用
+     });
   });
 
   return { feed, articles };
